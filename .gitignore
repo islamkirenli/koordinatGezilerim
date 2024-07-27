@@ -1,0 +1,13 @@
+.DS_Store
+Podfile
+Podfile.lock
+Pods/
+koordinatGezilerim/Info.plist
+koordinatGezilerim/SceneDelegate.swift
+koordinatGezilerim/AppDelegate.swift
+koordinatGezilerim.xcodeproj/project.xcworkspace/xcuserdata/islamkirenli.xcuserdatad/UserInterfaceState.xcuserstate
+koordinatGezilerim.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+koordinatGezilerim.xcodeproj/project.xcworkspace/contents.xcworkspacedata
+koordinatGezilerim.xcodeproj/project.pbxproj
+koordinatGezilerim.xcodeproj/xcuserdata/islamkirenli.xcuserdatad/xcschemes/xcschememanagement.plist
+koordinatGezilerim/Assets.xcassets/
