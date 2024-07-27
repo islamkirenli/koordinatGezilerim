@@ -1,15 +1,20 @@
 import UIKit
 
 class NewCoordinateViewController: UIViewController {
-
+    
     var mapManager: MapManager!
-    let randomCoordinateGenerator = RandomCoordinateGenerator()
-
+    var latitude: Double!
+    var longitude: Double!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        view.backgroundColor = .white
+        
+        guard let latitude = latitude, let longitude = longitude else { return }
+        
         // MapManager oluştur ve haritayı ekle
-        mapManager = MapManager(frame: self.view.bounds, latitude: randomCoordinateGenerator.latitude, longitude: randomCoordinateGenerator.longitude)
+        mapManager = MapManager(frame: self.view.bounds, latitude: latitude, longitude: longitude)
         self.view.addSubview(mapManager.mapView)
     }
     
@@ -19,6 +24,6 @@ class NewCoordinateViewController: UIViewController {
         // Geri dönüldüğünde küreyi sıfırlamak için notification gönder
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "resetScene"), object: nil)
     }
-
-    
 }
+
+

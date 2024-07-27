@@ -21,13 +21,16 @@ class MapManager: NSObject, MKMapViewDelegate {
         
         // Başlangıç konumu
         let initialLocation = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
-        let region = MKCoordinateRegion(center: initialLocation, span: MKCoordinateSpan(latitudeDelta: 90, longitudeDelta: 180))
+        let region = MKCoordinateRegion(center: initialLocation, span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05))
         mapView.setRegion(region, animated: true)
         
         // Annotation ekle
         let annotation = MKPointAnnotation()
         annotation.coordinate = initialLocation
         mapView.addAnnotation(annotation)
+        
+        // Annotation ekledikten sonra haritayı ortala
+        mapView.setRegion(regionThatFits(for: annotation.coordinate), animated: true)
         
         // Koordinatları şehir adına çevir
         let location = CLLocation(latitude: latitude, longitude: longitude)
@@ -40,5 +43,10 @@ class MapManager: NSObject, MKMapViewDelegate {
             }
         }
     }
+    
+    // Anotasyon koordinatına uygun bölge oluştur
+    private func regionThatFits(for coordinate: CLLocationCoordinate2D) -> MKCoordinateRegion {
+        let span = MKCoordinateSpan(latitudeDelta: 10, longitudeDelta: 10)
+        return MKCoordinateRegion(center: coordinate, span: span)
+    }
 }
-

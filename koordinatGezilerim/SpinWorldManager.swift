@@ -75,4 +75,3 @@ class SpinWorldManager {
         (sphereNode.geometry as? SCNSphere)?.radius = 2.0
     }
 }
-

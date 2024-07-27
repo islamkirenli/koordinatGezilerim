@@ -1,9 +1,13 @@
 import UIKit
 
+protocol ButtonManagerDelegate: AnyObject {
+    func buttonTapped()
+}
+
 class ButtonManager {
     
     let button: UIButton
-    var spinWorldManager: SpinWorldManager?
+    weak var delegate: ButtonManagerDelegate?
     
     init(frame: CGRect) {
         // Butonu oluştur ve özelliklerini ayarla
@@ -14,7 +18,6 @@ class ButtonManager {
     
     @objc func buttonTapped() {
         print("Tıklandı")
-        spinWorldManager?.startIncreasingRadius()
+        delegate?.buttonTapped()
     }
 }
-
