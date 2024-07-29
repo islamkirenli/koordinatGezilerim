@@ -7,21 +7,19 @@ class RandomLandCoordinateGenerator {
     init() {
         self.latitude = 0.0
         self.longitude = 0.0
-        generateNewCoordinates { (latitude, longitude) in
+        generateNewCoordinates(latitudeRange: -90.0...90.0, longitudeRange: -180.0...180.0) { (latitude, longitude) in
             self.latitude = latitude
             self.longitude = longitude
             print("İlk rastgele kara koordinatları: enlem = \(latitude), boylam = \(longitude)")
         }
     }
 
-    static func randomLatitude() -> Double {
-        return Double.random(in: -90.0...90.0)
-        //return Double.random(in: 36.0...42.0)
+    static func randomLatitude(in range: ClosedRange<Double>) -> Double {
+        return Double.random(in: range)
     }
 
-    static func randomLongitude() -> Double {
-        return Double.random(in: -180.0...180.0)
-        //return Double.random(in: 26.0...45.0)
+    static func randomLongitude(in range: ClosedRange<Double>) -> Double {
+        return Double.random(in: range)
     }
 
     func isLand(latitude: Double, longitude: Double, completion: @escaping (Bool) -> Void) {
@@ -40,7 +38,8 @@ class RandomLandCoordinateGenerator {
             do {
                 if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
                    let address = json["address"] as? [String: Any],
-                   let _ = address["country"] {
+                   let country = address["country"] {
+                    print(country)
                     completion(true)
                 } else {
                     completion(false)
@@ -52,10 +51,10 @@ class RandomLandCoordinateGenerator {
         task.resume()
     }
 
-    func randomLandCoordinate(completion: @escaping (Double, Double) -> Void) {
+    func randomLandCoordinate(latitudeRange: ClosedRange<Double>, longitudeRange: ClosedRange<Double>, completion: @escaping (Double, Double) -> Void) {
         func checkCoordinates() {
-            let latitude = RandomLandCoordinateGenerator.randomLatitude()
-            let longitude = RandomLandCoordinateGenerator.randomLongitude()
+            let latitude = RandomLandCoordinateGenerator.randomLatitude(in: latitudeRange)
+            let longitude = RandomLandCoordinateGenerator.randomLongitude(in: longitudeRange)
             isLand(latitude: latitude, longitude: longitude) { isLand in
                 if isLand {
                     completion(latitude, longitude)
@@ -68,11 +67,13 @@ class RandomLandCoordinateGenerator {
         checkCoordinates()
     }
 
-    func generateNewCoordinates(completion: @escaping (Double, Double) -> Void) {
-        randomLandCoordinate { latitude, longitude in
+    func generateNewCoordinates(latitudeRange: ClosedRange<Double>, longitudeRange: ClosedRange<Double>, completion: @escaping (Double, Double) -> Void) {
+        randomLandCoordinate(latitudeRange: latitudeRange, longitudeRange: longitudeRange) { latitude, longitude in
             self.latitude = latitude
             self.longitude = longitude
             completion(latitude, longitude)
         }
     }
 }
+
+

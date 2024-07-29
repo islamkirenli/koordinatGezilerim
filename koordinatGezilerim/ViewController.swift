@@ -9,6 +9,13 @@ class ViewController: UIViewController {
     var coordinateGenerator: RandomLandCoordinateGenerator!
     var latitude: Double?
     var longitude: Double?
+    var settingsData: [String: Any]?
+    
+    var north: Double?
+    var south: Double?
+    var east: Double?
+    var west: Double?
+    var selectedCountry: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,11 +25,15 @@ class ViewController: UIViewController {
         spinWorldManager.viewController = self // SpinWorldManager'a ViewController referansını ver
         self.view.addSubview(spinWorldManager.sceneView)
         
-        // ButtonManager oluştur ve butonu ekle
-        let buttonFrame = CGRect(x: 80, y: 100, width: 250, height: 200) // Butonun çerçevesini ayarla
-        buttonManager = ButtonManager(frame: buttonFrame)
+        // ButtonManager'ı oluştur ve butonları ayarla
+        let startButtonFrame = CGRect(x: 80, y: 100, width: 250, height: 200)
+        let settingsButtonFrame = CGRect(x: 40, y: 700, width: 100, height: 100)
+        buttonManager = ButtonManager(startButtonFrame: startButtonFrame, settingsButtonFrame: settingsButtonFrame)
         buttonManager.delegate = self
-        self.view.addSubview(buttonManager.button)
+        
+        // Butonları view'e ekle
+        view.addSubview(buttonManager.startButton)
+        view.addSubview(buttonManager.settingsButton)
         
         // Loading etiketi ekle
         loadingLabel = UILabel(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: 100))
@@ -57,6 +68,8 @@ class ViewController: UIViewController {
                 destinationVC.latitude = latitude
                 destinationVC.longitude = longitude
             }
+        } else if segue.identifier == "toSettingsVC", let settingsVC = segue.destination as? SettingsViewController {
+            settingsVC.delegate = self
         }
     }
     
@@ -65,7 +78,7 @@ class ViewController: UIViewController {
         activityIndicator.startAnimating() // Koordinatlar yüklenirken activity indicator'ı başlat
         coordinateGenerator = RandomLandCoordinateGenerator()
         
-        coordinateGenerator.generateNewCoordinates { [weak self] latitude, longitude in
+        coordinateGenerator.generateNewCoordinates(latitudeRange: south!...north!, longitudeRange: west!...east!) { [weak self] latitude, longitude in
             DispatchQueue.main.async {
                 self?.loadingLabel.isHidden = true
                 self?.activityIndicator.stopAnimating() // Koordinatlar yüklendikten sonra activity indicator'ı durdur
@@ -79,8 +92,29 @@ class ViewController: UIViewController {
 
 // ButtonManagerDelegate protokolünü ekleyin
 extension ViewController: ButtonManagerDelegate {
-    func buttonTapped() {
+    func startButtonTapped() {
         checkCoordinatesAndTransition()
+    }
+    
+    func settingsButtonTapped(){
+        performSegue(withIdentifier: "toSettingsVC", sender: nil)
+    }
+}
+
+// SettingsViewControllerDelegate protokolünü ekleyin
+extension ViewController: SettingsViewControllerDelegate {
+    func didSaveSettings(data: [String: Any]) {
+        if let north = data["north"] as? Double,
+           let south = data["south"] as? Double,
+           let east = data["east"] as? Double,
+           let west = data["west"] as? Double,
+           let country = data["country"] as? String {
+            self.north = north
+            self.south = south
+            self.east = east
+            self.west = west
+            self.selectedCountry = country
+        }
     }
 }
 
