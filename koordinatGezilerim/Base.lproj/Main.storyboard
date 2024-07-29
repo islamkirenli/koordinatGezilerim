@@ -21,11 +21,28 @@
                     <navigationItem key="navigationItem" id="ldp-b4-PsZ"/>
                     <connections>
                         <segue destination="aZw-Hk-59y" kind="show" identifier="toNewCoordinateVC" id="YxW-V6-7fp"/>
+                        <segue destination="ccO-GF-4S8" kind="show" identifier="toSettingsVC" id="fMS-VF-710"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1052.6717557251909" y="-2.1126760563380285"/>
+        </scene>
+        <!--Settings View Controller-->
+        <scene sceneID="7s5-Gz-3D2">
+            <objects>
+                <viewController id="ccO-GF-4S8" customClass="SettingsViewController" customModule="koordinatGezilerim" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="WSG-WP-RaZ">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="E2v-ND-kk0"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="MfB-IS-8vn"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dsp-Ld-OHI" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2146" y="227"/>
         </scene>
         <!--New Coordinate View Controller-->
         <scene sceneID="oMH-gk-1CV">
@@ -41,7 +58,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wsO-gn-rxL" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2075.5725190839694" y="-2.1126760563380285"/>
+            <point key="canvasLocation" x="2147" y="-568"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="JKZ-3V-viv">
