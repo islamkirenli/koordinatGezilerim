@@ -78,7 +78,7 @@ class ViewController: UIViewController {
         activityIndicator.startAnimating() // Koordinatlar yüklenirken activity indicator'ı başlat
         coordinateGenerator = RandomLandCoordinateGenerator()
         
-        coordinateGenerator.generateNewCoordinates(latitudeRange: south!...north!, longitudeRange: west!...east!) { [weak self] latitude, longitude in
+        coordinateGenerator.generateNewCoordinates(latitudeRange: (south ?? -90.0)...(north ?? 90.0), longitudeRange: (west ?? -180.0)...(east ?? 180.0)) { [weak self] latitude, longitude in
             DispatchQueue.main.async {
                 self?.loadingLabel.isHidden = true
                 self?.activityIndicator.stopAnimating() // Koordinatlar yüklendikten sonra activity indicator'ı durdur

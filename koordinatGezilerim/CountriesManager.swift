@@ -2,7 +2,7 @@ import Foundation
 
 class CountriesManager {
     static let countries = [
-        "Global", "Custom", "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina","Armenia",
+        "Global", "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina","Armenia",
         "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium",
         "Belize", "Benin", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria",
         "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia", "Cameroon", "Canada", "Central African Republic",
@@ -29,7 +29,6 @@ class CountriesManager {
 
     static let countryCoordinatesRanges: [String: (north: Double, south: Double, east: Double, west: Double)] = [
         "Global": (north: 90.0, south: -90.0, east: 180.0, west: -180.0),
-        "Custom": (north: 0.0, south: 0.0, east: 0.0, west: 0.0),
         "Afghanistan": (north: 38.4834, south: 29.3772, east: 74.8794, west: 60.5171),
         "Albania": (north: 42.6611, south: 39.6481, east: 21.0573, west: 19.2631),
         "Algeria": (north: 37.0937, south: 18.976, east: 11.9995, west: -8.684),
