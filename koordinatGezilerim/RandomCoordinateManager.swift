@@ -39,7 +39,7 @@ class RandomLandCoordinateGenerator {
                 if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
                    let address = json["address"] as? [String: Any],
                    let country = address["country"] {
-                    print(country)
+                    print(address)
                     completion(true)
                 } else {
                     completion(false)
