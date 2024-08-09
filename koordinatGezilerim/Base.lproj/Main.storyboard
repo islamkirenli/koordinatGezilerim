@@ -41,54 +41,10 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="e0C-3W-h6x" userLabel="customCoordinatesView">
-                                <rect key="frame" x="16" y="184" width="361" height="128"/>
-                                <subviews>
-                                    <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="North" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Xkz-9t-BRi">
-                                        <rect key="frame" x="8" y="8" width="97" height="34"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="97" id="qd0-je-bcF"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits"/>
-                                    </textField>
-                                    <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="South" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="hwB-f7-zfL">
-                                        <rect key="frame" x="256" y="8" width="97" height="34"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="97" id="tyq-u6-n1D"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits"/>
-                                    </textField>
-                                    <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="West" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="eCo-Qg-gto">
-                                        <rect key="frame" x="256" y="86" width="97" height="34"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits"/>
-                                    </textField>
-                                    <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="East" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="oen-k5-AmG">
-                                        <rect key="frame" x="8" y="86" width="97" height="34"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits"/>
-                                    </textField>
-                                </subviews>
-                                <color key="backgroundColor" systemColor="systemBrownColor"/>
-                                <constraints>
-                                    <constraint firstItem="oen-k5-AmG" firstAttribute="top" secondItem="Xkz-9t-BRi" secondAttribute="bottom" constant="44" id="0Zl-Da-qGR"/>
-                                    <constraint firstItem="oen-k5-AmG" firstAttribute="top" secondItem="eCo-Qg-gto" secondAttribute="top" id="4At-m4-C79"/>
-                                    <constraint firstItem="hwB-f7-zfL" firstAttribute="trailing" secondItem="eCo-Qg-gto" secondAttribute="trailing" id="6XK-vb-ZVn"/>
-                                    <constraint firstItem="Xkz-9t-BRi" firstAttribute="trailing" secondItem="oen-k5-AmG" secondAttribute="trailing" id="76L-Qe-BpI"/>
-                                    <constraint firstItem="Xkz-9t-BRi" firstAttribute="leading" secondItem="e0C-3W-h6x" secondAttribute="leadingMargin" id="Bya-PX-C49"/>
-                                    <constraint firstItem="hwB-f7-zfL" firstAttribute="leading" secondItem="eCo-Qg-gto" secondAttribute="leading" id="Fgh-Gp-5J2"/>
-                                    <constraint firstItem="hwB-f7-zfL" firstAttribute="trailing" secondItem="e0C-3W-h6x" secondAttribute="trailingMargin" id="m50-UF-nov"/>
-                                    <constraint firstItem="Xkz-9t-BRi" firstAttribute="top" secondItem="e0C-3W-h6x" secondAttribute="topMargin" id="nuB-sY-FuJ"/>
-                                    <constraint firstItem="Xkz-9t-BRi" firstAttribute="top" secondItem="hwB-f7-zfL" secondAttribute="top" id="oPl-7i-GV1"/>
-                                    <constraint firstItem="Xkz-9t-BRi" firstAttribute="leading" secondItem="oen-k5-AmG" secondAttribute="leading" id="sXB-bt-Qlf"/>
-                                </constraints>
-                            </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BP0-xx-avQ">
                                 <rect key="frame" x="16" y="554" width="361" height="94"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="94" id="fma-Ks-M2e"/>
+                                    <constraint firstAttribute="height" constant="94" id="ENW-Ig-VKA"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
@@ -98,27 +54,18 @@
                         <viewLayoutGuide key="safeArea" id="E2v-ND-kk0"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="eEn-eX-hss" firstAttribute="trailing" secondItem="WSG-WP-RaZ" secondAttribute="trailingMargin" id="0gG-9C-TUM"/>
-                            <constraint firstItem="eEn-eX-hss" firstAttribute="top" secondItem="E2v-ND-kk0" secondAttribute="top" constant="33" id="19U-ug-vW1"/>
-                            <constraint firstAttribute="bottom" secondItem="e0C-3W-h6x" secondAttribute="bottom" constant="540" id="KbZ-Wb-IUc"/>
-                            <constraint firstItem="e0C-3W-h6x" firstAttribute="trailing" secondItem="BP0-xx-avQ" secondAttribute="trailing" id="XS4-SH-TP3"/>
-                            <constraint firstItem="e0C-3W-h6x" firstAttribute="leading" secondItem="BP0-xx-avQ" secondAttribute="leading" id="XwC-DG-jmm"/>
-                            <constraint firstItem="eEn-eX-hss" firstAttribute="leading" secondItem="WSG-WP-RaZ" secondAttribute="leadingMargin" id="c5N-HD-gXT"/>
-                            <constraint firstItem="E2v-ND-kk0" firstAttribute="bottom" secondItem="BP0-xx-avQ" secondAttribute="bottom" constant="170" id="dIw-Re-scG"/>
-                            <constraint firstItem="eEn-eX-hss" firstAttribute="leading" secondItem="e0C-3W-h6x" secondAttribute="leading" id="eQN-cL-LKq"/>
-                            <constraint firstItem="e0C-3W-h6x" firstAttribute="top" secondItem="eEn-eX-hss" secondAttribute="bottom" constant="14" id="lPb-0O-jxQ"/>
-                            <constraint firstItem="eEn-eX-hss" firstAttribute="trailing" secondItem="e0C-3W-h6x" secondAttribute="trailing" id="qME-eI-uv9"/>
+                            <constraint firstItem="eEn-eX-hss" firstAttribute="trailing" secondItem="WSG-WP-RaZ" secondAttribute="trailingMargin" id="BdS-nQ-gAq"/>
+                            <constraint firstItem="eEn-eX-hss" firstAttribute="top" secondItem="E2v-ND-kk0" secondAttribute="top" constant="33" id="BzD-TX-aNT"/>
+                            <constraint firstItem="E2v-ND-kk0" firstAttribute="bottom" secondItem="BP0-xx-avQ" secondAttribute="bottom" constant="170" id="RVf-rp-042"/>
+                            <constraint firstItem="eEn-eX-hss" firstAttribute="leading" secondItem="WSG-WP-RaZ" secondAttribute="leadingMargin" id="an9-bz-5wf"/>
+                            <constraint firstItem="eEn-eX-hss" firstAttribute="trailing" secondItem="BP0-xx-avQ" secondAttribute="trailing" id="jSo-yx-OYC"/>
+                            <constraint firstItem="eEn-eX-hss" firstAttribute="leading" secondItem="BP0-xx-avQ" secondAttribute="leading" id="vik-ee-j3G"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="MfB-IS-8vn"/>
                     <connections>
                         <outlet property="coordinatesLabel" destination="BP0-xx-avQ" id="vmO-yJ-fPP"/>
                         <outlet property="countryTextField" destination="eEn-eX-hss" id="3Qc-0Q-emZ"/>
-                        <outlet property="customCoordinatesView" destination="e0C-3W-h6x" id="kqz-24-3PF"/>
-                        <outlet property="eastTextField" destination="oen-k5-AmG" id="edX-g1-X33"/>
-                        <outlet property="northTextField" destination="Xkz-9t-BRi" id="rrT-0S-THQ"/>
-                        <outlet property="southTextField" destination="hwB-f7-zfL" id="PiO-FP-rh9"/>
-                        <outlet property="westTextField" destination="eCo-Qg-gto" id="6fC-2g-WnJ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dsp-Ld-OHI" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -163,9 +110,6 @@
     <resources>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
-        <systemColor name="systemBrownColor">
-            <color red="0.63529411764705879" green="0.51764705882352946" blue="0.36862745098039218" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
