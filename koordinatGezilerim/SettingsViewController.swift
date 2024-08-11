@@ -1,173 +1,3 @@
-/*import UIKit
-import FirebaseFirestore
-
-class SettingsViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
-    
-    let pickerView = UIPickerView()
-    var selectedCountry: String?
-
-    @IBOutlet weak var countryTextField: UITextField!
-    @IBOutlet weak var coordinatesLabel: UILabel!
-    
-    let db = Firestore.firestore()
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(klavyeKapat))
-        view.addGestureRecognizer(gestureRecognizer)
-        
-        pickerView.delegate = self
-        pickerView.dataSource = self
-
-        // Toolbar
-        let toolbar = UIToolbar()
-        toolbar.sizeToFit()
-
-        let cancelButton = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancelAction))
-        let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let doneButton = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(doneAction))
-
-        toolbar.setItems([cancelButton, flexibleSpace, doneButton], animated: true)
-        toolbar.isUserInteractionEnabled = true
-
-        countryTextField.inputView = pickerView
-        countryTextField.inputAccessoryView = toolbar
-
-        // TextField değişimlerini dinle
-        countryTextField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
-                
-        // Default olarak ilk seçeneği seçili yap
-        pickerView.selectRow(0, inComponent: 0, animated: false)
-        selectedCountry = CountriesManager.countries[0]
-        countryTextField.text = selectedCountry
-        updateCoordinatesLabel(for: selectedCountry!)
-        
-        // Save butonunu navigation bar'a ekleyin
-        let saveButton = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(saveAction))
-        navigationItem.rightBarButtonItem = saveButton
-        
-        fetchSettingsDataFromFirebase()
-    }
-    
-    @objc func klavyeKapat(){
-        self.view.endEditing(true)
-    }
-
-    // UIPickerViewDataSource
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
-    }
-
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return CountriesManager.countries.count
-    }
-
-    // UIPickerViewDelegate
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return CountriesManager.countries[row]
-    }
-
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        selectedCountry = CountriesManager.countries[row]
-        countryTextField.text = selectedCountry
-    }
-
-    @objc func doneAction() {
-        if let selectedCountry = selectedCountry {
-            countryTextField.text = selectedCountry
-            updateCoordinatesLabel(for: selectedCountry)
-        } else {
-            countryTextField.text = CountriesManager.countries[0]
-            updateCoordinatesLabel(for: CountriesManager.countries[0])
-        }
-        self.view.endEditing(true)
-    }
-    
-    @objc func cancelAction() {
-        self.view.endEditing(true)
-    }
-    
-    @objc func textFieldDidChange() {
-        guard let text = countryTextField.text else { return }
-        
-        if let index = CountriesManager.countries.firstIndex(of: text) {
-            pickerView.selectRow(index, inComponent: 0, animated: true)
-            selectedCountry = text
-            updateCoordinatesLabel(for: text)
-        }
-    }
-    
-    private func updateCoordinatesLabel(for country: String) {
-        if let coordinatesRange = CountriesManager.countryCoordinatesRanges[country] {
-            coordinatesLabel.text = """
-            North: \(coordinatesRange.north)
-            South: \(coordinatesRange.south)
-            East: \(coordinatesRange.east)
-            West: \(coordinatesRange.west)
-            """
-        }
-    }
-    
-    @objc func saveAction() {
-        var settingsData: [String: Any] = [:]
-        print("Save button tapped")
-        
-        if let selectedCountry = selectedCountry {
-            if let coordinatesRange = CountriesManager.countryCoordinatesRanges[selectedCountry] {
-                settingsData["north"] = coordinatesRange.north
-                settingsData["south"] = coordinatesRange.south
-                settingsData["east"] = coordinatesRange.east
-                settingsData["west"] = coordinatesRange.west
-                if selectedCountry != "Global" {
-                    settingsData["country"] = selectedCountry
-                }
-            }
-        } else {
-            if let coordinatesRange = CountriesManager.countryCoordinatesRanges[CountriesManager.countries[0]] {
-                settingsData["north"] = coordinatesRange.north
-                settingsData["south"] = coordinatesRange.south
-                settingsData["east"] = coordinatesRange.east
-                settingsData["west"] = coordinatesRange.west
-                if selectedCountry != "Global" {
-                    settingsData["country"] = selectedCountry
-                }
-            }
-        }
-                
-        // Kullanıcı id veya benzeri bir doküman id'si ile veriyi saklayabilirsiniz
-        // Örneğin:
-        let documentID = "settings" // Bu doküman ID'yi ihtiyacınıza göre belirleyin
-
-        db.collection("user").document(documentID).setData(settingsData) { error in
-            if let error = error {
-                print("Error writing document: \(error)")
-            } else {
-                print("Document successfully written!")
-            }
-        }
-
-        // Firebase'e veri kaydedildikten sonra sayfayı kapatın
-        self.dismiss(animated: true, completion: nil)
-    }
-    
-    func fetchSettingsDataFromFirebase() {
-        let documentID = "settings" // Bu doküman ID'yi ihtiyacınıza göre belirleyin
-        let docRef = db.collection("user").document(documentID)
-        
-        docRef.getDocument { [weak self] (document, error) in
-            if let document = document, document.exists {
-                let data = document.data()
-                self?.countryTextField.text = data?["country"] as? String
-            } else {
-                print("Document does not exist or error occurred: \(error?.localizedDescription ?? "Unknown error")")
-                // Burada bir hata mesajı gösterebilir veya bir varsayılan işlem yapabilirsiniz
-            }
-        }
-    }
-}
-*/
-
 import UIKit
 import FirebaseFirestore
 
@@ -175,9 +5,13 @@ class SettingsViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
     
     let pickerView = UIPickerView()
     var selectedCountry: String?
+    var coordinateSettings: [String: Any] = [:]
+    var backgroundSettings: [String: Any] = [:]
 
     @IBOutlet weak var countryTextField: UITextField!
     @IBOutlet weak var coordinatesLabel: UILabel!
+    @IBOutlet weak var backgroundButton: UIButton!
+    @IBOutlet weak var backgroundImageView: UIImageView!
     
     let db = Firestore.firestore()
     
@@ -279,39 +113,81 @@ class SettingsViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
         }
     }
     
+    @IBAction func selectBackground(_ sender: Any) {
+        let actionSheet = UIAlertController(title: "Select Background", message: nil, preferredStyle: .actionSheet)
+        
+        let backgrounds = ["space_background", "space_background2", "space_background3", "space_background4", "space_background5"]
+        
+        for background in backgrounds {
+            actionSheet.addAction(UIAlertAction(title: background, style: .default, handler: { [weak self] action in
+                self?.backgroundSelected(background, sender: sender)
+            }))
+        }
+        
+        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        
+        present(actionSheet, animated: true, completion: nil)
+    }
+    
+    func backgroundSelected(_ background: String, sender: Any) {
+        // Seçilen arka planı backgroundSettings'e kaydet
+        backgroundSettings["background"] = background
+        
+        backgroundImageView.image = UIImage(named: background)
+        
+        // Butonun başlığını güncelle
+        if let button = sender as? UIButton {
+            button.setTitle(background, for: .normal)
+        }
+                
+        // UI'yi güncelleyebilirsin, örneğin bir label ya da preview'i güncellemek gibi
+        print("Arka Plan Seçildi: \(background)")
+    }
+    
     @objc func saveAction() {
-        var settingsData: [String: Any] = [:]
         print("Save button tapped")
         
         if let selectedCountry = selectedCountry {
             if let coordinatesRange = CountriesManager.countryCoordinatesRanges[selectedCountry] {
-                settingsData["north"] = coordinatesRange.north
-                settingsData["south"] = coordinatesRange.south
-                settingsData["east"] = coordinatesRange.east
-                settingsData["west"] = coordinatesRange.west
+                coordinateSettings["north"] = coordinatesRange.north
+                coordinateSettings["south"] = coordinatesRange.south
+                coordinateSettings["east"] = coordinatesRange.east
+                coordinateSettings["west"] = coordinatesRange.west
                 if selectedCountry != "Global" {
-                    settingsData["country"] = selectedCountry
+                    coordinateSettings["country"] = selectedCountry
                 }
             }
         } else {
             if let coordinatesRange = CountriesManager.countryCoordinatesRanges[CountriesManager.countries[0]] {
-                settingsData["north"] = coordinatesRange.north
-                settingsData["south"] = coordinatesRange.south
-                settingsData["east"] = coordinatesRange.east
-                settingsData["west"] = coordinatesRange.west
+                coordinateSettings["north"] = coordinatesRange.north
+                coordinateSettings["south"] = coordinatesRange.south
+                coordinateSettings["east"] = coordinatesRange.east
+                coordinateSettings["west"] = coordinatesRange.west
                 if selectedCountry != "Global" {
-                    settingsData["country"] = selectedCountry
+                    coordinateSettings["country"] = selectedCountry
                 }
             }
         }
                 
-        let documentID = "settings"
+        let coordinateDocumentID = "coordinateSettings"
+        let backgroundDocumentID = "backgroundSettings"
 
-        db.collection("user").document(documentID).setData(settingsData) { error in
+        // Koordinat verilerini Firebase'e kaydet
+        db.collection("user").document(coordinateDocumentID).setData(coordinateSettings) { error in
             if let error = error {
-                print("Error writing document: \(error)")
+                print("Error writing coordinate document: \(error)")
             } else {
-                print("Document successfully written!")
+                print("Coordinate document successfully written!")
+            }
+        }
+        
+        // Arka plan verisini Firebase'e kaydet
+        db.collection("user").document(backgroundDocumentID).setData(backgroundSettings) { error in
+            if let error = error {
+                print("Error writing background document: \(error)")
+            } else {
+                print("Background document successfully written!")
+                NotificationCenter.default.post(name: NSNotification.Name("BackgroundDidChange"), object: nil)
             }
         }
 
@@ -319,10 +195,12 @@ class SettingsViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
     }
     
     func fetchSettingsDataFromFirebase() {
-        let documentID = "settings"
-        let docRef = db.collection("user").document(documentID)
+        let coordinateDocumentID = "coordinateSettings"
+        let backgroundDocumentID = "backgroundSettings"
         
-        docRef.getDocument { [weak self] (document, error) in
+        // Koordinat verilerini Firebase'den al
+        let coordinateDocRef = db.collection("user").document(coordinateDocumentID)
+        coordinateDocRef.getDocument { [weak self] (document, error) in
             if let document = document, document.exists {
                 let data = document.data()
                 if let country = data?["country"] as? String {
@@ -330,9 +208,24 @@ class SettingsViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
                     self?.textFieldDidChange()
                 }
             } else {
-                print("Document does not exist or error occurred: \(error?.localizedDescription ?? "Unknown error")")
+                print("Coordinate document does not exist or error occurred: \(error?.localizedDescription ?? "Unknown error")")
+            }
+        }
+        
+        // Arka plan verisini Firebase'den al
+        let backgroundDocRef = db.collection("user").document(backgroundDocumentID)
+        backgroundDocRef.getDocument { [weak self] (document, error) in
+            if let document = document, document.exists {
+                let data = document.data()
+                if let background = data?["background"] as? String {
+                    self?.backgroundButton.setTitle(background, for: .normal)
+                    self?.backgroundSelected(background, sender: self?.backgroundButton as Any)
+                }
+            } else {
+                print("Background document does not exist or error occurred: \(error?.localizedDescription ?? "Unknown error")")
             }
         }
     }
 }
+
 

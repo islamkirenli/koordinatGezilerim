@@ -1,5 +1,6 @@
 import UIKit
 import SceneKit
+import FirebaseFirestore
 
 class SpinWorldManager {
     
@@ -9,6 +10,7 @@ class SpinWorldManager {
     let sphereNode: SCNNode
     var timer: Timer?
     var viewController: UIViewController?
+    let db = Firestore.firestore()  // Firestore bağlantısı
     
     init(frame: CGRect) {
         // SceneKit Görüntüleyici
@@ -42,6 +44,32 @@ class SpinWorldManager {
         let rotateAction = SCNAction.rotateBy(x: 0, y: CGFloat(Double.pi * 2), z: 0, duration: 10)
         let repeatAction = SCNAction.repeatForever(rotateAction)
         sphereNode.runAction(repeatAction)
+        
+        // Firestore'dan arka plan bilgisini çek
+        fetchBackgroundFromFirestore()
+    }
+    
+    func fetchBackgroundFromFirestore() {
+        let documentID = "backgroundSettings"
+        let docRef = db.collection("user").document(documentID)
+        
+        docRef.getDocument { [weak self] (document, error) in
+            if let document = document, document.exists {
+                if let data = document.data(), let backgroundName = data["background"] as? String {
+                    self?.updateBackground(with: backgroundName)
+                }
+            } else {
+                print("Document does not exist or error occurred: \(error?.localizedDescription ?? "Unknown error")")
+            }
+        }
+    }
+    
+    func updateBackground(with backgroundName: String) {
+        if let spaceBackground = UIImage(named: backgroundName) {
+            scene.background.contents = spaceBackground
+        } else {
+            print("Background image not found: \(backgroundName)")
+        }
     }
     
     func startIncreasingRadius() {
@@ -75,5 +103,3 @@ class SpinWorldManager {
         (sphereNode.geometry as? SCNSphere)?.radius = 2.0
     }
 }
-
-

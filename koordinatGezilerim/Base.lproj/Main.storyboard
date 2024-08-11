@@ -44,26 +44,49 @@
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BP0-xx-avQ">
                                 <rect key="frame" x="16" y="554" width="361" height="94"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="94" id="ENW-Ig-VKA"/>
+                                    <constraint firstAttribute="height" constant="94" id="hY5-Yy-Pac"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" showsMenuAsPrimaryAction="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KdY-Zc-L0h">
+                                <rect key="frame" x="16" y="223" width="121" height="30"/>
+                                <state key="normal" title="Select Backgroud"/>
+                                <connections>
+                                    <action selector="selectBackground:" destination="dsp-Ld-OHI" eventType="touchUpInside" id="8I5-iE-V8y"/>
+                                    <action selector="selectBackground:" destination="ccO-GF-4S8" eventType="touchUpInside" id="maa-GP-eFf"/>
+                                </connections>
+                            </button>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="8RZ-d3-pqQ">
+                                <rect key="frame" x="277" y="188" width="100" height="100"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="100" id="IMe-8X-wAd"/>
+                                    <constraint firstAttribute="height" constant="100" id="mwr-DA-4IR"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="zfv-xC-KWL"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="E2v-ND-kk0"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="eEn-eX-hss" firstAttribute="trailing" secondItem="WSG-WP-RaZ" secondAttribute="trailingMargin" id="BdS-nQ-gAq"/>
-                            <constraint firstItem="eEn-eX-hss" firstAttribute="top" secondItem="E2v-ND-kk0" secondAttribute="top" constant="33" id="BzD-TX-aNT"/>
-                            <constraint firstItem="E2v-ND-kk0" firstAttribute="bottom" secondItem="BP0-xx-avQ" secondAttribute="bottom" constant="170" id="RVf-rp-042"/>
-                            <constraint firstItem="eEn-eX-hss" firstAttribute="leading" secondItem="WSG-WP-RaZ" secondAttribute="leadingMargin" id="an9-bz-5wf"/>
-                            <constraint firstItem="eEn-eX-hss" firstAttribute="trailing" secondItem="BP0-xx-avQ" secondAttribute="trailing" id="jSo-yx-OYC"/>
-                            <constraint firstItem="eEn-eX-hss" firstAttribute="leading" secondItem="BP0-xx-avQ" secondAttribute="leading" id="vik-ee-j3G"/>
+                            <constraint firstItem="eEn-eX-hss" firstAttribute="trailing" secondItem="8RZ-d3-pqQ" secondAttribute="trailing" id="3RZ-F7-RVU"/>
+                            <constraint firstItem="eEn-eX-hss" firstAttribute="top" secondItem="E2v-ND-kk0" secondAttribute="top" constant="33" id="4ae-tV-890"/>
+                            <constraint firstItem="KdY-Zc-L0h" firstAttribute="centerY" secondItem="8RZ-d3-pqQ" secondAttribute="centerY" id="55r-IZ-a3r"/>
+                            <constraint firstItem="8RZ-d3-pqQ" firstAttribute="top" secondItem="eEn-eX-hss" secondAttribute="bottom" constant="18" id="8D3-bw-F6O"/>
+                            <constraint firstItem="KdY-Zc-L0h" firstAttribute="top" secondItem="eEn-eX-hss" secondAttribute="bottom" constant="53" id="Rfe-CL-4Us"/>
+                            <constraint firstItem="eEn-eX-hss" firstAttribute="trailing" secondItem="WSG-WP-RaZ" secondAttribute="trailingMargin" id="aTu-UV-kF6"/>
+                            <constraint firstItem="KdY-Zc-L0h" firstAttribute="leading" secondItem="BP0-xx-avQ" secondAttribute="leading" id="aVU-39-XfI"/>
+                            <constraint firstItem="8RZ-d3-pqQ" firstAttribute="trailing" secondItem="BP0-xx-avQ" secondAttribute="trailing" id="bJC-Zg-LNG"/>
+                            <constraint firstItem="eEn-eX-hss" firstAttribute="leading" secondItem="WSG-WP-RaZ" secondAttribute="leadingMargin" id="csv-DV-I17"/>
+                            <constraint firstItem="E2v-ND-kk0" firstAttribute="bottom" secondItem="BP0-xx-avQ" secondAttribute="bottom" constant="170" id="khf-6t-8dp"/>
+                            <constraint firstItem="eEn-eX-hss" firstAttribute="leading" secondItem="KdY-Zc-L0h" secondAttribute="leading" id="wD0-rq-Xo3"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="MfB-IS-8vn"/>
                     <connections>
+                        <outlet property="backgroundButton" destination="KdY-Zc-L0h" id="5tj-rV-3qv"/>
+                        <outlet property="backgroundImageView" destination="8RZ-d3-pqQ" id="2zF-7h-Bll"/>
                         <outlet property="coordinatesLabel" destination="BP0-xx-avQ" id="vmO-yJ-fPP"/>
                         <outlet property="countryTextField" destination="eEn-eX-hss" id="3Qc-0Q-emZ"/>
                     </connections>
