@@ -158,6 +158,7 @@ class ViewController: UIViewController {
 extension ViewController: ButtonManagerDelegate {
     func historyButtonTapped() {
         print("history tıklandı2.")
+        performSegue(withIdentifier: "toHistoryVC", sender: nil)
     }
     
     func startButtonTapped() {

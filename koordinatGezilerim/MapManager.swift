@@ -7,6 +7,9 @@ class MapManager: NSObject, MKMapViewDelegate {
     let mapView: MKMapView
     let geocoder = CLGeocoder()
     
+    var annotationTitle: String!
+    var annotationCountry: String!
+    
     init(frame: CGRect, latitude: Double, longitude: Double) {
         // Harita görünümünü oluştur
         mapView = MKMapView(frame: frame)
@@ -40,6 +43,8 @@ class MapManager: NSObject, MKMapViewDelegate {
                 annotation.title = "Unknown Location"
             } else if let placemark = placemarks?.first {
                 annotation.title = placemark.locality ?? "Unknown Location"
+                self.annotationTitle = placemark.locality ?? "Unknown Location"
+                self.annotationCountry = placemark.country ?? "Unknown Country"
             }
         }
     }
@@ -50,3 +55,4 @@ class MapManager: NSObject, MKMapViewDelegate {
         return MKCoordinateRegion(center: coordinate, span: span)
     }
 }
+
