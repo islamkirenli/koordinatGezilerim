@@ -1,7 +1,7 @@
 import UIKit
 import FirebaseFirestore
 
-class ViewController: UIViewController {
+class MainViewController: UIViewController {
     
     var spinWorldManager: SpinWorldManager!
     var buttonManager: ButtonManager!
@@ -23,8 +23,10 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.view.backgroundColor = UIColor(patternImage: UIImage(named: "world_texture_cloud.jpg")!)
+        
         // SpinWorldManager oluştur ve SceneKit sahnesini ekle
-        spinWorldManager = SpinWorldManager(frame: self.view.bounds)
+        spinWorldManager = SpinWorldManager(frame: self.view.bounds, radius: 2)
         spinWorldManager.viewController = self // SpinWorldManager'a ViewController referansını ver
         self.view.addSubview(spinWorldManager.sceneView)
         
@@ -44,6 +46,18 @@ class ViewController: UIViewController {
         self.view.bringSubviewToFront(buttonManager.startButton)
         self.view.bringSubviewToFront(buttonManager.settingsButton)
         self.view.bringSubviewToFront(buttonManager.historyButton)
+        
+        // Butonları başlangıçta görünmez yap
+        buttonManager.startButton.alpha = 0
+        buttonManager.settingsButton.alpha = 0
+        buttonManager.historyButton.alpha = 0
+        
+        // Görünürlük animasyonu
+        UIView.animate(withDuration: 2) {
+            self.buttonManager.startButton.alpha = 1
+            self.buttonManager.settingsButton.alpha = 1
+            self.buttonManager.historyButton.alpha = 1
+        }
 
         // Loading etiketi ekle
         loadingLabel = UILabel(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: 100))
@@ -72,6 +86,11 @@ class ViewController: UIViewController {
     
     @objc override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        UIView.animate(withDuration: 2) {
+            self.buttonManager.startButton.alpha = 1
+            self.buttonManager.settingsButton.alpha = 1
+            self.buttonManager.historyButton.alpha = 1
+        }
         spinWorldManager.stopIncreasingRadius() // Geri dönüldüğünde küreyi sıfırla
         loadingLabel.isHidden = true // Geri dönüldüğünde loading etiketi gizle
         activityIndicator.stopAnimating() // Geri dönüldüğünde activity indicator'ı durdur
@@ -84,9 +103,18 @@ class ViewController: UIViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "toNewCoordinateVC", let destinationVC = segue.destination as? NewCoordinateViewController {
-            if let latitude = latitude, let longitude = longitude {
+            if let latitude = latitude, 
+               let longitude = longitude,
+               let east = east,
+               let west = west,
+               let north = north,
+               let south = south{
                 destinationVC.latitude = latitude
                 destinationVC.longitude = longitude
+                destinationVC.east = east
+                destinationVC.west = west
+                destinationVC.north = north
+                destinationVC.south = south
             }
         }
     }
@@ -121,7 +149,11 @@ class ViewController: UIViewController {
     private func startSphereExpansion() {
         // Bring the sphere to the front before starting the expansion
         UIView.animate(withDuration: 2.0, animations: {
-            self.view.bringSubviewToFront(self.spinWorldManager.sceneView)
+            UIView.animate(withDuration: 2) {
+                self.buttonManager.startButton.alpha = 0
+                self.buttonManager.settingsButton.alpha = 0
+                self.buttonManager.historyButton.alpha = 0
+            }
             self.spinWorldManager.startIncreasingRadius()
         })
     }
@@ -155,7 +187,7 @@ class ViewController: UIViewController {
 }
 
 // ButtonManagerDelegate protokolünü ekleyin
-extension ViewController: ButtonManagerDelegate {
+extension MainViewController: ButtonManagerDelegate {
     func historyButtonTapped() {
         print("history tıklandı2.")
         performSegue(withIdentifier: "toHistoryVC", sender: nil)
@@ -169,3 +201,5 @@ extension ViewController: ButtonManagerDelegate {
         performSegue(withIdentifier: "toSettingsVC", sender: nil)
     }
 }
+
+

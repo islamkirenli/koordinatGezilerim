@@ -54,5 +54,6 @@ class MapManager: NSObject, MKMapViewDelegate {
         let span = MKCoordinateSpan(latitudeDelta: 10, longitudeDelta: 10)
         return MKCoordinateRegion(center: coordinate, span: span)
     }
+    
 }
 

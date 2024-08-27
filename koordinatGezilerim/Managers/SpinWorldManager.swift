@@ -11,8 +11,8 @@ class SpinWorldManager {
     var timer: Timer?
     var viewController: UIViewController?
     let db = Firestore.firestore()  // Firestore bağlantısı
-    
-    init(frame: CGRect) {
+        
+    init(frame: CGRect, radius: CGFloat) {
         // SceneKit Görüntüleyici
         sceneView = SCNView(frame: frame)
         
@@ -28,8 +28,10 @@ class SpinWorldManager {
         cameraNode.position = SCNVector3(x: 0, y: 0, z: 10)
         scene.rootNode.addChildNode(cameraNode)
         
+        scene.background.contents = UIImage(named: "space_background5")
+        
         // Küre
-        let sphere = SCNSphere(radius: 2)
+        let sphere = SCNSphere(radius: radius)
         
         // Dünya Tekstürü
         let material = SCNMaterial()
@@ -102,4 +104,26 @@ class SpinWorldManager {
         timer = nil
         (sphereNode.geometry as? SCNSphere)?.radius = 2.0
     }
+    
+    func animateSphereGrowth(to newRadius: CGFloat, duration: TimeInterval, completion: @escaping () -> Void) {
+        guard let sphere = sphereNode.geometry as? SCNSphere else { return }
+        
+        let animation = CABasicAnimation(keyPath: "geometry.radius")
+        animation.fromValue = sphere.radius
+        animation.toValue = newRadius
+        animation.duration = duration
+        animation.fillMode = .forwards
+        animation.isRemovedOnCompletion = false
+        animation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        
+        sphereNode.addAnimation(animation, forKey: "sphereGrowth")
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + duration) {
+            sphere.radius = newRadius
+            completion()
+        }
+    }
+
 }
+
+

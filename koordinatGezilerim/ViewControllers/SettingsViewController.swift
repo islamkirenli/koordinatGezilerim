@@ -1,5 +1,6 @@
 import UIKit
 import FirebaseFirestore
+import FirebaseAuth
 
 class SettingsViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     
@@ -9,7 +10,6 @@ class SettingsViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
     var backgroundSettings: [String: Any] = [:]
 
     @IBOutlet weak var countryTextField: UITextField!
-    @IBOutlet weak var coordinatesLabel: UILabel!
     @IBOutlet weak var backgroundButton: UIButton!
     @IBOutlet weak var backgroundImageView: UIImageView!
     
@@ -45,7 +45,6 @@ class SettingsViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
         pickerView.selectRow(0, inComponent: 0, animated: false)
         selectedCountry = CountriesManager.countries[0]
         countryTextField.text = selectedCountry
-        updateCoordinatesLabel(for: selectedCountry!)
         
         // Save butonunu navigation bar'a ekleyin
         let saveButton = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(saveAction))
@@ -53,6 +52,20 @@ class SettingsViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
         
         fetchSettingsDataFromFirebase()
     }
+    
+    @IBAction func logoutButtonTapped(_ sender: Any) {
+        logOutUser()
+    }
+    
+    func logOutUser() {
+        do {
+            try Auth.auth().signOut()
+            self.performSegue(withIdentifier: "toLoginVC", sender: nil)
+        } catch let signOutError as NSError {
+            print("Error signing out: %@", signOutError)
+        }
+    }
+
     
     @objc func klavyeKapat(){
         self.view.endEditing(true)
@@ -80,10 +93,8 @@ class SettingsViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
     @objc func doneAction() {
         if let selectedCountry = selectedCountry {
             countryTextField.text = selectedCountry
-            updateCoordinatesLabel(for: selectedCountry)
         } else {
             countryTextField.text = CountriesManager.countries[0]
-            updateCoordinatesLabel(for: CountriesManager.countries[0])
         }
         self.view.endEditing(true)
     }
@@ -98,25 +109,13 @@ class SettingsViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
         if let index = CountriesManager.countries.firstIndex(where: { $0.lowercased() == text }) {
             pickerView.selectRow(index, inComponent: 0, animated: true)
             selectedCountry = CountriesManager.countries[index]
-            updateCoordinatesLabel(for: selectedCountry!)
-        }
-    }
-    
-    private func updateCoordinatesLabel(for country: String) {
-        if let coordinatesRange = CountriesManager.countryCoordinatesRanges[country] {
-            coordinatesLabel.text = """
-            North: \(coordinatesRange.north)
-            South: \(coordinatesRange.south)
-            East: \(coordinatesRange.east)
-            West: \(coordinatesRange.west)
-            """
         }
     }
     
     @IBAction func selectBackground(_ sender: Any) {
         let actionSheet = UIAlertController(title: "Select Background", message: nil, preferredStyle: .actionSheet)
         
-        let backgrounds = ["space_background", "space_background2", "space_background3", "space_background4", "space_background5"]
+        let backgrounds = ["background6", "space_background", "space_background2", "space_background3", "space_background4", "space_background5"]
         
         for background in backgrounds {
             actionSheet.addAction(UIAlertAction(title: background, style: .default, handler: { [weak self] action in
@@ -191,7 +190,7 @@ class SettingsViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
             }
         }
 
-        self.dismiss(animated: true, completion: nil)
+        //self.dismiss(animated: true, completion: nil)
     }
     
     func fetchSettingsDataFromFirebase() {
