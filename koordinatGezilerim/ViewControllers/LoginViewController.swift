@@ -10,6 +10,8 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var signinButtonOutlet: UIButton!
     
     var spinWorldManager: SpinWorldManager!
+    
+    var destinationVC = UIViewController()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,7 +27,7 @@ class LoginViewController: UIViewController {
         passwordTextField.clipsToBounds = true
 
         // SpinWorldManager oluştur ve SceneKit sahnesini ekle
-        spinWorldManager = SpinWorldManager(frame: self.view.bounds, radius: 0.5)
+        spinWorldManager = SpinWorldManager(frame: self.view.bounds, radius: 0.1)
         spinWorldManager.viewController = self // SpinWorldManager'a ViewController referansını ver
         
         // Kullanıcının küreye müdahale etmesini engelle
@@ -35,11 +37,17 @@ class LoginViewController: UIViewController {
         // SpinWorldManager'ın SceneView'ini ekleyin
         self.view.insertSubview(spinWorldManager.sceneView, at: 0)
         
-        // Buton gibi diğer UI elemanlarının üstte kalmasını sağlamak için
-        //self.view.bringSubviewToFront(button)
-        
         let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(klavyeKapat))
         view.addGestureRecognizer(gestureRecognizer)
+        
+        
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        destinationVC = storyboard.instantiateViewController(withIdentifier: "NavController")
+        
+        destinationVC.view.alpha = 0.0  // Görünürlüğü sıfıra ayarlayın (görünmez)
+        self.view.addSubview(destinationVC.view)
+        self.addChild(destinationVC)
+        
     }
     
     @objc func klavyeKapat(){
@@ -68,7 +76,11 @@ class LoginViewController: UIViewController {
                 // Giriş başarılı, küreyi büyüt
                 self.spinWorldManager.animateSphereGrowth(to: 2.0, duration: 3.0) {
                     // Küre büyüme işlemi tamamlandığında segue ile MainViewController'a geç
-                    self.performSegue(withIdentifier: "toMainVC", sender: self)
+                    UIView.animate(withDuration: 2, animations: {
+                        self.destinationVC.view.alpha = 1.0  // Görünürlüğü yavaş yavaş artır
+                    }, completion: { _ in
+                        self.destinationVC.didMove(toParent: self)
+                    })
                 }
             }
         }

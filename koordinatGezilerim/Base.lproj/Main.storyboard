@@ -11,7 +11,7 @@
         <!--Main View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="MainViewController" customModule="RandomJourney" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MainViewController" id="BYZ-38-t0r" customClass="MainViewController" customModule="RandomJourney" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -323,7 +323,7 @@
                         <outlet property="loginButtonOutlet" destination="eep-iT-MIE" id="r79-kx-Mys"/>
                         <outlet property="passwordTextField" destination="U0H-HA-q42" id="kj0-db-cPB"/>
                         <outlet property="signinButtonOutlet" destination="MDw-mj-wBd" id="Ou6-my-NRe"/>
-                        <segue destination="Ete-Sw-Fm5" kind="presentation" identifier="toMainVC" customClass="RightToLeftSegue" customModule="RandomJourney" customModuleProvider="target" modalPresentationStyle="fullScreen" id="xjz-ah-24s"/>
+                        <segue destination="Ete-Sw-Fm5" kind="presentation" identifier="toMainVC" animates="NO" modalPresentationStyle="fullScreen" id="xjz-ah-24s"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XZt-z7-oCx" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
