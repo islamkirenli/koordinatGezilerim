@@ -1,5 +1,9 @@
 import UIKit
 import FirebaseAuth
+import FirebaseCore
+import GoogleSignIn
+//import GoogleSignInSwift
+import AuthenticationServices
 
 class LoginViewController: UIViewController {
     
@@ -8,6 +12,8 @@ class LoginViewController: UIViewController {
     
     @IBOutlet weak var loginButtonOutlet: UIButton!
     @IBOutlet weak var signinButtonOutlet: UIButton!
+    @IBOutlet weak var googleSignInButtonOutlet: UIButton!
+    @IBOutlet weak var appleSignInButtonOutlet: UIButton!
     
     var spinWorldManager: SpinWorldManager!
     
@@ -47,7 +53,79 @@ class LoginViewController: UIViewController {
         destinationVC.view.alpha = 0.0  // Görünürlüğü sıfıra ayarlayın (görünmez)
         self.view.addSubview(destinationVC.view)
         self.addChild(destinationVC)
-        
+    }
+    
+    
+    @IBAction func googleSigninButton(_ sender: Any) {
+        signInWithGoogle()
+    }
+    
+    @IBAction func appleSignInButton(_ sender: Any) {
+        print("apple butona basıldı.")
+    }
+    
+    func signInWithGoogle(){
+        Task { @MainActor in
+            let success = await performSignInWithGoogle()
+            if success {                
+                // Giriş başarılı, küreyi büyüt ve butonları gizle
+                UIView.animate(withDuration: 1.5, animations: {
+                    self.emailTextField.alpha = 0
+                    self.passwordTextField.alpha = 0
+                    self.loginButtonOutlet.alpha = 0
+                    self.signinButtonOutlet.alpha = 0
+                    self.googleSignInButtonOutlet.alpha = 0
+                    self.appleSignInButtonOutlet.alpha = 0
+                })
+                
+                // Giriş başarılı, küreyi büyüt
+                self.spinWorldManager.animateSphereGrowth(to: 2.0, duration: 3.0) {
+                    // Küre büyüme işlemi tamamlandığında segue ile MainViewController'a geç
+                    UIView.animate(withDuration: 2, animations: {
+                        self.destinationVC.view.alpha = 1.0  // Görünürlüğü yavaş yavaş artır
+                    }, completion: { _ in
+                        self.destinationVC.didMove(toParent: self)
+                    })
+                }
+            } else {
+                print("burda hata var.....")
+            }
+        }
+    }
+    
+    func performSignInWithGoogle() async -> Bool {
+      guard let clientID = FirebaseApp.app()?.options.clientID else {
+        fatalError("No client ID found in Firebase configuration")
+      }
+      let config = GIDConfiguration(clientID: clientID)
+      GIDSignIn.sharedInstance.configuration = config
+
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let window = windowScene.windows.first,
+              let rootViewController = window.rootViewController else {
+        print("There is no root view controller!")
+        return false
+        }
+        do {
+          let userAuthentication = try await GIDSignIn.sharedInstance.signIn(withPresenting: rootViewController)
+          let user = userAuthentication.user
+          guard let idToken = user.idToken else { throw AuthenticationError.showAlert(message: "ID token missing") }
+          let accessToken = user.accessToken
+          let credential = GoogleAuthProvider.credential(withIDToken: idToken.tokenString,
+                                                         accessToken: accessToken.tokenString)
+          let result = try await Auth.auth().signIn(with: credential)
+          let firebaseUser = result.user
+          print("User \(firebaseUser.uid) signed in with email \(firebaseUser.email ?? "unknown")")
+          return true
+        }
+        catch {
+          print(error.localizedDescription)
+          return false
+        }
+    }
+    
+    enum AuthenticationError: Error {
+      case showAlert(message: String)
     }
     
     @objc func klavyeKapat(){

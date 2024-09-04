@@ -251,7 +251,7 @@
         <!--Login View Controller-->
         <scene sceneID="MvQ-jC-APM">
             <objects>
-                <viewController id="zbe-8P-but" customClass="LoginViewController" customModule="RandomJourney" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LoginViewController" id="zbe-8P-but" customClass="LoginViewController" customModule="RandomJourney" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="jaL-xC-i8d">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -299,6 +299,28 @@
                                     <action selector="loginButton:" destination="zbe-8P-but" eventType="touchUpInside" id="UVK-Wy-mq7"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yrh-vl-RxQ">
+                                <rect key="frame" x="96" y="565" width="201" height="35"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" title="Sign In With Apple" cornerStyle="capsule">
+                                    <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <color key="baseBackgroundColor" red="0.67843137249999996" green="0.82745098039999998" blue="0.79607843140000001" alpha="1" colorSpace="calibratedRGB"/>
+                                </buttonConfiguration>
+                                <connections>
+                                    <action selector="appleSignInButton:" destination="zbe-8P-but" eventType="touchUpInside" id="xvd-2n-jsN"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HeL-mw-CXp">
+                                <rect key="frame" x="96" y="503" width="201" height="35"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" title="Sign In With Google" cornerStyle="capsule">
+                                    <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <color key="baseBackgroundColor" red="0.67843137249999996" green="0.82745098039999998" blue="0.79607843140000001" alpha="1" colorSpace="calibratedRGB"/>
+                                </buttonConfiguration>
+                                <connections>
+                                    <action selector="googleSigninButton:" destination="zbe-8P-but" eventType="touchUpInside" id="bGo-UV-aZw"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Q8m-vb-E0h"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -309,17 +331,27 @@
                             <constraint firstItem="tFu-NS-fOI" firstAttribute="trailing" secondItem="jaL-xC-i8d" secondAttribute="trailingMargin" id="Bkq-ce-JFU"/>
                             <constraint firstItem="Q8m-vb-E0h" firstAttribute="trailing" secondItem="U0H-HA-q42" secondAttribute="trailing" constant="16" id="Bvc-5a-1jm"/>
                             <constraint firstItem="U0H-HA-q42" firstAttribute="trailing" secondItem="MDw-mj-wBd" secondAttribute="trailing" id="DhN-in-N5u"/>
+                            <constraint firstItem="HeL-mw-CXp" firstAttribute="leading" secondItem="Yrh-vl-RxQ" secondAttribute="leading" id="Dxa-7u-YJL"/>
+                            <constraint firstItem="HeL-mw-CXp" firstAttribute="centerX" secondItem="U0H-HA-q42" secondAttribute="centerX" id="HEy-gK-ALv"/>
                             <constraint firstItem="eep-iT-MIE" firstAttribute="baseline" secondItem="MDw-mj-wBd" secondAttribute="baseline" id="NID-r1-37g"/>
                             <constraint firstItem="U0H-HA-q42" firstAttribute="top" secondItem="tFu-NS-fOI" secondAttribute="bottom" constant="20" id="Om7-6a-PJJ"/>
+                            <constraint firstItem="Q8m-vb-E0h" firstAttribute="trailing" secondItem="Yrh-vl-RxQ" secondAttribute="trailing" constant="96" id="P0E-fl-TwX"/>
                             <constraint firstItem="tFu-NS-fOI" firstAttribute="top" secondItem="Q8m-vb-E0h" secondAttribute="top" constant="178" id="RHx-ZP-vZn"/>
                             <constraint firstItem="U0H-HA-q42" firstAttribute="leading" secondItem="eep-iT-MIE" secondAttribute="leading" id="Y2w-l6-aw8"/>
                             <constraint firstItem="U0H-HA-q42" firstAttribute="leading" secondItem="Q8m-vb-E0h" secondAttribute="leading" constant="16" id="l6U-QP-BS6"/>
+                            <constraint firstItem="Yrh-vl-RxQ" firstAttribute="leading" secondItem="Q8m-vb-E0h" secondAttribute="leading" constant="96" id="lv1-W2-JEG"/>
+                            <constraint firstItem="HeL-mw-CXp" firstAttribute="leading" secondItem="Q8m-vb-E0h" secondAttribute="leading" constant="96" id="rB7-kH-APp"/>
+                            <constraint firstItem="Q8m-vb-E0h" firstAttribute="bottom" secondItem="Yrh-vl-RxQ" secondAttribute="bottom" constant="252" id="tFk-H5-afZ"/>
+                            <constraint firstItem="Yrh-vl-RxQ" firstAttribute="top" secondItem="HeL-mw-CXp" secondAttribute="bottom" constant="27" id="tqO-Cm-zCr"/>
                             <constraint firstItem="eep-iT-MIE" firstAttribute="centerY" secondItem="jaL-xC-i8d" secondAttribute="centerY" id="uQz-xB-aX0"/>
+                            <constraint firstItem="Q8m-vb-E0h" firstAttribute="trailing" secondItem="HeL-mw-CXp" secondAttribute="trailing" constant="96" id="wcT-98-Rt5"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="cIf-Eu-W4g"/>
                     <connections>
+                        <outlet property="appleSignInButtonOutlet" destination="Yrh-vl-RxQ" id="PyA-eg-po7"/>
                         <outlet property="emailTextField" destination="tFu-NS-fOI" id="IJt-Tm-65w"/>
+                        <outlet property="googleSignInButtonOutlet" destination="HeL-mw-CXp" id="Rlh-tM-Set"/>
                         <outlet property="loginButtonOutlet" destination="eep-iT-MIE" id="r79-kx-Mys"/>
                         <outlet property="passwordTextField" destination="U0H-HA-q42" id="kj0-db-cPB"/>
                         <outlet property="signinButtonOutlet" destination="MDw-mj-wBd" id="Ou6-my-NRe"/>
