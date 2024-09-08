@@ -49,8 +49,8 @@ class SaveCoordinateViewController: UIViewController {
             coordinateInfo["CityTitle"] = titleTextField.text
             coordinateInfo["Country"] = annotationCountry
             coordinateInfo["Comment"] = commentTextView.text
-            coordinateInfo["Latitude"] = latitudeLabel.text
-            coordinateInfo["Longitude"] = longitudeLabel.text
+            coordinateInfo["Latitude"] = latitude
+            coordinateInfo["Longitude"] = longitude
             coordinateInfo["SaveDate"] = FieldValue.serverTimestamp()
         }else{
             print("alanları kontrol edin.")

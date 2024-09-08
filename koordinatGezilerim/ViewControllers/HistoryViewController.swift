@@ -1,7 +1,8 @@
 import UIKit
 import FirebaseFirestore
+import MapKit
 
-class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewDataSource{
 
     @IBOutlet weak var tableView: UITableView!
 
@@ -9,9 +10,12 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
     var itemDictionary: [String: [String]] = [:] // Country -> CityTitles sözlüğü
     let db = Firestore.firestore()
     var addedCountries: Set<String> = [] // Eklenen Country değerlerini takip etmek için Set
-    
+    var coordinates: [(city: String, latitude: CLLocationDegrees, longitude: CLLocationDegrees)] = [] // Store city and coordinates
+
     var isSelectionMode = false
     var selectedItems: [IndexPath] = []
+    
+    var mapView: MKMapView? // Add a map view property
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,6 +29,9 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         // Sağ üst köşeye "Select" butonu ekleyin
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Select", style: .plain, target: self, action: #selector(selectButtonTapped))
+        
+        // Add the floating map button
+        addFloatingMapButton()
     }
     
     @objc func selectButtonTapped() {
@@ -48,7 +55,95 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
         // Tablodaki tüm bölümleri ve satırları yeniden yükleyin
         tableView.reloadData()
     }
+    
+    // Add the floating button in the bottom right corner
+    func addFloatingMapButton() {
+        let button = UIButton(type: .system)
+        
+        // Set the map icon using SF Symbols
+        let largeConfig = UIImage.SymbolConfiguration(pointSize: 34, weight: .bold, scale: .large)
+        let mapImage = UIImage(systemName: "map", withConfiguration: largeConfig)
+        button.setImage(mapImage, for: .normal)
+        
+        // Button appearance settings
+        button.tintColor = .white
+        button.backgroundColor = .systemBlue
+        button.layer.cornerRadius = 30 // Half of the button height and width to make it circular
+        button.layer.masksToBounds = true
+        
+        // Add the button action
+        button.addTarget(self, action: #selector(mapButtonTapped), for: .touchUpInside)
+        
+        // Add the button to the view
+        view.addSubview(button)
+        
+        // Set Auto Layout constraints
+        button.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            button.heightAnchor.constraint(equalToConstant: 80),
+            button.widthAnchor.constraint(equalToConstant: 80),
+            button.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            button.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
+        ])
+    }
+    
+    // Action for the map button
+    @objc func mapButtonTapped() {
+        
+        // Hide the navigation bar (Select and Back buttons)
+        navigationController?.setNavigationBarHidden(true, animated: true)
+        
+        // Create the map view
+        if mapView == nil {
+            mapView = MKMapView(frame: view.bounds)
+            mapView?.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+            view.addSubview(mapView!)
+            
+            /* Set the initial region to one of the coordinates (if available)
+            if let firstCoordinate = coordinates.first {
+                let region = MKCoordinateRegion(center: firstCoordinate, latitudinalMeters: 10000, longitudinalMeters: 10000)
+                mapView?.setRegion(region, animated: true)
+            }
+            */
+            
+            // Add annotations for all coordinates
+            for coordinate in coordinates {
+                print(coordinate.latitude)
+                let annotation = MKPointAnnotation()
+                annotation.coordinate = CLLocationCoordinate2D(latitude: coordinate.latitude, longitude: coordinate.longitude)
+                annotation.title = coordinate.city
+                mapView?.addAnnotation(annotation)
+            }
+            
+            // Add a dismiss button on the map
+            let dismissButton = UIButton(type: .system)
+            dismissButton.setTitle("Close Map", for: .normal)
+            dismissButton.tintColor = .white
+            dismissButton.backgroundColor = .systemRed
+            dismissButton.layer.cornerRadius = 10
+            dismissButton.addTarget(self, action: #selector(closeMapView), for: .touchUpInside)
+            
+            // Add dismiss button to the map view
+            mapView?.addSubview(dismissButton)
+            
+            // Set dismiss button constraints
+            dismissButton.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                dismissButton.bottomAnchor.constraint(equalTo: mapView!.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+                dismissButton.centerXAnchor.constraint(equalTo: mapView!.centerXAnchor),
+                dismissButton.widthAnchor.constraint(equalToConstant: 120),
+                dismissButton.heightAnchor.constraint(equalToConstant: 40)
+            ])
+        }
+    }
 
+    @objc func closeMapView() {
+        // Show the navigation bar again
+        navigationController?.setNavigationBarHidden(false, animated: true)
+        // Remove the map view from the screen
+        mapView?.removeFromSuperview()
+        mapView = nil
+    }
 
     // Toplu silme işlemi için buton ekleyin
     @objc func deleteSelectedItems() {
@@ -255,6 +350,13 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
                     let data = document.data()
                     let country = data["Country"] as? String ?? "Unknown Country"
                     let city = data["CityTitle"] as? String ?? "Unknown City"
+                    let latitude = data["Latitude"] as? CLLocationDegrees ?? 0.0
+                    let longitude = data["Longitude"] as? CLLocationDegrees ?? 0.0
+
+                    // Append the city and coordinates
+                    if latitude != 0.0 && longitude != 0.0 {
+                        self.coordinates.append((city: city, latitude: latitude, longitude: longitude))
+                    }
 
                     // Eğer country daha önce eklenmediyse, sections dizisine ekle
                     if !self.addedCountries.contains(country) {
@@ -327,7 +429,6 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
             }
         }
     }
-
 }
 
 // Section model
@@ -335,3 +436,5 @@ struct Section {
     let title: String
     var isExpanded: Bool
 }
+
+
