@@ -16,6 +16,8 @@ class NewCoordinateViewController: UIViewController, MKMapViewDelegate {
     var east: Double?
     var west: Double?
     
+    let annotation = MKPointAnnotation()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -28,8 +30,16 @@ class NewCoordinateViewController: UIViewController, MKMapViewDelegate {
         mapManager.mapView.delegate = self
         self.view.addSubview(mapManager.mapView)
         
-        annotationTitle = mapManager.annotationTitle
-        annotationCountry = mapManager.annotationCountry
+        // Koordinatları şehir adına çevir
+        let location = CLLocation(latitude: latitude, longitude: longitude)
+        self.geocoder.reverseGeocodeLocation(location) { placemarks, error in
+            if let error = error {
+                print("Reverse geocode failed: \(error.localizedDescription)")
+            } else if let placemark = placemarks?.first {
+                self.annotationTitle = placemark.locality ?? "Unknown Location"
+                self.annotationCountry = placemark.country ?? "Unknown Country"
+            }
+        }
  
         let newCoordinateButton = UIButton(type: .custom)
         newCoordinateButton.setImage(UIImage(named: "startButton"), for: .normal)
@@ -45,10 +55,12 @@ class NewCoordinateViewController: UIViewController, MKMapViewDelegate {
         ])
     }
     
+    
     @objc func newCoordinateButtonTapped() {
         print("new coordinate tıklandı")
         generateCoordinatesAndTransition()
     }
+    
     
     private func generateCoordinatesAndTransition() {
         guard let north = north, let south = south, let east = east, let west = west else {
@@ -68,33 +80,33 @@ class NewCoordinateViewController: UIViewController, MKMapViewDelegate {
                 self?.mapManager.mapView.removeAnnotations(self?.mapManager.mapView.annotations ?? [])
                 
                 // Yeni bir MapManager oluşturmanıza gerek yok, sadece yeni annotation ekleyebilirsiniz
-                let annotation = MKPointAnnotation()
-                annotation.coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+                self?.annotation.coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
                 
                 // Koordinatları şehir adına çevir
                 let location = CLLocation(latitude: latitude, longitude: longitude)
                 self?.geocoder.reverseGeocodeLocation(location) { placemarks, error in
                     if let error = error {
                         print("Reverse geocode failed: \(error.localizedDescription)")
-                        annotation.title = "Unknown Location"
+                        self?.annotation.title = "Unknown Location"
                     } else if let placemark = placemarks?.first {
-                        annotation.title = placemark.locality ?? "Unknown Location"
+                        self?.annotation.title = placemark.locality ?? "Unknown Location"
                         self?.annotationTitle = placemark.locality ?? "Unknown Location"
                         self?.annotationCountry = placemark.country ?? "Unknown Country"
                     }
                 }
                 
                 // Yeni annotation'ı MapView'a ekle
-                self?.mapManager.mapView.addAnnotation(annotation)
+                self?.mapManager.mapView.addAnnotation(self!.annotation)
                 
                 // Haritayı annotation'ın merkezine getir
-                let coordinateRegion = MKCoordinateRegion(center: annotation.coordinate, span: MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5))
+                let coordinateRegion = MKCoordinateRegion(center: (self?.annotation.coordinate)!, span: MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5))
                 self?.mapManager.mapView.setRegion(coordinateRegion, animated: true)
             }
         }
 
 
     }
+    
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)

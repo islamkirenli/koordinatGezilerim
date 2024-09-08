@@ -2,10 +2,9 @@ import UIKit
 import FirebaseAuth
 import FirebaseCore
 import GoogleSignIn
-//import GoogleSignInSwift
 import AuthenticationServices
 
-class LoginViewController: UIViewController {
+class LoginViewController: UIViewController, ASAuthorizationControllerPresentationContextProviding {
     
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
@@ -62,6 +61,17 @@ class LoginViewController: UIViewController {
     
     @IBAction func appleSignInButton(_ sender: Any) {
         print("apple butona basıldı.")
+        let request = ASAuthorizationAppleIDProvider().createRequest()
+        request.requestedScopes = [.fullName, .email]
+        
+        let authorizationController = ASAuthorizationController(authorizationRequests: [request])
+        authorizationController.delegate = self
+        authorizationController.presentationContextProvider = self
+        authorizationController.performRequests()
+    }
+    
+    func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
+        return self.view.window!
     }
     
     func signInWithGoogle(){
@@ -149,6 +159,8 @@ class LoginViewController: UIViewController {
                     self.passwordTextField.alpha = 0
                     self.loginButtonOutlet.alpha = 0
                     self.signinButtonOutlet.alpha = 0
+                    self.googleSignInButtonOutlet.alpha = 0
+                    self.appleSignInButtonOutlet.alpha = 0
                 })
                 
                 // Giriş başarılı, küreyi büyüt
@@ -177,6 +189,54 @@ class LoginViewController: UIViewController {
                 // Giriş ekranına yönlendirebilirsiniz
             }
         }
+    }
+}
+
+extension LoginViewController: ASAuthorizationControllerDelegate {
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+        if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
+            guard let idTokenData = appleIDCredential.identityToken,
+                  let idTokenString = String(data: idTokenData, encoding: .utf8) else {
+                print("Apple ID token missing")
+                return
+            }
+            
+            let credential = OAuthProvider.credential(withProviderID: "apple.com", idToken: idTokenString, rawNonce: nil)
+            
+            Task { @MainActor in
+                do {
+                    let result = try await Auth.auth().signIn(with: credential)
+                    let firebaseUser = result.user
+                    print("User \(firebaseUser.uid) signed in with email \(firebaseUser.email ?? "unknown")")
+                    // Başarılı giriş işlemleri burada yapılabilir
+                    // Giriş başarılı, küreyi büyüt ve butonları gizle
+                    UIView.animate(withDuration: 1.5, animations: {
+                        self.emailTextField.alpha = 0
+                        self.passwordTextField.alpha = 0
+                        self.loginButtonOutlet.alpha = 0
+                        self.signinButtonOutlet.alpha = 0
+                        self.googleSignInButtonOutlet.alpha = 0
+                        self.appleSignInButtonOutlet.alpha = 0
+                    })
+                    
+                    // Giriş başarılı, küreyi büyüt
+                    self.spinWorldManager.animateSphereGrowth(to: 2.0, duration: 3.0) {
+                        // Küre büyüme işlemi tamamlandığında segue ile MainViewController'a geç
+                        UIView.animate(withDuration: 2, animations: {
+                            self.destinationVC.view.alpha = 1.0  // Görünürlüğü yavaş yavaş artır
+                        }, completion: { _ in
+                            self.destinationVC.didMove(toParent: self)
+                        })
+                    }
+                } catch {
+                    print("Apple sign in error: \(error.localizedDescription)")
+                }
+            }
+        }
+    }
+    
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
+        print("Sign in with Apple failed: \(error.localizedDescription)")
     }
 }
 
