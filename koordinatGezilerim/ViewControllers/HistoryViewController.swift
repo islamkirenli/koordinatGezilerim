@@ -2,7 +2,7 @@ import UIKit
 import FirebaseFirestore
 import MapKit
 
-class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewDataSource{
+class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, MKMapViewDelegate{
 
     @IBOutlet weak var tableView: UITableView!
 
@@ -97,6 +97,7 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
         if mapView == nil {
             mapView = MKMapView(frame: view.bounds)
             mapView?.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+            mapView?.delegate = self // MKMapViewDelegate atandı
             view.addSubview(mapView!)
             
             /* Set the initial region to one of the coordinates (if available)
@@ -108,7 +109,6 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
             
             // Add annotations for all coordinates
             for coordinate in coordinates {
-                print(coordinate.latitude)
                 let annotation = MKPointAnnotation()
                 annotation.coordinate = CLLocationCoordinate2D(latitude: coordinate.latitude, longitude: coordinate.longitude)
                 annotation.title = coordinate.city
@@ -144,6 +144,33 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
         mapView?.removeFromSuperview()
         mapView = nil
     }
+    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        let identifier = "pin"
+        
+        if annotation is MKUserLocation {
+            // Kullanıcının konumu için varsayılan simgeyi kullanma
+            return nil
+        }
+
+        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? MKPinAnnotationView
+        
+        if annotationView == nil {
+            annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+            annotationView?.canShowCallout = true
+            
+            // Pin animasyonunu etkinleştir
+            annotationView?.animatesDrop = true
+            
+            // Pin rengini ayarla (varsayılan: .red, .green, .purple)
+            annotationView?.pinTintColor = .red
+        } else {
+            annotationView?.annotation = annotation
+        }
+        
+        return annotationView
+    }
+
 
     // Toplu silme işlemi için buton ekleyin
     @objc func deleteSelectedItems() {
@@ -436,5 +463,3 @@ struct Section {
     let title: String
     var isExpanded: Bool
 }
-
-

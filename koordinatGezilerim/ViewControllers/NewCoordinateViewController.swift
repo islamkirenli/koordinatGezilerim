@@ -16,7 +16,7 @@ class NewCoordinateViewController: UIViewController, MKMapViewDelegate {
     var east: Double?
     var west: Double?
     
-    let annotation = MKPointAnnotation()
+    var annotation = MKPointAnnotation()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,6 +55,32 @@ class NewCoordinateViewController: UIViewController, MKMapViewDelegate {
         ])
     }
     
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        let identifier = "pin"
+        
+        if annotation is MKUserLocation {
+            // Kullanıcının konumu için varsayılan simgeyi kullanma
+            return nil
+        }
+
+        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? MKPinAnnotationView
+        
+        if annotationView == nil {
+            annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+            annotationView?.canShowCallout = true
+            
+            // Pin animasyonunu etkinleştir
+            annotationView?.animatesDrop = true
+            
+            // Pin rengini ayarla (varsayılan: .red, .green, .purple)
+            annotationView?.pinTintColor = .red
+        } else {
+            annotationView?.annotation = annotation
+        }
+        
+        return annotationView
+    }
+    
     
     @objc func newCoordinateButtonTapped() {
         print("new coordinate tıklandı")
@@ -79,7 +105,12 @@ class NewCoordinateViewController: UIViewController, MKMapViewDelegate {
                 // Mevcut annotation'ları kaldır
                 self?.mapManager.mapView.removeAnnotations(self?.mapManager.mapView.annotations ?? [])
                 
-                // Yeni bir MapManager oluşturmanıza gerek yok, sadece yeni annotation ekleyebilirsiniz
+                // Yeni annotation oluştur veya mevcut olanı güncelle
+                if self?.annotation == nil {
+                    self?.annotation = MKPointAnnotation()
+                }
+                
+                // Yeni koordinatları mevcut annotation'a ata
                 self?.annotation.coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
                 
                 // Koordinatları şehir adına çevir
@@ -92,6 +123,12 @@ class NewCoordinateViewController: UIViewController, MKMapViewDelegate {
                         self?.annotation.title = placemark.locality ?? "Unknown Location"
                         self?.annotationTitle = placemark.locality ?? "Unknown Location"
                         self?.annotationCountry = placemark.country ?? "Unknown Country"
+                        
+                        // Annotation'ı ekledikten sonra başlığı otomatik olarak göster
+                        if let annotationView = self?.mapManager.mapView.view(for: self!.annotation) {
+                            annotationView.canShowCallout = true
+                            annotationView.isSelected = true  // Annotation'ı seçili hale getir
+                        }
                     }
                 }
                 
@@ -103,9 +140,8 @@ class NewCoordinateViewController: UIViewController, MKMapViewDelegate {
                 self?.mapManager.mapView.setRegion(coordinateRegion, animated: true)
             }
         }
-
-
     }
+
     
     
     override func viewWillDisappear(_ animated: Bool) {

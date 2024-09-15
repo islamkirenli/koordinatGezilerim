@@ -30,6 +30,7 @@ class MapManager: NSObject, MKMapViewDelegate {
         // Annotation ekle
         let annotation = MKPointAnnotation()
         annotation.coordinate = initialLocation
+        annotation.title = "Loading..."  // Başlık için geçici bir ifade ekle
         mapView.addAnnotation(annotation)
         
         // Annotation ekledikten sonra haritayı ortala
@@ -45,8 +46,43 @@ class MapManager: NSObject, MKMapViewDelegate {
                 annotation.title = placemark.locality ?? "Unknown Location"
                 self.annotationTitle = placemark.locality ?? "Unknown Location"
                 self.annotationCountry = placemark.country ?? "Unknown Country"
+                
+                // Harita güncellendikten sonra annotation'ın callout'ını otomatik göster
+                if let annotationView = self.mapView.view(for: annotation) {
+                    annotationView.canShowCallout = true
+                    annotationView.isSelected = true  // Annotation'ı seçili hale getir
+                }
             }
         }
+    }
+    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        let identifier = "pin"
+        
+        if annotation is MKUserLocation {
+            // Kullanıcının konumu için varsayılan simgeyi kullanma
+            return nil
+        }
+
+        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? MKPinAnnotationView
+        
+        if annotationView == nil {
+            annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+            annotationView?.canShowCallout = true
+            
+            // Pin animasyonunu etkinleştir
+            annotationView?.animatesDrop = true
+            
+            // Pin rengini ayarla
+            annotationView?.pinTintColor = .red
+        } else {
+            annotationView?.annotation = annotation
+        }
+        
+        // Annotation'ı ekledikten sonra callout'ı otomatik olarak göster
+        annotationView?.isSelected = true
+        
+        return annotationView
     }
     
     // Anotasyon koordinatına uygun bölge oluştur

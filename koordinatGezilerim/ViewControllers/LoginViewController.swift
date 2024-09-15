@@ -17,6 +17,9 @@ class LoginViewController: UIViewController, ASAuthorizationControllerPresentati
     var spinWorldManager: SpinWorldManager!
     
     var destinationVC = UIViewController()
+    
+    let label = UILabel()
+    let signUpButton = UIButton(type: .system)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,8 +55,43 @@ class LoginViewController: UIViewController, ASAuthorizationControllerPresentati
         destinationVC.view.alpha = 0.0  // Görünürlüğü sıfıra ayarlayın (görünmez)
         self.view.addSubview(destinationVC.view)
         self.addChild(destinationVC)
+        
+        // UILabel yapılandır
+        label.text = "Don't have an account?"
+        label.textAlignment = .center
+        label.font = UIFont.systemFont(ofSize: 16)
+        label.textColor = UIColor.white
+        
+        // UIButton yapılandır
+        signUpButton.setTitle("SIGN UP", for: .normal)
+        signUpButton.setTitleColor(.white, for: .normal)
+        signUpButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        signUpButton.addTarget(self, action: #selector(kaydolTapped), for: .touchUpInside)
+        
+        // UIElement'leri view'e ekle
+        view.addSubview(label)
+        view.addSubview(signUpButton)
+        
+        // Auto Layout ayarla
+        label.translatesAutoresizingMaskIntoConstraints = false
+        signUpButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        // UILabel ve UIButton'un yanyana hizalanmasını sağla
+        NSLayoutConstraint.activate([
+            // Label ortalamak
+            label.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: -40),
+            label.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+            
+            // Button ortalamak ve label'in sağında yerleştirmek
+            signUpButton.leadingAnchor.constraint(equalTo: label.trailingAnchor, constant: 8),
+            signUpButton.centerYAnchor.constraint(equalTo: label.centerYAnchor)
+        ])
     }
     
+    // UIButton Action
+    @objc func kaydolTapped() {
+        print("kaydol tıklandı.")
+    }
     
     @IBAction func googleSigninButton(_ sender: Any) {
         signInWithGoogle()
@@ -77,7 +115,7 @@ class LoginViewController: UIViewController, ASAuthorizationControllerPresentati
     func signInWithGoogle(){
         Task { @MainActor in
             let success = await performSignInWithGoogle()
-            if success {                
+            if success {
                 // Giriş başarılı, küreyi büyüt ve butonları gizle
                 UIView.animate(withDuration: 1.5, animations: {
                     self.emailTextField.alpha = 0
@@ -86,6 +124,8 @@ class LoginViewController: UIViewController, ASAuthorizationControllerPresentati
                     self.signinButtonOutlet.alpha = 0
                     self.googleSignInButtonOutlet.alpha = 0
                     self.appleSignInButtonOutlet.alpha = 0
+                    self.label.alpha = 0
+                    self.signUpButton.alpha = 0
                 })
                 
                 // Giriş başarılı, küreyi büyüt
@@ -161,6 +201,8 @@ class LoginViewController: UIViewController, ASAuthorizationControllerPresentati
                     self.signinButtonOutlet.alpha = 0
                     self.googleSignInButtonOutlet.alpha = 0
                     self.appleSignInButtonOutlet.alpha = 0
+                    self.label.alpha = 0
+                    self.signUpButton.alpha = 0
                 })
                 
                 // Giriş başarılı, küreyi büyüt
@@ -217,6 +259,8 @@ extension LoginViewController: ASAuthorizationControllerDelegate {
                         self.signinButtonOutlet.alpha = 0
                         self.googleSignInButtonOutlet.alpha = 0
                         self.appleSignInButtonOutlet.alpha = 0
+                        self.label.alpha = 0
+                        self.signUpButton.alpha = 0
                     })
                     
                     // Giriş başarılı, küreyi büyüt
