@@ -35,7 +35,7 @@ class SpinWorldManager {
         
         // Dünya Tekstürü
         let material = SCNMaterial()
-        material.diffuse.contents = UIImage(named: "world_texture_cloud.jpg")
+        material.diffuse.contents = UIImage(named: "world_texture_cloud")
         sphere.materials = [material]
         
         // Dünya Node'u

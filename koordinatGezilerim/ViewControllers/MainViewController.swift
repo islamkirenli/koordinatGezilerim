@@ -1,12 +1,11 @@
 import UIKit
 import FirebaseFirestore
+import Lottie
 
 class MainViewController: UIViewController {
     
     var spinWorldManager: SpinWorldManager!
     var buttonManager: ButtonManager!
-    var loadingLabel: UILabel!
-    var activityIndicator: UIActivityIndicatorView!
     var coordinateGenerator: RandomLandCoordinateGenerator!
     var latitude: Double?
     var longitude: Double?
@@ -17,6 +16,11 @@ class MainViewController: UIViewController {
     var west: Double?
     var selectedCountry: String?
     var backgroundImage: String?
+    
+    var sloganLabel: UILabel!
+    
+    var animationView: LottieAnimationView!
+    private var blurEffectView: UIVisualEffectView?
     
     let db = Firestore.firestore()
     
@@ -37,43 +41,47 @@ class MainViewController: UIViewController {
         buttonManager = ButtonManager(startButtonFrame: startButtonFrame, settingsButtonFrame: settingsButtonFrame, historyButtonFrame: historyButtonFrame)
         buttonManager.delegate = self
         
+        // Slogan Label'ı oluştur ve startButton'un altında konumlandır
+        sloganLabel = UILabel(frame: CGRect(x: 0, y: buttonManager.startButton.frame.maxY + 10, width: self.view.bounds.width, height: 50))
+        sloganLabel.textAlignment = .center
+        //sloganLabel.font = UIFont.systemFont(ofSize: 18)
+        sloganLabel.font = UIFont.italicSystemFont(ofSize: 18)
+        sloganLabel.textColor = .white
+        sloganLabel.numberOfLines = 2 // Sınırsız satır sayısı, yazı satırlara bölünebilir
+        sloganLabel.lineBreakMode = .byWordWrapping // Kelimelere göre satır kırma
+        
         // Butonları view'e ekle
         view.addSubview(buttonManager.startButton)
         view.addSubview(buttonManager.settingsButton)
         view.addSubview(buttonManager.historyButton)
+        view.addSubview(sloganLabel)
         
         // Ensure the buttons are visible initially
         self.view.bringSubviewToFront(buttonManager.startButton)
         self.view.bringSubviewToFront(buttonManager.settingsButton)
         self.view.bringSubviewToFront(buttonManager.historyButton)
+        self.view.bringSubviewToFront(sloganLabel)
         
         // Butonları başlangıçta görünmez yap
         buttonManager.startButton.alpha = 0
         buttonManager.settingsButton.alpha = 0
         buttonManager.historyButton.alpha = 0
+        sloganLabel.alpha = 0
         
         // Görünürlük animasyonu
         UIView.animate(withDuration: 2) {
             self.buttonManager.startButton.alpha = 1
             self.buttonManager.settingsButton.alpha = 1
             self.buttonManager.historyButton.alpha = 1
+            self.sloganLabel.alpha = 1
         }
-
-        // Loading etiketi ekle
-        loadingLabel = UILabel(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: 100))
-        loadingLabel.center = self.view.center
-        loadingLabel.textAlignment = .center
-        loadingLabel.text = "New Coordinate Loading..."
-        loadingLabel.isHidden = true
-        loadingLabel.backgroundColor = UIColor.lightGray.withAlphaComponent(0.5) // Arka planı açık gri ve yarı saydam yap
-        loadingLabel.numberOfLines = 0
-        self.view.addSubview(loadingLabel)
         
-        // Activity Indicator ekle
-        activityIndicator = UIActivityIndicatorView(style: .large)
-        activityIndicator.center = CGPoint(x: loadingLabel.frame.width / 2, y: loadingLabel.frame.height / 2 - 30)
-        activityIndicator.hidesWhenStopped = true
-        loadingLabel.addSubview(activityIndicator)
+        animationView = LottieAnimationView(name: "search_animation")
+        animationView.frame = CGRect(x: 0, y: 0, width: 200, height: 200)
+        animationView.center = self.view.center
+        animationView.isHidden = true
+        self.view.addSubview(animationView)
+
         
         // Geri dönüldüğünde çağrılacak olan observer
         NotificationCenter.default.addObserver(self, selector: #selector(viewWillAppear(_:)), name: NSNotification.Name(rawValue: "resetScene"), object: nil)
@@ -82,28 +90,40 @@ class MainViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(handleBackgroundChange), name: NSNotification.Name("BackgroundDidChange"), object: nil)
         
         fetchSettingsDataFromFirebase()
+        
+        // Rastgele bir slogan seç ve göster
+        displayRandomSlogan()
+
+    }
+    
+    func displayRandomSlogan() {
+        // Rastgele bir indeks seç
+        let randomIndex = Int.random(in: 0..<SloganManager.sloganArray.count)
+        // Seçilen sloganı göster
+        sloganLabel.text = SloganManager.sloganArray[randomIndex]
     }
     
     @objc override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        displayRandomSlogan()
         UIView.animate(withDuration: 2) {
             self.buttonManager.startButton.alpha = 1
             self.buttonManager.settingsButton.alpha = 1
             self.buttonManager.historyButton.alpha = 1
+            self.sloganLabel.alpha = 1
         }
         spinWorldManager.stopIncreasingRadius() // Geri dönüldüğünde küreyi sıfırla
-        loadingLabel.isHidden = true // Geri dönüldüğünde loading etiketi gizle
-        activityIndicator.stopAnimating() // Geri dönüldüğünde activity indicator'ı durdur
+        animationView.isHidden = true
         fetchSettingsDataFromFirebase()
         self.view.bringSubviewToFront(buttonManager.startButton)
         self.view.bringSubviewToFront(buttonManager.settingsButton)
         self.view.bringSubviewToFront(buttonManager.historyButton)
-        self.view.bringSubviewToFront(loadingLabel)
+        self.view.bringSubviewToFront(sloganLabel)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "toNewCoordinateVC", let destinationVC = segue.destination as? NewCoordinateViewController {
-            if let latitude = latitude, 
+            if let latitude = latitude,
                let longitude = longitude,
                let east = east,
                let west = west,
@@ -120,8 +140,8 @@ class MainViewController: UIViewController {
     }
     
     func checkCoordinatesAndTransition() {
-        loadingLabel.isHidden = false
-        activityIndicator.startAnimating() // Koordinatlar yüklenirken activity indicator'ı başlat
+        animationView.isHidden = false
+        animationView.play()
         
         // Koordinatları güncelle ve geçiş işlemini başlat
         generateCoordinatesAndTransition()
@@ -135,16 +155,68 @@ class MainViewController: UIViewController {
         
         coordinateGenerator = RandomLandCoordinateGenerator()
         
+        let minimumAnimationDuration: TimeInterval = 3.0 // En az 3 saniye animasyon gösterimi
+        let animationStartTime = Date() // Animasyonun başladığı zamanı kaydediyoruz
+
+        // Arka plana bulanıklık efekti ekle
+        addBlurEffect()
+
         coordinateGenerator.generateNewCoordinates(latitudeRange: south...north, longitudeRange: west...east) { [weak self] latitude, longitude in
             DispatchQueue.main.async {
-                self?.loadingLabel.isHidden = true
-                self?.activityIndicator.stopAnimating() // Koordinatlar yüklendikten sonra activity indicator'ı durdur
-                self?.latitude = latitude
-                self?.longitude = longitude
-                self?.startSphereExpansion()
+                let timeElapsed = Date().timeIntervalSince(animationStartTime)
+                let remainingTime = max(0, minimumAnimationDuration - timeElapsed) // 3 saniye dolmadıysa kalan süre
+                
+                // Geri kalan süreyi bekle ve ardından animasyonu durdur
+                DispatchQueue.main.asyncAfter(deadline: .now() + remainingTime) {
+                    self?.animationView.stop()
+                    self?.animationView.isHidden = true
+                    self?.latitude = latitude
+                    self?.longitude = longitude
+                    self?.startSphereExpansion()
+
+                    // Bulanıklık efektini kaldır
+                    self?.removeBlurEffect()
+                }
             }
         }
     }
+    
+    private func addBlurEffect() {
+        // Bulanıklık efekti oluştur
+        let blurEffect = UIBlurEffect(style: .regular) // İsteğe göre `.light` veya `.extraLight` seçilebilir
+        blurEffectView = UIVisualEffectView(effect: blurEffect)
+        blurEffectView?.frame = self.view.bounds
+        blurEffectView?.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+                
+        if let blurView = blurEffectView {
+            // Blur view'ı en alta ekle
+            blurView.alpha = 0
+            self.view.insertSubview(blurView, belowSubview: animationView)
+
+            // Butonları blur effect'in arkasına yerleştir
+            self.view.bringSubviewToFront(animationView)  // Animasyon net gözükmeli
+            self.view.sendSubviewToBack(buttonManager.startButton)
+            self.view.sendSubviewToBack(buttonManager.settingsButton)
+            self.view.sendSubviewToBack(buttonManager.historyButton)
+            self.view.sendSubviewToBack(sloganLabel)
+            
+            UIView.animate(withDuration: 0.5) {
+                blurView.alpha = 1.0
+            }
+        }
+    }
+
+    private func removeBlurEffect() {
+        // Bulanıklık efektini animasyonla kaldır
+        if let blurView = blurEffectView {
+            UIView.animate(withDuration: 0.5, animations: {
+                blurView.alpha = 0.0
+            }) { _ in
+                blurView.removeFromSuperview()
+            }
+        }
+    }
+
 
     private func startSphereExpansion() {
         // Bring the sphere to the front before starting the expansion
@@ -153,6 +225,7 @@ class MainViewController: UIViewController {
                 self.buttonManager.startButton.alpha = 0
                 self.buttonManager.settingsButton.alpha = 0
                 self.buttonManager.historyButton.alpha = 0
+                self.sloganLabel.alpha = 0
             }
             self.spinWorldManager.startIncreasingRadius()
         })
@@ -201,5 +274,3 @@ extension MainViewController: ButtonManagerDelegate {
         performSegue(withIdentifier: "toSettingsVC", sender: nil)
     }
 }
-
-

@@ -1,9 +1,14 @@
 import UIKit
 import FirebaseAuth
+import MessageUI
 
-class AyarlarViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class AyarlarViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, MFMailComposeViewControllerDelegate {
 
     @IBOutlet weak var tableView: UITableView!
+    
+    @IBOutlet weak var chevronRightIconOutlet: UIImageView!
+    @IBOutlet weak var darkModeSwitchOutlet: UISwitch!
+    
     
     let sections = ["Account", "Personalization", "Accessibility & Advanced", ""]
     let accountItems = ["Profile & Accounts", "Privacy & Security"]
@@ -50,21 +55,38 @@ class AyarlarViewController: UIViewController, UITableViewDelegate, UITableViewD
         if indexPath.section == 0 {
             cell.titleLabel.text = accountItems[indexPath.row]
             cell.iconImageView.image = UIImage(systemName: accountIcons[indexPath.row])
+            cell.chevronRightOutlet.alpha = 1
+            cell.darkModeSwitchOutlet.alpha = 0
         } else if indexPath.section == 1 {
-            cell.titleLabel.text = personalizationItems[indexPath.row]
-            cell.iconImageView.image = UIImage(systemName: personalizationIcons[indexPath.row])
+            if indexPath.row == 0 {
+                // Dark Mode satırı
+                cell.titleLabel.text = personalizationItems[indexPath.row]
+                cell.iconImageView.image = UIImage(systemName: personalizationIcons[indexPath.row])
+                cell.chevronRightOutlet.alpha = 0
+                cell.darkModeSwitchOutlet.alpha = 1
+            } else {
+                // Diğer personalization satırları
+                cell.titleLabel.text = personalizationItems[indexPath.row]
+                cell.iconImageView.image = UIImage(systemName: personalizationIcons[indexPath.row])
+                cell.chevronRightOutlet.alpha = 1
+                cell.darkModeSwitchOutlet.alpha = 0
+            }
         } else if indexPath.section == 2 {
             cell.titleLabel.text = accessibilityItems[indexPath.row]
             cell.iconImageView.image = UIImage(systemName: accessibilityIcons[indexPath.row])
+            cell.chevronRightOutlet.alpha = 1
+            cell.darkModeSwitchOutlet.alpha = 0
         } else {
             cell.titleLabel.text = signOutItems[indexPath.row]
             cell.iconImageView.image = UIImage(systemName: signOutIcons[indexPath.row])
+            cell.chevronRightOutlet.alpha = 1
+            cell.darkModeSwitchOutlet.alpha = 0
         }
         
         // Köşe yuvarlama işlemi
         let totalRows = tableView.numberOfRows(inSection: indexPath.section)
         let cornerRadius: CGFloat = 10
-        
+
         if indexPath.row == 0 && indexPath.row == totalRows - 1 {
             // Tek hücrelik bir grup (ilk ve son aynı hücre)
             cell.layer.cornerRadius = cornerRadius
@@ -100,6 +122,12 @@ class AyarlarViewController: UIViewController, UITableViewDelegate, UITableViewD
             switch indexPath.row {
             case 0:
                 print("Dark Mode")
+                // Dark Mode satırına tıklandığında switch'in durumunu değiştirme
+                if let cell = tableView.cellForRow(at: indexPath) as? SettingsTableViewCell {
+                    cell.darkModeSwitchOutlet.setOn(!cell.darkModeSwitchOutlet.isOn, animated: true)
+                    // Burada ayrıca dark mode'un sistem genelinde etkisini de sağlayabilirsiniz
+                    toggleDarkMode(isOn: cell.darkModeSwitchOutlet.isOn)
+                }
             case 1:
                 print("Region & Language")
             case 2:
@@ -111,12 +139,15 @@ class AyarlarViewController: UIViewController, UITableViewDelegate, UITableViewD
             switch indexPath.row {
             case 0:
                 print("Help & Feedback")
+                sendFeedbackEmail()
             case 1:
                 print("Permissions")
+                openAppPermissions()
             case 2:
                 print("About")
             case 3:
                 print("Support Us")
+                showSupportOptions()
             default:
                 break
             }
@@ -128,30 +159,29 @@ class AyarlarViewController: UIViewController, UITableViewDelegate, UITableViewD
             default:
                 break
             }
-            
         }
     }
 
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return sections[section]
     }
-    
+
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = UIView()
-        headerView.backgroundColor = UIColor.clear // İsterseniz renk ekleyebilirsiniz
+        headerView.backgroundColor = UIColor.clear
 
         let label = UILabel()
-        label.frame = CGRect(x: 16, y: 0, width: tableView.frame.width, height: 40) // Yüksekliği ayarlayın
-        label.font = UIFont.boldSystemFont(ofSize: 24) // Font büyüklüğünü ayarlayın
-        label.textColor = UIColor.white // Yazı rengini ayarlayın
-        label.text = sections[section] // Section başlığı
+        label.frame = CGRect(x: 16, y: 0, width: tableView.frame.width, height: 40)
+        label.font = UIFont.boldSystemFont(ofSize: 24)
+        label.textColor = UIColor.white
+        label.text = sections[section]
 
         headerView.addSubview(label)
         return headerView
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 50 // Yüksekliği istediğiniz değere göre ayarlayın
+        return 40
     }
     
     func logOutUser() {
@@ -162,4 +192,85 @@ class AyarlarViewController: UIViewController, UITableViewDelegate, UITableViewD
             print("Error signing out: %@", signOutError)
         }
     }
+    
+    // Kullanıcıyı ayarlar sayfasına yönlendirme
+    func openAppPermissions() {
+        if let appSettings = URL(string: UIApplication.openSettingsURLString) {
+            if UIApplication.shared.canOpenURL(appSettings) {
+                UIApplication.shared.open(appSettings, options: [:], completionHandler: nil)
+            }
+        }
+    }
+    
+    // E-posta göndermek için mail composer
+    func sendFeedbackEmail() {
+        if MFMailComposeViewController.canSendMail() {
+            let mailComposeVC = MFMailComposeViewController()
+            mailComposeVC.mailComposeDelegate = self
+            mailComposeVC.setToRecipients(["your_email@example.com"])
+            mailComposeVC.setSubject("Help & Feedback")
+            mailComposeVC.setMessageBody("Lütfen geri bildiriminizi buraya yazın...", isHTML: false)
+            
+            present(mailComposeVC, animated: true, completion: nil)
+        } else {
+            let alert = UIAlertController(title: "Mail Gönderilemiyor", message: "Mail uygulaması bulunamadı. Lütfen cihazınıza mail hesabı ekleyin.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+
+    // Kullanıcıya destek seçenekleri göstermek için
+    func showSupportOptions() {
+        let alertController = UIAlertController(title: "Support Us", message: "Please choose an option to support us", preferredStyle: .actionSheet)
+        
+        let twitterAction = UIAlertAction(title: "Follow us on X", style: .default) { _ in
+            self.openURL("https://twitter.com/your_twitter_profile")
+        }
+        
+        let instagramAction = UIAlertAction(title: "Follow us on Instagram", style: .default) { _ in
+            self.openURL("https://instagram.com/your_instagram_profile")
+        }
+        
+        let appStoreAction = UIAlertAction(title: "Rate us on the App Store", style: .default) { _ in
+            self.openURL("https://apps.apple.com/app/id123456789") // App Store URL'si
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        
+        alertController.addAction(twitterAction)
+        alertController.addAction(instagramAction)
+        alertController.addAction(appStoreAction)
+        alertController.addAction(cancelAction)
+        
+        if let popoverController = alertController.popoverPresentationController {
+            popoverController.sourceView = self.view
+            popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
+            popoverController.permittedArrowDirections = []
+        }
+
+        present(alertController, animated: true, completion: nil)
+    }
+    
+    // URL açma fonksiyonu
+    func openURL(_ urlString: String) {
+        if let url = URL(string: urlString) {
+            if UIApplication.shared.canOpenURL(url) {
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            }
+        }
+    }
+    
+    // MFMailComposeViewControllerDelegate metodu
+    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+        controller.dismiss(animated: true, completion: nil)
+    }
+    
+    func toggleDarkMode(isOn: Bool) {
+        if isOn {
+            overrideUserInterfaceStyle = .dark
+        } else {
+            overrideUserInterfaceStyle = .light
+        }
+    }
+
 }

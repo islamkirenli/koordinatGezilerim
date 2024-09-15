@@ -149,7 +149,7 @@
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" estimatedSectionHeaderHeight="-1" sectionFooterHeight="28" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="hQu-nH-HJO">
                                 <rect key="frame" x="30" y="44" width="333" height="808"/>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <inset key="separatorInset" minX="15" minY="0.0" maxX="15" maxY="0.0"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="SettingsCell" rowHeight="50" id="JdO-yU-LHe" customClass="SettingsTableViewCell" customModule="RandomJourney" customModuleProvider="target">
@@ -176,10 +176,15 @@
                                                     <rect key="frame" x="300" y="14.999999999999998" width="13" height="18.666666666666664"/>
                                                     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </imageView>
+                                                <switch opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="F6T-jh-Y7h">
+                                                    <rect key="frame" x="264" y="9" width="51" height="31"/>
+                                                </switch>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstAttribute="bottomMargin" secondItem="4j7-gl-Ymc" secondAttribute="bottom" constant="3.6699999999999999" id="1Pe-Aq-T3b"/>
+                                                <constraint firstAttribute="trailing" secondItem="F6T-jh-Y7h" secondAttribute="trailing" constant="20" symbolic="YES" id="2sC-LW-eoa"/>
                                                 <constraint firstItem="tNH-bW-lFD" firstAttribute="centerY" secondItem="I4e-4R-Puu" secondAttribute="centerY" id="3xr-0i-UBo"/>
+                                                <constraint firstAttribute="bottom" secondItem="F6T-jh-Y7h" secondAttribute="bottom" constant="10" id="6tE-HS-wSu"/>
                                                 <constraint firstItem="tNH-bW-lFD" firstAttribute="leading" secondItem="I4e-4R-Puu" secondAttribute="trailing" constant="8" id="AHz-gr-gk3"/>
                                                 <constraint firstItem="4j7-gl-Ymc" firstAttribute="trailing" secondItem="QH3-Ce-U86" secondAttribute="trailingMargin" id="DEw-Zs-i8Y"/>
                                                 <constraint firstItem="4j7-gl-Ymc" firstAttribute="trailing" secondItem="QH3-Ce-U86" secondAttribute="trailingMargin" id="Dql-sp-GJs"/>
@@ -188,9 +193,12 @@
                                                 <constraint firstItem="I4e-4R-Puu" firstAttribute="leading" secondItem="QH3-Ce-U86" secondAttribute="leadingMargin" id="R4O-go-NzB"/>
                                                 <constraint firstItem="tNH-bW-lFD" firstAttribute="centerY" secondItem="QH3-Ce-U86" secondAttribute="centerY" id="TSc-Ix-XWK"/>
                                                 <constraint firstItem="I4e-4R-Puu" firstAttribute="top" secondItem="QH3-Ce-U86" secondAttribute="topMargin" constant="2" id="blO-Kx-xEg"/>
+                                                <constraint firstItem="F6T-jh-Y7h" firstAttribute="top" secondItem="QH3-Ce-U86" secondAttribute="top" constant="9" id="nJc-Ww-0LT"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="chevronRightOutlet" destination="4j7-gl-Ymc" id="Wwf-ar-TSt"/>
+                                            <outlet property="darkModeSwitchOutlet" destination="F6T-jh-Y7h" id="Hmp-fW-IVk"/>
                                             <outlet property="iconImageView" destination="I4e-4R-Puu" id="rSd-ld-CFJ"/>
                                             <outlet property="titleLabel" destination="tNH-bW-lFD" id="1KS-wM-1wA"/>
                                         </connections>
@@ -199,7 +207,7 @@
                             </tableView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="5Hz-Im-BYM"/>
-                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="hQu-nH-HJO" firstAttribute="bottom" secondItem="5Hz-Im-BYM" secondAttribute="bottom" id="9yc-Pg-GN0"/>
                             <constraint firstItem="5Hz-Im-BYM" firstAttribute="trailing" secondItem="hQu-nH-HJO" secondAttribute="trailing" constant="30" id="f8g-nm-RL4"/>
