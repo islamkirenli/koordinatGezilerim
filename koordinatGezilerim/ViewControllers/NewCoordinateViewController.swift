@@ -42,14 +42,23 @@ class NewCoordinateViewController: UIViewController, MKMapViewDelegate {
         }
  
         let newCoordinateButton = UIButton(type: .custom)
-        newCoordinateButton.setImage(UIImage(named: "startButton"), for: .normal)
+        var config = UIButton.Configuration.filled()
+        config.title = "New Coordinate" // Metin
+        config.image = UIImage(systemName: "safari.fill") // İkon
+        config.baseForegroundColor = .black// Metin ve ikon rengi
+        config.baseBackgroundColor = UIColor(hex: "#CACACA") // Butonun arka plan rengi
+        config.imagePadding = 10 // İkon ile metin arasındaki boşluk
+        config.imagePlacement = .leading // İkonu metnin soluna yerleştir
+        newCoordinateButton.configuration = config
+        
+        newCoordinateButton.layer.cornerRadius = 10 // Yuvarlak köşeler
         newCoordinateButton.addTarget(self, action: #selector(newCoordinateButtonTapped), for: .touchUpInside)
         newCoordinateButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(newCoordinateButton)
         
         NSLayoutConstraint.activate([
-            newCoordinateButton.widthAnchor.constraint(equalToConstant: 220),
-            newCoordinateButton.heightAnchor.constraint(equalToConstant: 100),
+            newCoordinateButton.widthAnchor.constraint(equalToConstant: 200),
+            newCoordinateButton.heightAnchor.constraint(equalToConstant: 60),
             newCoordinateButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             newCoordinateButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
         ])

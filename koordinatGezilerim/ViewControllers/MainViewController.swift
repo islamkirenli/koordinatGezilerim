@@ -35,14 +35,14 @@ class MainViewController: UIViewController {
         self.view.addSubview(spinWorldManager.sceneView)
         
         // ButtonManager'ı oluştur ve butonları ayarla
-        let startButtonFrame = CGRect(x: 100, y: 100, width: 220, height: 100)
-        let settingsButtonFrame = CGRect(x: 25, y: 700, width: 100, height: 100)
-        let historyButtonFrame = CGRect(x: 165, y: 700, width: 220, height: 100)
+        let startButtonFrame = CGRect(x: 105, y: 670, width: 200, height: 60)
+        let settingsButtonFrame = CGRect(x: 330, y: 80, width: 70, height: 70)
+        let historyButtonFrame = CGRect(x: 15, y: 80, width: 70, height: 70)
         buttonManager = ButtonManager(startButtonFrame: startButtonFrame, settingsButtonFrame: settingsButtonFrame, historyButtonFrame: historyButtonFrame)
         buttonManager.delegate = self
         
         // Slogan Label'ı oluştur ve startButton'un altında konumlandır
-        sloganLabel = UILabel(frame: CGRect(x: 0, y: buttonManager.startButton.frame.maxY + 10, width: self.view.bounds.width, height: 50))
+        sloganLabel = UILabel(frame: CGRect(x: 0, y: buttonManager.historyButton.frame.maxY + 35, width: self.view.bounds.width, height: 50))
         sloganLabel.textAlignment = .center
         //sloganLabel.font = UIFont.systemFont(ofSize: 18)
         sloganLabel.font = UIFont.italicSystemFont(ofSize: 18)
