@@ -83,6 +83,13 @@ class AyarlarViewController: UIViewController, UITableViewDelegate, UITableViewD
             cell.darkModeSwitchOutlet.alpha = 0
         }
         
+        // Separator'ın alt satırlarda olmamasını sağlama
+        if indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {
+            cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: .greatestFiniteMagnitude)
+        } else {
+            cell.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        }
+
         // Köşe yuvarlama işlemi
         let totalRows = tableView.numberOfRows(inSection: indexPath.section)
         let cornerRadius: CGFloat = 10
@@ -107,6 +114,7 @@ class AyarlarViewController: UIViewController, UITableViewDelegate, UITableViewD
         return cell
     }
 
+
     // Hücreye tıklama işlemi
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 {
@@ -130,6 +138,7 @@ class AyarlarViewController: UIViewController, UITableViewDelegate, UITableViewD
                 }
             case 1:
                 print("Region & Language")
+                performSegue(withIdentifier: "toRegionLanguageVC", sender: nil)
             case 2:
                 print("Themes Organize")
             default:
@@ -274,3 +283,4 @@ class AyarlarViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
 
 }
+

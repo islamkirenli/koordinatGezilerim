@@ -1,4 +1,4 @@
-import UIKit
+/*import UIKit
 import FirebaseFirestore
 import FirebaseAuth
 
@@ -18,8 +18,7 @@ class SettingsViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(klavyeKapat))
-        view.addGestureRecognizer(gestureRecognizer)
+        
         
         pickerView.delegate = self
         pickerView.dataSource = self
@@ -28,18 +27,18 @@ class SettingsViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
         let toolbar = UIToolbar()
         toolbar.sizeToFit()
 
-        let cancelButton = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancelAction))
+        //let cancelButton = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancelAction))
         let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let doneButton = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(doneAction))
+        //let doneButton = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(doneAction))
 
-        toolbar.setItems([cancelButton, flexibleSpace, doneButton], animated: true)
-        toolbar.isUserInteractionEnabled = true
+        //toolbar.setItems([cancelButton, flexibleSpace, doneButton], animated: true)
+        //toolbar.isUserInteractionEnabled = true
 
         countryTextField.inputView = pickerView
         countryTextField.inputAccessoryView = toolbar
 
         // TextField değişimlerini dinle
-        countryTextField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
+        //countryTextField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
                 
         // Default olarak ilk seçeneği seçili yap
         pickerView.selectRow(0, inComponent: 0, animated: false)
@@ -52,65 +51,7 @@ class SettingsViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
         
         fetchSettingsDataFromFirebase()
     }
-    
-    @IBAction func logoutButtonTapped(_ sender: Any) {
-        logOutUser()
-    }
-    
-    func logOutUser() {
-        do {
-            try Auth.auth().signOut()
-            self.performSegue(withIdentifier: "toLoginVC", sender: nil)
-        } catch let signOutError as NSError {
-            print("Error signing out: %@", signOutError)
-        }
-    }
 
-    
-    @objc func klavyeKapat(){
-        self.view.endEditing(true)
-    }
-
-    // UIPickerViewDataSource
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
-    }
-
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return CountriesManager.countries.count
-    }
-
-    // UIPickerViewDelegate
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return CountriesManager.countries[row]
-    }
-
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        selectedCountry = CountriesManager.countries[row]
-        countryTextField.text = selectedCountry
-    }
-
-    @objc func doneAction() {
-        if let selectedCountry = selectedCountry {
-            countryTextField.text = selectedCountry
-        } else {
-            countryTextField.text = CountriesManager.countries[0]
-        }
-        self.view.endEditing(true)
-    }
-    
-    @objc func cancelAction() {
-        self.view.endEditing(true)
-    }
-    
-    @objc func textFieldDidChange() {
-        guard let text = countryTextField.text?.lowercased() else { return }
-        
-        if let index = CountriesManager.countries.firstIndex(where: { $0.lowercased() == text }) {
-            pickerView.selectRow(index, inComponent: 0, animated: true)
-            selectedCountry = CountriesManager.countries[index]
-        }
-    }
     
     @IBAction func selectBackground(_ sender: Any) {
         let actionSheet = UIAlertController(title: "Select Background", message: nil, preferredStyle: .actionSheet)
@@ -194,22 +135,7 @@ class SettingsViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
     }
     
     func fetchSettingsDataFromFirebase() {
-        let coordinateDocumentID = "coordinateSettings"
         let backgroundDocumentID = "backgroundSettings"
-        
-        // Koordinat verilerini Firebase'den al
-        let coordinateDocRef = db.collection("user").document(coordinateDocumentID)
-        coordinateDocRef.getDocument { [weak self] (document, error) in
-            if let document = document, document.exists {
-                let data = document.data()
-                if let country = data?["country"] as? String {
-                    self?.countryTextField.text = country
-                    self?.textFieldDidChange()
-                }
-            } else {
-                print("Coordinate document does not exist or error occurred: \(error?.localizedDescription ?? "Unknown error")")
-            }
-        }
         
         // Arka plan verisini Firebase'den al
         let backgroundDocRef = db.collection("user").document(backgroundDocumentID)
@@ -226,5 +152,5 @@ class SettingsViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
         }
     }
 }
-
+*/
 

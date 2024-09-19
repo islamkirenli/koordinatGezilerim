@@ -309,7 +309,7 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
 
         let label = UILabel()
         label.text = sections[section].title
-        label.textColor = .black
+        label.textColor = .white
         label.font = UIFont.boldSystemFont(ofSize: 20)
         label.frame = CGRect(x: 16, y: 8, width: tableView.frame.width - 64, height: 28)
         headerView.addSubview(label)

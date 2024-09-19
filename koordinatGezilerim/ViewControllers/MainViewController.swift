@@ -273,3 +273,5 @@ extension MainViewController: ButtonManagerDelegate {
         performSegue(withIdentifier: "toSettingsVC", sender: nil)
     }
 }
+
+

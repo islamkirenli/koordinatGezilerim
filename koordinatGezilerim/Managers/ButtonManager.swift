@@ -85,3 +85,4 @@ class ButtonManager {
         delegate?.historyButtonTapped()
     }
 }
+
