@@ -81,7 +81,6 @@ class MainViewController: UIViewController {
         animationView.center = self.view.center
         animationView.isHidden = true
         self.view.addSubview(animationView)
-
         
         // Geri dönüldüğünde çağrılacak olan observer
         NotificationCenter.default.addObserver(self, selector: #selector(viewWillAppear(_:)), name: NSNotification.Name(rawValue: "resetScene"), object: nil)

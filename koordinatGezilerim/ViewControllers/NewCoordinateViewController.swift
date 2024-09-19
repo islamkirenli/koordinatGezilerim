@@ -1,5 +1,6 @@
 import UIKit
 import MapKit
+import Lottie
 
 class NewCoordinateViewController: UIViewController, MKMapViewDelegate {
     
@@ -17,6 +18,9 @@ class NewCoordinateViewController: UIViewController, MKMapViewDelegate {
     var west: Double?
     
     var annotation = MKPointAnnotation()
+    
+    var animationView: LottieAnimationView!
+    private var blurEffectView: UIVisualEffectView?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,6 +44,12 @@ class NewCoordinateViewController: UIViewController, MKMapViewDelegate {
                 self.annotationCountry = placemark.country ?? "Unknown Country"
             }
         }
+        
+        animationView = LottieAnimationView(name: "search_animation")
+        animationView.frame = CGRect(x: 0, y: 0, width: 200, height: 200)
+        animationView.center = self.view.center
+        animationView.isHidden = true
+        self.view.addSubview(animationView)
  
         let newCoordinateButton = UIButton(type: .custom)
         var config = UIButton.Configuration.filled()
@@ -62,6 +72,11 @@ class NewCoordinateViewController: UIViewController, MKMapViewDelegate {
             newCoordinateButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             newCoordinateButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
         ])
+    }
+    
+    @objc override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        animationView.isHidden = true
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
@@ -92,6 +107,8 @@ class NewCoordinateViewController: UIViewController, MKMapViewDelegate {
     
     
     @objc func newCoordinateButtonTapped() {
+        animationView.isHidden = false
+        animationView.play()
         print("new coordinate tıklandı")
         generateCoordinatesAndTransition()
     }
@@ -105,52 +122,97 @@ class NewCoordinateViewController: UIViewController, MKMapViewDelegate {
         
         coordinateGenerator = RandomLandCoordinateGenerator()
         
+        let minimumAnimationDuration: TimeInterval = 3.0 // En az 3 saniye animasyon gösterimi
+        let animationStartTime = Date() // Animasyonun başladığı zamanı kaydediyoruz
+
+        // Arka plana bulanıklık efekti ekle
+        addBlurEffect()
+        
         coordinateGenerator.generateNewCoordinates(latitudeRange: south...north, longitudeRange: west...east) { [weak self] latitude, longitude in
             DispatchQueue.main.async {
-                // self?.activityIndicator.stopAnimating() // Koordinatlar yüklendikten sonra activity indicator'ı durdur
-                self?.latitude = latitude
-                self?.longitude = longitude
+                let timeElapsed = Date().timeIntervalSince(animationStartTime)
+                let remainingTime = max(0, minimumAnimationDuration - timeElapsed) // 3 saniye dolmadıysa kalan süre
                 
-                // Mevcut annotation'ları kaldır
-                self?.mapManager.mapView.removeAnnotations(self?.mapManager.mapView.annotations ?? [])
-                
-                // Yeni annotation oluştur veya mevcut olanı güncelle
-                if self?.annotation == nil {
-                    self?.annotation = MKPointAnnotation()
-                }
-                
-                // Yeni koordinatları mevcut annotation'a ata
-                self?.annotation.coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
-                
-                // Koordinatları şehir adına çevir
-                let location = CLLocation(latitude: latitude, longitude: longitude)
-                self?.geocoder.reverseGeocodeLocation(location) { placemarks, error in
-                    if let error = error {
-                        print("Reverse geocode failed: \(error.localizedDescription)")
-                        self?.annotation.title = "Unknown Location"
-                    } else if let placemark = placemarks?.first {
-                        self?.annotation.title = placemark.locality ?? "Unknown Location"
-                        self?.annotationTitle = placemark.locality ?? "Unknown Location"
-                        self?.annotationCountry = placemark.country ?? "Unknown Country"
-                        
-                        // Annotation'ı ekledikten sonra başlığı otomatik olarak göster
-                        if let annotationView = self?.mapManager.mapView.view(for: self!.annotation) {
-                            annotationView.canShowCallout = true
-                            annotationView.isSelected = true  // Annotation'ı seçili hale getir
+                DispatchQueue.main.asyncAfter(deadline: .now() + remainingTime){
+                    self?.animationView.stop()
+                    self?.animationView.isHidden = true
+                    self?.removeBlurEffect()
+
+                    self?.latitude = latitude
+                    self?.longitude = longitude
+                    
+                    // Mevcut annotation'ları kaldır
+                    self?.mapManager.mapView.removeAnnotations(self?.mapManager.mapView.annotations ?? [])
+                    
+                    // Yeni annotation oluştur veya mevcut olanı güncelle
+                    if self?.annotation == nil {
+                        self?.annotation = MKPointAnnotation()
+                    }
+                    
+                    // Yeni koordinatları mevcut annotation'a ata
+                    self?.annotation.coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+                    
+                    // Koordinatları şehir adına çevir
+                    let location = CLLocation(latitude: latitude, longitude: longitude)
+                    self?.geocoder.reverseGeocodeLocation(location) { placemarks, error in
+                        if let error = error {
+                            print("Reverse geocode failed: \(error.localizedDescription)")
+                            self?.annotation.title = "Unknown Location"
+                        } else if let placemark = placemarks?.first {
+                            self?.annotation.title = placemark.locality ?? "Unknown Location"
+                            self?.annotationTitle = placemark.locality ?? "Unknown Location"
+                            self?.annotationCountry = placemark.country ?? "Unknown Country"
+                            
+                            // Annotation'ı ekledikten sonra başlığı otomatik olarak göster
+                            if let annotationView = self?.mapManager.mapView.view(for: self!.annotation) {
+                                annotationView.canShowCallout = true
+                                annotationView.isSelected = true  // Annotation'ı seçili hale getir
+                            }
                         }
                     }
+                    
+                    // Yeni annotation'ı MapView'a ekle
+                    self?.mapManager.mapView.addAnnotation(self!.annotation)
+                    
+                    // Haritayı annotation'ın merkezine getir
+                    let coordinateRegion = MKCoordinateRegion(center: (self?.annotation.coordinate)!, span: MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5))
+                    self?.mapManager.mapView.setRegion(coordinateRegion, animated: true)
                 }
-                
-                // Yeni annotation'ı MapView'a ekle
-                self?.mapManager.mapView.addAnnotation(self!.annotation)
-                
-                // Haritayı annotation'ın merkezine getir
-                let coordinateRegion = MKCoordinateRegion(center: (self?.annotation.coordinate)!, span: MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5))
-                self?.mapManager.mapView.setRegion(coordinateRegion, animated: true)
             }
         }
     }
 
+    private func addBlurEffect() {
+        // Bulanıklık efekti oluştur
+        let blurEffect = UIBlurEffect(style: .regular) // İsteğe göre `.light` veya `.extraLight` seçilebilir
+        blurEffectView = UIVisualEffectView(effect: blurEffect)
+        blurEffectView?.frame = self.view.bounds
+        blurEffectView?.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+                
+        if let blurView = blurEffectView {
+            // Blur view'ı en alta ekle
+            blurView.alpha = 0
+            self.view.insertSubview(blurView, belowSubview: animationView)
+
+            // Butonları blur effect'in arkasına yerleştir
+            self.view.bringSubviewToFront(animationView)  // Animasyon net gözükmeli
+            
+            UIView.animate(withDuration: 0.5) {
+                blurView.alpha = 1.0
+            }
+        }
+    }
+    
+    private func removeBlurEffect() {
+        // Bulanıklık efektini animasyonla kaldır
+        if let blurView = blurEffectView {
+            UIView.animate(withDuration: 0.5, animations: {
+                blurView.alpha = 0.0
+            }) { _ in
+                blurView.removeFromSuperview()
+            }
+        }
+    }
     
     
     override func viewWillDisappear(_ animated: Bool) {
