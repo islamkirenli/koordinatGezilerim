@@ -281,6 +281,8 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         
+        cell.backgroundColor = UIColor(hex: "#0f1418")
+        
         // İlgili section için CityTitle bilgisini itemDictionary'den al ve alfabetik sırada göster
         let country = sections[indexPath.section].title
         if let cities = itemDictionary[country] {

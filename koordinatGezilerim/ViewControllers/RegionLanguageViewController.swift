@@ -118,7 +118,11 @@ class RegionLanguageViewController: UIViewController, UIPickerViewDelegate, UIPi
         }
 
         if let selectedLanguage = selectedLanguage {
-            languageSettings["language"] = selectedLanguage
+            if selectedLanguage == "English"{
+                languageSettings["language"] = "en"
+            } else if selectedLanguage == "Türkçe"{
+                languageSettings["language"] = "tr"
+            }
         }
 
         // Koordinat verilerini Firebase'e kaydet
@@ -148,6 +152,7 @@ class RegionLanguageViewController: UIViewController, UIPickerViewDelegate, UIPi
                 let data = document.data()
                 if let country = data?["country"] as? String {
                     self?.regionTextField.text = country
+                    self?.selectedCountry = country  // selectedCountry'e atama yap
                 }
             } else {
                 print("Coordinate document does not exist or error occurred: \(error?.localizedDescription ?? "Unknown error")")
@@ -160,11 +165,18 @@ class RegionLanguageViewController: UIViewController, UIPickerViewDelegate, UIPi
             if let document = document, document.exists {
                 let data = document.data()
                 if let language = data?["language"] as? String {
-                    self?.languageTextField.text = language
+                    if language == "en"{
+                        self?.languageTextField.text = "English"
+                        self?.selectedLanguage = "English"  // selectedLanguage'e atama yap
+                    } else if language == "tr"{
+                        self?.languageTextField.text = "Türkçe"
+                        self?.selectedLanguage = "Türkçe"  // selectedLanguage'e atama yap
+                    }
                 }
             } else {
                 print("Language document does not exist or error occurred: \(error?.localizedDescription ?? "Unknown error")")
             }
         }
     }
+
 }

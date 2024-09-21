@@ -35,7 +35,7 @@ class ButtonManager {
     
     lazy var historyButton: UIButton = {
         let button = UIButton(frame: historyButtonFrame)
-        button.setImage(UIImage(named: "pin"), for: .normal)
+        button.setImage(UIImage(named: "earth-2"), for: .normal)
         button.addTarget(self, action: #selector(historyButtonTapped), for: .touchUpInside)
         return button
     }()

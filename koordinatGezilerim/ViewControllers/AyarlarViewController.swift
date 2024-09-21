@@ -121,8 +121,10 @@ class AyarlarViewController: UIViewController, UITableViewDelegate, UITableViewD
             switch indexPath.row {
             case 0:
                 print("Profile & Accounts")
+                performSegue(withIdentifier: "toProfilAccountVC", sender: nil)
             case 1:
                 print("Privacy & Security")
+                performSegue(withIdentifier: "toPrivacySecurityVC", sender: nil)
             default:
                 break
             }
