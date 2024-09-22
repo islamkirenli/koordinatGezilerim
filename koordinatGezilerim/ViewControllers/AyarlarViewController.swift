@@ -156,6 +156,7 @@ class AyarlarViewController: UIViewController, UITableViewDelegate, UITableViewD
                 openAppPermissions()
             case 2:
                 print("About")
+                performSegue(withIdentifier: "toAboutVC", sender: nil)
             case 3:
                 print("Support Us")
                 showSupportOptions()
@@ -218,9 +219,9 @@ class AyarlarViewController: UIViewController, UITableViewDelegate, UITableViewD
         if MFMailComposeViewController.canSendMail() {
             let mailComposeVC = MFMailComposeViewController()
             mailComposeVC.mailComposeDelegate = self
-            mailComposeVC.setToRecipients(["your_email@example.com"])
+            mailComposeVC.setToRecipients(["randomjourneyapp@gmail.com"])
             mailComposeVC.setSubject("Help & Feedback")
-            mailComposeVC.setMessageBody("Lütfen geri bildiriminizi buraya yazın...", isHTML: false)
+            mailComposeVC.setMessageBody("Please write your feedback here...", isHTML: false)
             
             present(mailComposeVC, animated: true, completion: nil)
         } else {
@@ -285,4 +286,5 @@ class AyarlarViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
 
 }
+
 

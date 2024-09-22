@@ -1,5 +1,6 @@
 import UIKit
 import FirebaseFirestore
+import FirebaseAuth
 import Lottie
 
 class MainViewController: UIViewController {
@@ -10,10 +11,10 @@ class MainViewController: UIViewController {
     var latitude: Double?
     var longitude: Double?
     
-    var north: Double?
-    var south: Double?
-    var east: Double?
-    var west: Double?
+    var north: Double? = 90.0
+    var south: Double? = -90.0
+    var east: Double? = 180.0
+    var west: Double? = -180.0
     var selectedCountry: String?
     var backgroundImage: String?
     
@@ -23,6 +24,7 @@ class MainViewController: UIViewController {
     private var blurEffectView: UIVisualEffectView?
     
     let db = Firestore.firestore()
+    let currentUser = Auth.auth().currentUser
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -232,18 +234,19 @@ class MainViewController: UIViewController {
     
     func fetchSettingsDataFromFirebase() {
         let documentID = "coordinateSettings" // Bu doküman ID'yi ihtiyacınıza göre belirleyin
-        let docRef = db.collection("user").document(documentID)
-        
-        docRef.getDocument { [weak self] (document, error) in
-            if let document = document, document.exists {
-                let data = document.data()
-                self?.north = data?["north"] as? Double
-                self?.south = data?["south"] as? Double
-                self?.east = data?["east"] as? Double
-                self?.west = data?["west"] as? Double
-            } else {
-                print("Document does not exist or error occurred: \(error?.localizedDescription ?? "Unknown error")")
-                // Burada bir hata mesajı gösterebilir veya bir varsayılan işlem yapabilirsiniz
+        if let currentUserEmail = currentUser?.email {
+            let docRef = db.collection(currentUserEmail).document(documentID)
+            
+            docRef.getDocument { [weak self] (document, error) in
+                if let document = document, document.exists {
+                    let data = document.data()
+                    self?.north = data?["north"] as? Double
+                    self?.south = data?["south"] as? Double
+                    self?.east = data?["east"] as? Double
+                    self?.west = data?["west"] as? Double
+                } else {
+                    print("Document does not exist or error occurred: \(error?.localizedDescription ?? "Unknown error")")
+                }
             }
         }
     }
@@ -266,6 +269,7 @@ extension MainViewController: ButtonManagerDelegate {
     }
     
     func startButtonTapped() {
+        fetchSettingsDataFromFirebase()
         checkCoordinatesAndTransition()
     }
     

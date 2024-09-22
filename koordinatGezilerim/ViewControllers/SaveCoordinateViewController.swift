@@ -1,5 +1,6 @@
 import UIKit
 import FirebaseFirestore
+import FirebaseAuth
 
 class SaveCoordinateViewController: UIViewController {
     
@@ -16,6 +17,7 @@ class SaveCoordinateViewController: UIViewController {
     var coordinateInfo: [String: Any] = [:]
     
     let db = Firestore.firestore()
+    let currentUser = Auth.auth().currentUser
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,7 +31,10 @@ class SaveCoordinateViewController: UIViewController {
         if let annotationTitle = annotationTitle{
             titleTextField.text = annotationTitle
         }
+        titleTextField.textColor = .white
 
+        commentTextView.layer.cornerRadius = 10
+        
         let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(klavyeKapat))
         view.addGestureRecognizer(gestureRecognizer)
     }
@@ -56,7 +61,7 @@ class SaveCoordinateViewController: UIViewController {
             print("alanları kontrol edin.")
         }
         
-        db.collection("user-CoordinateInformations").document(coordinateInfoID).setData(coordinateInfo) { error in
+        db.collection((currentUser?.email)!+"-CoordinateInformations").document(coordinateInfoID).setData(coordinateInfo) { error in
             if let error = error {
                 print("Error writing coordinate document: \(error)")
             } else {

@@ -35,10 +35,13 @@ class SettingsTableViewCell: UITableViewCell {
         contentView.layer.borderWidth = 0.1 // İsterseniz kenarlık ekleyebilirsiniz
         contentView.layer.borderColor = UIColor.darkGray.cgColor // Kenarlık rengini ayarlayabilirsiniz
         contentView.backgroundColor = UIColor(hex: "#0f1418")
+        
+        
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
     }
 }
+
 

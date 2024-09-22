@@ -14,7 +14,7 @@ class ButtonManager {
         // UIButtonConfiguration ile ikon ve metin ekleme
         var config = UIButton.Configuration.filled()
         config.title = "New Coordinate" // Metin
-        config.image = UIImage(systemName: "safari.fill") // İkon
+        config.image = UIImage(systemName: "mappin.and.ellipse") // İkon
         config.baseForegroundColor = .black// Metin ve ikon rengi
         config.baseBackgroundColor = UIColor(hex: "#CACACA") // Butonun arka plan rengi
         config.imagePadding = 10 // İkon ile metin arasındaki boşluk

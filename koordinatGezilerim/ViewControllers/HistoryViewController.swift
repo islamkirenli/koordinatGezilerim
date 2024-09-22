@@ -1,5 +1,6 @@
 import UIKit
 import FirebaseFirestore
+import FirebaseAuth
 import MapKit
 
 class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, MKMapViewDelegate{
@@ -9,6 +10,7 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
     var sections: [Section] = []
     var itemDictionary: [String: [String]] = [:] // Country -> CityTitles sözlüğü
     let db = Firestore.firestore()
+    let currentUser = Auth.auth().currentUser
     var addedCountries: Set<String> = [] // Eklenen Country değerlerini takip etmek için Set
     var coordinates: [(city: String, latitude: CLLocationDegrees, longitude: CLLocationDegrees)] = [] // Store city and coordinates
 
@@ -186,7 +188,7 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
                 // Firestore'dan bölüm altındaki tüm şehirleri sil
                 if let cities = itemDictionary[country] {
                     for city in cities {
-                        db.collection("user-CoordinateInformations").whereField("Country", isEqualTo: country).whereField("CityTitle", isEqualTo: city).getDocuments { (snapshot, error) in
+                        db.collection((currentUser?.email)!+"-CoordinateInformations").whereField("Country", isEqualTo: country).whereField("CityTitle", isEqualTo: city).getDocuments { (snapshot, error) in
                             if let error = error {
                                 print("Error deleting document: \(error)")
                             } else {
@@ -217,7 +219,7 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
                 let cityToDelete = cities[indexPath.row]
 
                 // Firestore'dan veriyi sil
-                db.collection("user-CoordinateInformations").whereField("Country", isEqualTo: country).whereField("CityTitle", isEqualTo: cityToDelete).getDocuments { (snapshot, error) in
+                db.collection((currentUser?.email)!+"-CoordinateInformations").whereField("Country", isEqualTo: country).whereField("CityTitle", isEqualTo: cityToDelete).getDocuments { (snapshot, error) in
                     if let error = error {
                         print("Error deleting document: \(error)")
                     } else {
@@ -371,7 +373,7 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
 
     // Firestore'dan verileri çek ve sections dizisini doldur
     func fetchSectionsFromFirestore() {
-        db.collection("user-CoordinateInformations").getDocuments { (snapshot, error) in
+        db.collection((currentUser?.email)!+"-CoordinateInformations").getDocuments { (snapshot, error) in
             if let error = error {
                 print("Error getting documents: \(error)")
             } else {
@@ -422,7 +424,7 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
             let cityToDelete = cities[indexPath.row]
             
             // Firestore'dan veriyi sil
-            db.collection("user-CoordinateInformations").whereField("Country", isEqualTo: country).whereField("CityTitle", isEqualTo: cityToDelete).getDocuments { (snapshot, error) in
+            db.collection((currentUser?.email)!+"-CoordinateInformations").whereField("Country", isEqualTo: country).whereField("CityTitle", isEqualTo: cityToDelete).getDocuments { (snapshot, error) in
                 if let error = error {
                     print("Error deleting document: \(error)")
                 } else {

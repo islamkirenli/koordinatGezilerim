@@ -53,14 +53,13 @@ class ProfilAccountViewController: UIViewController {
         }
         present(avatarVC, animated: true, completion: nil)
     }
-
     
     @objc func klavyeKapat(){
         view.endEditing(true)
     }
 
     @IBAction func saveButton(_ sender: Any) {
-        firestoreDB.collection("user").document("profilSettings").setData([
+        firestoreDB.collection((currentUser?.email)!).document("profilSettings").setData([
             "name": nameTextField.text ?? "",
             "surname": surnameTextField.text ?? "",
             "email": currentUser?.email,
@@ -78,7 +77,7 @@ class ProfilAccountViewController: UIViewController {
     }
     
     func firebaseVerileriAl(){
-        let coordinateDocRef = firestoreDB.collection("user").document("profilSettings")
+        let coordinateDocRef = firestoreDB.collection((currentUser?.email)!).document("profilSettings")
         coordinateDocRef.getDocument { [weak self] (document, error) in
             if let document = document, document.exists {
                 let data = document.data()

@@ -22,7 +22,7 @@ class CountriesManager {
         "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone",
         "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "South Sudan", "Spain",
         "Sri Lanka", "Sudan", "Suriname", "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania",
-        "Thailand", "Timor-Leste", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan",
+        "Thailand", "Timor-Leste", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Türkiye", "Turkmenistan",
         "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States", "Uruguay", "Uzbekistan",
         "Vanuatu", "Vatican City", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"
     ]
@@ -208,7 +208,7 @@ class CountriesManager {
         "Tonga": (north: -15.5639, south: -21.4559, east: -173.9297, west: -175.6834),
         "Trinidad and Tobago": (north: 11.3525, south: 10.036, east: -60.9397, west: -61.9245),
         "Tunisia": (north: 37.5391, south: 30.2282, east: 11.5975, west: 7.5245),
-        "Turkey": (north: 42.1076, south: 35.8086, east: 44.7939, west: 25.865),
+        "Türkiye": (north: 42.1076, south: 35.8086, east: 44.7939, west: 25.865),
         "Turkmenistan": (north: 42.7516, south: 35.1415, east: 66.646, west: 52.4414),
         "Tuvalu": (north: -5.6417, south: -10.801, east: 179.9042, west: 176.1256),
         "Uganda": (north: 4.2208, south: -1.4823, east: 35.0, west: 29.5734),

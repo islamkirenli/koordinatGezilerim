@@ -10,7 +10,6 @@ class LoginViewController: UIViewController, ASAuthorizationControllerPresentati
     @IBOutlet weak var passwordTextField: UITextField!
     
     @IBOutlet weak var loginButtonOutlet: UIButton!
-    @IBOutlet weak var signinButtonOutlet: UIButton!
     @IBOutlet weak var googleSignInButtonOutlet: UIButton!
     @IBOutlet weak var appleSignInButtonOutlet: UIButton!
     
@@ -20,6 +19,13 @@ class LoginViewController: UIViewController, ASAuthorizationControllerPresentati
     
     let label = UILabel()
     let signUpButton = UIButton(type: .system)
+    
+    let togglePasswordButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.setImage(UIImage(systemName: "eye.slash.fill"), for: .normal) // Kapalı göz ikonu
+        button.tintColor = .gray
+        return button
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,6 +39,13 @@ class LoginViewController: UIViewController, ASAuthorizationControllerPresentati
         // Password TextField'ı kapsül şeklinde yap
         passwordTextField.layer.cornerRadius = passwordTextField.frame.height / 2
         passwordTextField.clipsToBounds = true
+        
+        togglePasswordButton.addTarget(self, action: #selector(togglePasswordVisibility), for: .touchUpInside)
+        let passwordRightView = UIView(frame: CGRect(x: 0, y: 0, width: 40, height: 40)) // 40 genişliğinde bir alan
+        togglePasswordButton.frame = CGRect(x: 0, y: 0, width: 30, height: 40) // İçeri doğru 5 birim padding
+        passwordRightView.addSubview(togglePasswordButton)
+        passwordTextField.rightView = passwordRightView
+        passwordTextField.rightViewMode = .always
 
         // SpinWorldManager oluştur ve SceneKit sahnesini ekle
         spinWorldManager = SpinWorldManager(frame: self.view.bounds, radius: 0.1)
@@ -66,7 +79,7 @@ class LoginViewController: UIViewController, ASAuthorizationControllerPresentati
         signUpButton.setTitle("SIGN UP", for: .normal)
         signUpButton.setTitleColor(.white, for: .normal)
         signUpButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-        signUpButton.addTarget(self, action: #selector(kaydolTapped), for: .touchUpInside)
+        signUpButton.addTarget(self, action: #selector(signUpTapped), for: .touchUpInside)
         
         // UIElement'leri view'e ekle
         view.addSubview(label)
@@ -88,9 +101,18 @@ class LoginViewController: UIViewController, ASAuthorizationControllerPresentati
         ])
     }
     
+    @objc func togglePasswordVisibility() {
+        passwordTextField.isSecureTextEntry.toggle() // Şifre görünürlük durumu değiştirilir
+        
+        // İkona uygun güncelleme yapılır
+        let iconName = passwordTextField.isSecureTextEntry ? "eye.slash.fill" : "eye.fill"
+        togglePasswordButton.setImage(UIImage(systemName: iconName), for: .normal)
+    }
+    
     // UIButton Action
-    @objc func kaydolTapped() {
+    @objc func signUpTapped() {
         print("kaydol tıklandı.")
+        performSegue(withIdentifier: "toSignUpVC", sender: nil)
     }
     
     @IBAction func googleSigninButton(_ sender: Any) {
@@ -121,7 +143,6 @@ class LoginViewController: UIViewController, ASAuthorizationControllerPresentati
                     self.emailTextField.alpha = 0
                     self.passwordTextField.alpha = 0
                     self.loginButtonOutlet.alpha = 0
-                    self.signinButtonOutlet.alpha = 0
                     self.googleSignInButtonOutlet.alpha = 0
                     self.appleSignInButtonOutlet.alpha = 0
                     self.label.alpha = 0
@@ -198,7 +219,6 @@ class LoginViewController: UIViewController, ASAuthorizationControllerPresentati
                     self.emailTextField.alpha = 0
                     self.passwordTextField.alpha = 0
                     self.loginButtonOutlet.alpha = 0
-                    self.signinButtonOutlet.alpha = 0
                     self.googleSignInButtonOutlet.alpha = 0
                     self.appleSignInButtonOutlet.alpha = 0
                     self.label.alpha = 0
@@ -218,18 +238,26 @@ class LoginViewController: UIViewController, ASAuthorizationControllerPresentati
         }
     }
     
-    @IBAction func signinButton(_ sender: Any) {
-        guard let email = emailTextField.text, let password = passwordTextField.text else { return }
-
-        Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
-            if let error = error {
-                // Hata durumunu ele alın
-                print("Kayıt hatası: \(error.localizedDescription)")
-            } else {
-                // Başarılı kayıt, kullanıcıyı giriş yapmaya yönlendirin
-                print("Kayıt başarılı!")
-                // Giriş ekranına yönlendirebilirsiniz
-            }
+    func startWorldGrowthAnimation() {
+        // Giriş başarılı, küreyi büyüt ve butonları gizle
+        UIView.animate(withDuration: 1.5, animations: {
+            self.emailTextField.alpha = 0
+            self.passwordTextField.alpha = 0
+            self.loginButtonOutlet.alpha = 0
+            self.googleSignInButtonOutlet.alpha = 0
+            self.appleSignInButtonOutlet.alpha = 0
+            self.label.alpha = 0
+            self.signUpButton.alpha = 0
+        })
+        
+        // Giriş başarılı, küreyi büyüt
+        self.spinWorldManager.animateSphereGrowth(to: 2.0, duration: 3.0) {
+            // Küre büyüme işlemi tamamlandığında segue ile MainViewController'a geç
+            UIView.animate(withDuration: 2, animations: {
+                self.destinationVC.view.alpha = 1.0  // Görünürlüğü yavaş yavaş artır
+            }, completion: { _ in
+                self.destinationVC.didMove(toParent: self)
+            })
         }
     }
 }
@@ -256,7 +284,6 @@ extension LoginViewController: ASAuthorizationControllerDelegate {
                         self.emailTextField.alpha = 0
                         self.passwordTextField.alpha = 0
                         self.loginButtonOutlet.alpha = 0
-                        self.signinButtonOutlet.alpha = 0
                         self.googleSignInButtonOutlet.alpha = 0
                         self.appleSignInButtonOutlet.alpha = 0
                         self.label.alpha = 0
@@ -283,5 +310,7 @@ extension LoginViewController: ASAuthorizationControllerDelegate {
         print("Sign in with Apple failed: \(error.localizedDescription)")
     }
 }
+
+
 
 

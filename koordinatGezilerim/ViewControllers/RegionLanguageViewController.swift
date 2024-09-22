@@ -14,6 +14,7 @@ class RegionLanguageViewController: UIViewController, UIPickerViewDelegate, UIPi
     var languageSettings: [String: Any] = [:]
     
     let db = Firestore.firestore()
+    let currentUser = Auth.auth().currentUser
     
     let coordinateDocumentID = "coordinateSettings"
     let languageDocumentID = "languageSettigns"
@@ -126,7 +127,7 @@ class RegionLanguageViewController: UIViewController, UIPickerViewDelegate, UIPi
         }
 
         // Koordinat verilerini Firebase'e kaydet
-        db.collection("user").document(coordinateDocumentID).setData(coordinateSettings) { error in
+        db.collection((currentUser?.email)!).document(coordinateDocumentID).setData(coordinateSettings) { error in
             if let error = error {
                 print("Error writing coordinate document: \(error)")
             } else {
@@ -135,7 +136,7 @@ class RegionLanguageViewController: UIViewController, UIPickerViewDelegate, UIPi
         }
         
         // Dil verilerini Firebase'e kaydet
-        db.collection("user").document(languageDocumentID).setData(languageSettings) { error in
+        db.collection((currentUser?.email)!).document(languageDocumentID).setData(languageSettings) { error in
             if let error = error {
                 print("Error writing coordinate document: \(error)")
             } else {
@@ -146,7 +147,7 @@ class RegionLanguageViewController: UIViewController, UIPickerViewDelegate, UIPi
 
     func fetchSettingsDataFromFirebase() {
         // Koordinat verilerini Firebase'den al
-        let coordinateDocRef = db.collection("user").document(coordinateDocumentID)
+        let coordinateDocRef = db.collection((currentUser?.email)!).document(coordinateDocumentID)
         coordinateDocRef.getDocument { [weak self] (document, error) in
             if let document = document, document.exists {
                 let data = document.data()
@@ -160,7 +161,7 @@ class RegionLanguageViewController: UIViewController, UIPickerViewDelegate, UIPi
         }
         
         // Dil verilerini Firebase'den al
-        let languageDocRef = db.collection("user").document(languageDocumentID)
+        let languageDocRef = db.collection((currentUser?.email)!).document(languageDocumentID)
         languageDocRef.getDocument { [weak self] (document, error) in
             if let document = document, document.exists {
                 let data = document.data()
