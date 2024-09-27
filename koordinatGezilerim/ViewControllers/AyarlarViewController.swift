@@ -12,13 +12,13 @@ class AyarlarViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     let sections = ["Account", "Personalization", "Accessibility & Advanced", ""]
     let accountItems = ["Profile & Accounts", "Privacy & Security"]
-    let personalizationItems = ["Dark Mode", "Region & Language", "Themes Organize"]
+    let personalizationItems = ["Region"]
     let accessibilityItems = ["Help & Feedback", "Permissions", "About", "Support Us"]
     let signOutItems = ["Sign Out"]
     
     // İkonlar
     let accountIcons = ["person.crop.circle", "lock"]
-    let personalizationIcons = ["moon", "globe", "books.vertical"]
+    let personalizationIcons = ["globe"]
     let accessibilityIcons = ["smiley.fill", "lock.shield", "questionmark.circle", "heart"]
     let signOutIcons = ["rectangle.portrait.and.arrow.right"]
     
@@ -55,32 +55,22 @@ class AyarlarViewController: UIViewController, UITableViewDelegate, UITableViewD
         if indexPath.section == 0 {
             cell.titleLabel.text = accountItems[indexPath.row]
             cell.iconImageView.image = UIImage(systemName: accountIcons[indexPath.row])
-            cell.chevronRightOutlet.alpha = 1
-            cell.darkModeSwitchOutlet.alpha = 0
         } else if indexPath.section == 1 {
             if indexPath.row == 0 {
                 // Dark Mode satırı
                 cell.titleLabel.text = personalizationItems[indexPath.row]
                 cell.iconImageView.image = UIImage(systemName: personalizationIcons[indexPath.row])
-                cell.chevronRightOutlet.alpha = 0
-                cell.darkModeSwitchOutlet.alpha = 1
             } else {
                 // Diğer personalization satırları
                 cell.titleLabel.text = personalizationItems[indexPath.row]
                 cell.iconImageView.image = UIImage(systemName: personalizationIcons[indexPath.row])
-                cell.chevronRightOutlet.alpha = 1
-                cell.darkModeSwitchOutlet.alpha = 0
             }
         } else if indexPath.section == 2 {
             cell.titleLabel.text = accessibilityItems[indexPath.row]
             cell.iconImageView.image = UIImage(systemName: accessibilityIcons[indexPath.row])
-            cell.chevronRightOutlet.alpha = 1
-            cell.darkModeSwitchOutlet.alpha = 0
         } else {
             cell.titleLabel.text = signOutItems[indexPath.row]
             cell.iconImageView.image = UIImage(systemName: signOutIcons[indexPath.row])
-            cell.chevronRightOutlet.alpha = 1
-            cell.darkModeSwitchOutlet.alpha = 0
         }
         
         // Separator'ın alt satırlarda olmamasını sağlama
@@ -131,18 +121,8 @@ class AyarlarViewController: UIViewController, UITableViewDelegate, UITableViewD
         } else if indexPath.section == 1 {
             switch indexPath.row {
             case 0:
-                print("Dark Mode")
-                // Dark Mode satırına tıklandığında switch'in durumunu değiştirme
-                if let cell = tableView.cellForRow(at: indexPath) as? SettingsTableViewCell {
-                    cell.darkModeSwitchOutlet.setOn(!cell.darkModeSwitchOutlet.isOn, animated: true)
-                    // Burada ayrıca dark mode'un sistem genelinde etkisini de sağlayabilirsiniz
-                    toggleDarkMode(isOn: cell.darkModeSwitchOutlet.isOn)
-                }
-            case 1:
                 print("Region & Language")
                 performSegue(withIdentifier: "toRegionLanguageVC", sender: nil)
-            case 2:
-                print("Themes Organize")
             default:
                 break
             }

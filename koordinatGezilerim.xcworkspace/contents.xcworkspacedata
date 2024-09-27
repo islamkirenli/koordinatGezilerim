@@ -2,12 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:/Users/islamkirenli/Desktop/yapilanUygulamalar/koordinatGezilerim/koordinatGezilerim.xcodeproj">
+      location = "group:RandomJourney.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Pods/Pods.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:koordinatGezilerim.xcodeproj">
    </FileRef>
 </Workspace>

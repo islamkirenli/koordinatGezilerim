@@ -8,17 +8,19 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
     @IBOutlet weak var tableView: UITableView!
 
     var sections: [Section] = []
-    var itemDictionary: [String: [String]] = [:] // Country -> CityTitles sözlüğü
+    var itemDictionary: [String: [(city: String, uuid: String)]] = [:] // Country -> CityTitles sözlüğü
     let db = Firestore.firestore()
     let currentUser = Auth.auth().currentUser
     var addedCountries: Set<String> = [] // Eklenen Country değerlerini takip etmek için Set
-    var coordinates: [(city: String, latitude: CLLocationDegrees, longitude: CLLocationDegrees)] = [] // Store city and coordinates
+    var coordinates: [(city: String, latitude: CLLocationDegrees, longitude: CLLocationDegrees, isGone: Bool, uuid: String)] = []
 
     var isSelectionMode = false
     var selectedItems: [IndexPath] = []
     
     var mapView: MKMapView? // Add a map view property
-
+    
+    var selectedUUID: String?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -55,6 +57,92 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
 
         // Tablodaki tüm bölümleri ve satırları yeniden yükleyin
+        tableView.reloadData()
+    }
+    
+    // Toplu silme işlemi için buton ekleyin
+    @objc func deleteSelectedItems() {
+        // Seçimlerin tersinden (en son seçilenden başlayarak) silinmesi için, seçili öğeleri ters sırayla işleyelim.
+        let reversedSelectedItems = selectedItems.sorted(by: { $0.section > $1.section })
+
+        for indexPath in reversedSelectedItems {
+            if indexPath.row == -1 {
+                // Bölüm silme işlemi (bölüm altındaki tüm şehirleri sil)
+                let section = indexPath.section
+                let country = sections[section].title
+
+                // Firestore'dan bölüm altındaki tüm şehirleri sil
+                if let cities = itemDictionary[country] {
+                    for city in cities {
+                        db.collection((currentUser?.email)!+"-CoordinateInformations").whereField("Country", isEqualTo: country).whereField("CityTitle", isEqualTo: city.city).getDocuments { (snapshot, error) in
+                            if let error = error {
+                                print("Error deleting document: \(error)")
+                            } else {
+                                for document in snapshot!.documents {
+                                    document.reference.delete { error in
+                                        if let error = error {
+                                            print("Error deleting document: \(error)")
+                                        } else {
+                                            print("Document successfully deleted!")
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // itemDictionary ve sections'dan bölümü sil
+                itemDictionary.removeValue(forKey: country)
+                sections.remove(at: section)
+                tableView.deleteSections(IndexSet(integer: section), with: .automatic)
+            } else {
+                // Satır silme işlemi
+                let section = indexPath.section
+                let country = sections[section].title
+                var cities = itemDictionary[country]!
+                
+                let cityToDelete = cities[indexPath.row]
+
+                // Firestore'dan veriyi sil
+                db.collection((currentUser?.email)!+"-CoordinateInformations").whereField("Country", isEqualTo: country).whereField("CityTitle", isEqualTo: cityToDelete.city).getDocuments { (snapshot, error) in
+                    if let error = error {
+                        print("Error deleting document: \(error)")
+                    } else {
+                        for document in snapshot!.documents {
+                            document.reference.delete { error in
+                                if let error = error {
+                                    print("Error deleting document: \(error)")
+                                } else {
+                                    print("Document successfully deleted!")
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Diziden şehri sil
+                cities.remove(at: indexPath.row)
+                itemDictionary[country] = cities
+                
+                if cities.isEmpty {
+                    // Eğer bölümde başka şehir kalmadıysa, bölümü de kaldır
+                    itemDictionary.removeValue(forKey: country)
+                    sections.remove(at: section)
+                    tableView.deleteSections(IndexSet(integer: section), with: .automatic)
+                } else {
+                    tableView.deleteRows(at: [indexPath], with: .automatic)
+                }
+            }
+        }
+
+        // Seçim modunu kapat ve butonları geri yükle
+        selectedItems.removeAll()
+        isSelectionMode = false
+        navigationItem.leftBarButtonItem = nil
+        navigationItem.rightBarButtonItem?.title = "Select"
+        
+        // Tabloyu yeniden yükleyin (ok işaretlerini geri getirmek için)
         tableView.reloadData()
     }
     
@@ -101,13 +189,6 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
             mapView?.autoresizingMask = [.flexibleWidth, .flexibleHeight]
             mapView?.delegate = self // MKMapViewDelegate atandı
             view.addSubview(mapView!)
-            
-            /* Set the initial region to one of the coordinates (if available)
-            if let firstCoordinate = coordinates.first {
-                let region = MKCoordinateRegion(center: firstCoordinate, latitudinalMeters: 10000, longitudinalMeters: 10000)
-                mapView?.setRegion(region, animated: true)
-            }
-            */
             
             // Add annotations for all coordinates
             for coordinate in coordinates {
@@ -164,105 +245,23 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
             // Pin animasyonunu etkinleştir
             annotationView?.animatesDrop = true
             
-            // Pin rengini ayarla (varsayılan: .red, .green, .purple)
-            annotationView?.pinTintColor = .red
+            // Annotation'un başlığını şehre göre al
+            if let cityTitle = annotation.title as? String {
+                // coordinates dizisinde bu şehre karşılık gelen isGone değerini bul
+                if let coordinate = coordinates.first(where: { $0.city == cityTitle }) {
+                    // isGone true ise yeşil, false ise kırmızı pin
+                    annotationView?.pinTintColor = coordinate.isGone ? .green : .red
+                } else {
+                    // Eğer bir eşleşme bulunmazsa varsayılan olarak kırmızı pin kullan
+                    annotationView?.pinTintColor = .red
+                }
+            }
         } else {
             annotationView?.annotation = annotation
         }
         
         return annotationView
     }
-
-
-    // Toplu silme işlemi için buton ekleyin
-    @objc func deleteSelectedItems() {
-        // Seçimlerin tersinden (en son seçilenden başlayarak) silinmesi için, seçili öğeleri ters sırayla işleyelim.
-        let reversedSelectedItems = selectedItems.sorted(by: { $0.section > $1.section })
-
-        for indexPath in reversedSelectedItems {
-            if indexPath.row == -1 {
-                // Bölüm silme işlemi (bölüm altındaki tüm şehirleri sil)
-                let section = indexPath.section
-                let country = sections[section].title
-
-                // Firestore'dan bölüm altındaki tüm şehirleri sil
-                if let cities = itemDictionary[country] {
-                    for city in cities {
-                        db.collection((currentUser?.email)!+"-CoordinateInformations").whereField("Country", isEqualTo: country).whereField("CityTitle", isEqualTo: city).getDocuments { (snapshot, error) in
-                            if let error = error {
-                                print("Error deleting document: \(error)")
-                            } else {
-                                for document in snapshot!.documents {
-                                    document.reference.delete { error in
-                                        if let error = error {
-                                            print("Error deleting document: \(error)")
-                                        } else {
-                                            print("Document successfully deleted!")
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-                // itemDictionary ve sections'dan bölümü sil
-                itemDictionary.removeValue(forKey: country)
-                sections.remove(at: section)
-                tableView.deleteSections(IndexSet(integer: section), with: .automatic)
-            } else {
-                // Satır silme işlemi
-                let section = indexPath.section
-                let country = sections[section].title
-                var cities = itemDictionary[country]!
-                
-                let cityToDelete = cities[indexPath.row]
-
-                // Firestore'dan veriyi sil
-                db.collection((currentUser?.email)!+"-CoordinateInformations").whereField("Country", isEqualTo: country).whereField("CityTitle", isEqualTo: cityToDelete).getDocuments { (snapshot, error) in
-                    if let error = error {
-                        print("Error deleting document: \(error)")
-                    } else {
-                        for document in snapshot!.documents {
-                            document.reference.delete { error in
-                                if let error = error {
-                                    print("Error deleting document: \(error)")
-                                } else {
-                                    print("Document successfully deleted!")
-                                }
-                            }
-                        }
-                    }
-                }
-
-                // Diziden şehri sil
-                cities.remove(at: indexPath.row)
-                itemDictionary[country] = cities
-                
-                if cities.isEmpty {
-                    // Eğer bölümde başka şehir kalmadıysa, bölümü de kaldır
-                    itemDictionary.removeValue(forKey: country)
-                    sections.remove(at: section)
-                    tableView.deleteSections(IndexSet(integer: section), with: .automatic)
-                } else {
-                    tableView.deleteRows(at: [indexPath], with: .automatic)
-                }
-            }
-        }
-
-        // Seçim modunu kapat ve butonları geri yükle
-        selectedItems.removeAll()
-        isSelectionMode = false
-        navigationItem.leftBarButtonItem = nil
-        navigationItem.rightBarButtonItem?.title = "Select"
-        
-        // Tabloyu yeniden yükleyin (ok işaretlerini geri getirmek için)
-        tableView.reloadData()
-    }
-
-
-
-
 
     // Number of sections
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -288,7 +287,7 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
         // İlgili section için CityTitle bilgisini itemDictionary'den al ve alfabetik sırada göster
         let country = sections[indexPath.section].title
         if let cities = itemDictionary[country] {
-            cell.textLabel?.text = cities[indexPath.row]
+            cell.textLabel?.text = cities[indexPath.row].city
         }
 
         if isSelectionMode {
@@ -340,8 +339,16 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
         return headerView
     }
 
-    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let country = sections[indexPath.section].title
+        print(country)
+        if let cities = itemDictionary[country] {
+            let selectedCity = cities[indexPath.row]
+            print("deneme: \(selectedCity.uuid)")
+            // UUID bilgisini ShowViewController'a aktar
+            selectedUUID = selectedCity.uuid
+        }
+        
         if isSelectionMode {
             if let index = selectedItems.firstIndex(of: indexPath) {
                 selectedItems.remove(at: index)
@@ -350,6 +357,10 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
             }
             
             tableView.reloadRows(at: [indexPath], with: .none)
+        }
+        
+        if isSelectionMode == false{
+            performSegue(withIdentifier: "toShowVC", sender: self)
         }
     }
 
@@ -383,10 +394,14 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
                     let city = data["CityTitle"] as? String ?? "Unknown City"
                     let latitude = data["Latitude"] as? CLLocationDegrees ?? 0.0
                     let longitude = data["Longitude"] as? CLLocationDegrees ?? 0.0
-
+                    let isGone = data["IsGone"] as? Bool ?? false
+                    let uuid = data["UUID"] as? String ?? "Unknown UUID"
+                    
+                    print(uuid)
+                    
                     // Append the city and coordinates
-                    if latitude != 0.0 && longitude != 0.0 {
-                        self.coordinates.append((city: city, latitude: latitude, longitude: longitude))
+                    if latitude != 0.0 && longitude != 0.0 && uuid != "Unknown UUID"{
+                        self.coordinates.append((city: city, latitude: latitude, longitude: longitude, isGone: isGone, uuid: uuid))
                     }
 
                     // Eğer country daha önce eklenmediyse, sections dizisine ekle
@@ -398,10 +413,10 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
 
                     // itemDictionary'e city ekle ve alfabetik sırayla sakla
                     if self.itemDictionary[country] != nil {
-                        self.itemDictionary[country]?.append(city)
-                        self.itemDictionary[country]?.sort() // Alfabetik sırala
+                        self.itemDictionary[country]?.append((city,uuid))
+                        //self.itemDictionary[country]?.sort() // Alfabetik sırala
                     } else {
-                        self.itemDictionary[country] = [city]
+                        self.itemDictionary[country] = [(city,uuid)]
                     }
                 }
 
@@ -415,6 +430,15 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
             }
         }
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "toShowVC"{
+            if let destinationVC = segue.destination as? ShowCoordinateViewController{
+                destinationVC.uuid = selectedUUID
+            }
+        }
+    }
+
 
     // Sağa kaydırarak silme özelliğini ekleyin
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
@@ -424,7 +448,7 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
             let cityToDelete = cities[indexPath.row]
             
             // Firestore'dan veriyi sil
-            db.collection((currentUser?.email)!+"-CoordinateInformations").whereField("Country", isEqualTo: country).whereField("CityTitle", isEqualTo: cityToDelete).getDocuments { (snapshot, error) in
+            db.collection((currentUser?.email)!+"-CoordinateInformations").whereField("Country", isEqualTo: country).whereField("CityTitle", isEqualTo: cityToDelete.city).getDocuments { (snapshot, error) in
                 if let error = error {
                     print("Error deleting document: \(error)")
                 } else {

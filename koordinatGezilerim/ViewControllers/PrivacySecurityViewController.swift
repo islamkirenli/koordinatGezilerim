@@ -235,21 +235,85 @@ class PrivacySecurityViewController: UIViewController, UITextViewDelegate {
     }
     
     func deleteUserAccount() {
-        currentUser?.delete { error in
-            if let error = error {
-                // Hata durumunu ele al
-                print("Kullanıcı silme hatası: \(error.localizedDescription)")
+        // İlk olarak Firestore'dan tüm verileri sil
+        deleteUserData { [weak self] success in
+            guard let self = self else { return }
+            
+            if success {
+                // Firestore verileri başarıyla silindiyse kullanıcı hesabını sil
+                self.currentUser?.delete { error in
+                    if let error = error {
+                        // Kullanıcı silme hatası
+                        print("Kullanıcı silme hatası: \(error.localizedDescription)")
+                    } else {
+                        // Kullanıcı başarıyla silindi
+                        self.performSegue(withIdentifier: "toLogInVC", sender: nil)
+                        print("Kullanıcı başarıyla silindi")
+                    }
+                }
             } else {
-                // Kullanıcı başarıyla silindi
-                self.performSegue(withIdentifier: "toLogInVC", sender: nil)
-                print("Kullanıcı başarıyla silindi")
+                print("Kullanıcı verileri silinirken bir hata oluştu.")
+            }
+        }
+    }
+
+    func deleteUserData(completion: @escaping (Bool) -> Void) {
+        guard let userEmail = currentUser?.email else {
+            completion(false)
+            return
+        }
+        
+        // Kullanıcıya ait ana koleksiyonu sil
+        let userCollectionRef = db.collection(userEmail)
+        
+        userCollectionRef.getDocuments { snapshot, error in
+            if let error = error {
+                print("Error getting documents: \(error)")
+                completion(false)
+                return
+            }
+            
+            let batch = self.db.batch()
+            
+            // Kullanıcıya ait belgeleri sil
+            snapshot?.documents.forEach { document in
+                batch.deleteDocument(document.reference)
+            }
+            
+            // CoordinateInformations koleksiyonunu da sil
+            let coordinateCollectionRef = self.db.collection(userEmail + "-CoordinateInformations")
+            
+            coordinateCollectionRef.getDocuments { snapshot, error in
+                if let error = error {
+                    print("Error getting CoordinateInformations documents: \(error)")
+                    completion(false)
+                    return
+                }
+                
+                snapshot?.documents.forEach { document in
+                    batch.deleteDocument(document.reference)
+                }
+                
+                // Veritabanındaki tüm belgeler siliniyor
+                batch.commit { error in
+                    if let error = error {
+                        print("Error deleting data: \(error)")
+                        completion(false)
+                    } else {
+                        print("Kullanıcı verileri başarıyla silindi.")
+                        completion(true)
+                    }
+                }
             }
         }
     }
     
     func saveDeleteReason(){
-        db.collection((currentUser?.email)!).document("deleteReason").setData([
+        let uuid = UUID().uuidString
+        db.collection("DeleteReasons").document(uuid).setData([
             "Reason": deleteAccountTextView.text ?? "",
+            "User": currentUser?.email ?? "",
+            "Date": Date()
         ]) { error in
             if let error = error {
                 // Hata durumunu işle

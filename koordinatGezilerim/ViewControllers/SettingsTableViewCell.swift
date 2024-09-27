@@ -24,7 +24,6 @@ class SettingsTableViewCell: UITableViewCell {
     @IBOutlet weak var iconImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!    
     
-    @IBOutlet weak var darkModeSwitchOutlet: UISwitch!
     @IBOutlet weak var chevronRightOutlet: UIImageView!
     
     override func awakeFromNib() {

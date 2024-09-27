@@ -44,10 +44,12 @@ class RegionLanguageViewController: UIViewController, UIPickerViewDelegate, UIPi
         selectedCountry = CountriesManager.countries[0]
         regionTextField.text = selectedCountry
         
+        /*
         languageTextField.inputView = pickerView
         languageTextField.inputAccessoryView = toolbar
         selectedLanguage = LanguageManager.languages[0]
         languageTextField.text = selectedLanguage
+        */
         
         // Save butonunu navigation bar'a ekleyin
         let saveButton = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(saveAction))
@@ -64,9 +66,9 @@ class RegionLanguageViewController: UIViewController, UIPickerViewDelegate, UIPi
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         if regionTextField.isFirstResponder {
             return CountriesManager.countries.count
-        } else if languageTextField.isFirstResponder {
+        } /*else if languageTextField.isFirstResponder {
             return LanguageManager.languages.count
-        }
+        }*/
         return 0
     }
 
@@ -74,9 +76,9 @@ class RegionLanguageViewController: UIViewController, UIPickerViewDelegate, UIPi
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         if regionTextField.isFirstResponder {
             return CountriesManager.countries[row]
-        } else if languageTextField.isFirstResponder {
+        } /*else if languageTextField.isFirstResponder {
             return LanguageManager.languages[row]
-        }
+        }*/
         return nil
     }
 
@@ -84,18 +86,18 @@ class RegionLanguageViewController: UIViewController, UIPickerViewDelegate, UIPi
         if regionTextField.isFirstResponder {
             selectedCountry = CountriesManager.countries[row]
             regionTextField.text = selectedCountry
-        } else if languageTextField.isFirstResponder {
+        } /*else if languageTextField.isFirstResponder {
             selectedLanguage = LanguageManager.languages[row]
             languageTextField.text = selectedLanguage
-        }
+        }*/
     }
 
     @objc func doneAction() {
         if regionTextField.isFirstResponder {
             regionTextField.text = selectedCountry ?? CountriesManager.countries[0]
-        } else if languageTextField.isFirstResponder {
+        } /*else if languageTextField.isFirstResponder {
             languageTextField.text = selectedLanguage ?? LanguageManager.languages[0]
-        }
+        }*/
         self.view.endEditing(true)
     }
     
@@ -118,13 +120,14 @@ class RegionLanguageViewController: UIViewController, UIPickerViewDelegate, UIPi
             }
         }
 
+        /*
         if let selectedLanguage = selectedLanguage {
             if selectedLanguage == "English"{
                 languageSettings["language"] = "en"
             } else if selectedLanguage == "Türkçe"{
                 languageSettings["language"] = "tr"
             }
-        }
+        }*/
 
         // Koordinat verilerini Firebase'e kaydet
         db.collection((currentUser?.email)!).document(coordinateDocumentID).setData(coordinateSettings) { error in
@@ -135,14 +138,14 @@ class RegionLanguageViewController: UIViewController, UIPickerViewDelegate, UIPi
             }
         }
         
-        // Dil verilerini Firebase'e kaydet
+        /* Dil verilerini Firebase'e kaydet
         db.collection((currentUser?.email)!).document(languageDocumentID).setData(languageSettings) { error in
             if let error = error {
                 print("Error writing coordinate document: \(error)")
             } else {
                 print("Language document successfully written!")
             }
-        }
+        }*/
     }
 
     func fetchSettingsDataFromFirebase() {
@@ -160,7 +163,7 @@ class RegionLanguageViewController: UIViewController, UIPickerViewDelegate, UIPi
             }
         }
         
-        // Dil verilerini Firebase'den al
+        /* Dil verilerini Firebase'den al
         let languageDocRef = db.collection((currentUser?.email)!).document(languageDocumentID)
         languageDocRef.getDocument { [weak self] (document, error) in
             if let document = document, document.exists {
@@ -177,7 +180,7 @@ class RegionLanguageViewController: UIViewController, UIPickerViewDelegate, UIPi
             } else {
                 print("Language document does not exist or error occurred: \(error?.localizedDescription ?? "Unknown error")")
             }
-        }
+        }*/
     }
 
 }
