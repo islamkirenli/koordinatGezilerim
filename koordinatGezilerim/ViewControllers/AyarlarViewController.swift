@@ -182,6 +182,7 @@ class AyarlarViewController: UIViewController, UITableViewDelegate, UITableViewD
             self.performSegue(withIdentifier: "toLoginVC", sender: nil)
         } catch let signOutError as NSError {
             print("Error signing out: %@", signOutError)
+            AlertManager.showAlert(title: "Error", message: "Error signing out: \(signOutError)", viewController: self)
         }
     }
     
@@ -205,9 +206,7 @@ class AyarlarViewController: UIViewController, UITableViewDelegate, UITableViewD
             
             present(mailComposeVC, animated: true, completion: nil)
         } else {
-            let alert = UIAlertController(title: "Mail Gönderilemiyor", message: "Mail uygulaması bulunamadı. Lütfen cihazınıza mail hesabı ekleyin.", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Tamam", style: .default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
+            AlertManager.showAlert(title: "Mail Gönderilemiyor", message: "Mail uygulaması bulunamadı. Lütfen cihazınıza mail hesabı ekleyin.", viewController: self)
         }
     }
 

@@ -67,11 +67,10 @@ class ProfilAccountViewController: UIViewController {
         ]) { error in
             if let error = error {
                 // Hata durumunu işle
-                print("Error writing document: \(error)")
+                AlertManager.showAlert(title: "Error", message: "Error writing document: \(error)", viewController: self)
             } else {
                 // Başarılı yazma
-                //Alerts.showAlert(title: "Saved!", message: "Your information has been successfully saved.", viewController: self)
-                print("Document successfully written!")
+                AlertManager.showAlert(title: "Saved", message: "Your information has been successfully saved.", viewController: self)
             }
         }
     }
@@ -94,6 +93,7 @@ class ProfilAccountViewController: UIViewController {
                 }
             } else {
                 print("Profil document does not exist or error occurred: \(error?.localizedDescription ?? "Unknown error")")
+                AlertManager.showAlert(title: "Error", message: "Profil document does not exist or error occurred: \(error?.localizedDescription ?? "Unknown error")", viewController: self!)
             }
         }
     }

@@ -100,7 +100,7 @@ class SignUpViewController: UIViewController, ASAuthorizationControllerDelegate,
             Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
                 if let error = error {
                     // Hata durumunu ele alın
-                    print("Kayıt hatası: \(error.localizedDescription)")
+                    AlertManager.showAlert(title: "Error", message: "Kayıt hatası: \(error.localizedDescription)", viewController: self)
                 } else {
                     // Başarılı kayıt, kullanıcıyı giriş yapmaya yönlendirin
                     print("Kayıt başarılı!")
@@ -108,7 +108,7 @@ class SignUpViewController: UIViewController, ASAuthorizationControllerDelegate,
                 }
             }
         } else{
-            print("şifre ve doğrulama şifresi aynı değil.")
+            AlertManager.showAlert(title: "Error", message: "şifre ve doğrulama şifresi aynı değil.", viewController: self)
         }
         
     }
@@ -209,13 +209,13 @@ class SignUpViewController: UIViewController, ASAuthorizationControllerDelegate,
                     // Başarılı giriş işlemleri burada yapılabilir
                     self.handleSuccessfulSignUp()
                 } catch {
-                    print("Apple sign in error: \(error.localizedDescription)")
+                    AlertManager.showAlert(title: "Error", message: "Apple sign up error: \(error.localizedDescription)", viewController: self)
                 }
             }
         }
     }
     
     func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
-        print("Sign in with Apple failed: \(error.localizedDescription)")
+        AlertManager.showAlert(title: "Error", message: "Sign up with Apple failed: \(error.localizedDescription)", viewController: self)
     }
 }

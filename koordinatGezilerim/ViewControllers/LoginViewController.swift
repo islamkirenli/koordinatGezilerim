@@ -209,7 +209,7 @@ class LoginViewController: UIViewController, ASAuthorizationControllerPresentati
         Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
             if let error = error {
                 // Hata durumunu ele alın
-                print("Giriş hatası: \(error.localizedDescription)")
+                AlertManager.showAlert(title: "Error", message: "Giriş hatası: \(error.localizedDescription)", viewController: self)
             } else {
                 // Başarılı giriş, kullanıcıyı başka bir ekrana yönlendirin
                 print("Giriş başarılı!")
@@ -300,14 +300,14 @@ extension LoginViewController: ASAuthorizationControllerDelegate {
                         })
                     }
                 } catch {
-                    print("Apple sign in error: \(error.localizedDescription)")
+                    AlertManager.showAlert(title: "Error", message: "Apple sign in error: \(error.localizedDescription)", viewController: self)
                 }
             }
         }
     }
     
     func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
-        print("Sign in with Apple failed: \(error.localizedDescription)")
+        AlertManager.showAlert(title: "Error", message: "Sign in with Apple failed: \(error.localizedDescription)", viewController: self)
     }
 }
 

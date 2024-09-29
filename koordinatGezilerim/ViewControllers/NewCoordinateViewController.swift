@@ -116,7 +116,7 @@ class NewCoordinateViewController: UIViewController, MKMapViewDelegate {
     
     private func generateCoordinatesAndTransition() {
         guard let north = north, let south = south, let east = east, let west = west else {
-            print("Koordinatlar eksik")
+            AlertManager.showAlert(title: "Error!", message: "Lütfen ayarlardan bölge seçimi yapınız.", viewController: self)
             return
         }
         

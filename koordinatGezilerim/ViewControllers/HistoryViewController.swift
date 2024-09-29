@@ -16,9 +16,7 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
 
     var isSelectionMode = false
     var selectedItems: [IndexPath] = []
-    
-    var mapView: MKMapView? // Add a map view property
-    
+        
     var selectedUUID: String?
     
     override func viewDidLoad() {
@@ -37,6 +35,12 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
         // Add the floating map button
         addFloatingMapButton()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+    }
+
     
     @objc func selectButtonTapped() {
         isSelectionMode.toggle()
@@ -76,14 +80,14 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
                     for city in cities {
                         db.collection((currentUser?.email)!+"-CoordinateInformations").whereField("Country", isEqualTo: country).whereField("CityTitle", isEqualTo: city.city).getDocuments { (snapshot, error) in
                             if let error = error {
-                                print("Error deleting document: \(error)")
+                                AlertManager.showAlert(title: "Error!", message: "Error deleting document: \(error)", viewController: self)
                             } else {
                                 for document in snapshot!.documents {
                                     document.reference.delete { error in
                                         if let error = error {
-                                            print("Error deleting document: \(error)")
+                                            AlertManager.showAlert(title: "Delete Error", message: "Error deleting document: \(error)", viewController: self)
                                         } else {
-                                            print("Document successfully deleted!")
+                                            AlertManager.showAlert(title: "Deleted", message: "Document successfully deleted!", viewController: self)
                                         }
                                     }
                                 }
@@ -107,14 +111,14 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
                 // Firestore'dan veriyi sil
                 db.collection((currentUser?.email)!+"-CoordinateInformations").whereField("Country", isEqualTo: country).whereField("CityTitle", isEqualTo: cityToDelete.city).getDocuments { (snapshot, error) in
                     if let error = error {
-                        print("Error deleting document: \(error)")
+                        AlertManager.showAlert(title: "Error!", message: "Error deleting document: \(error)", viewController: self)
                     } else {
                         for document in snapshot!.documents {
                             document.reference.delete { error in
                                 if let error = error {
-                                    print("Error deleting document: \(error)")
+                                    AlertManager.showAlert(title: "Delete Error", message: "Error deleting document: \(error)", viewController: self)
                                 } else {
-                                    print("Document successfully deleted!")
+                                    AlertManager.showAlert(title: "Deleted", message: "Document successfully deleted!", viewController: self)
                                 }
                             }
                         }
@@ -179,88 +183,7 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     // Action for the map button
     @objc func mapButtonTapped() {
-        
-        // Hide the navigation bar (Select and Back buttons)
-        navigationController?.setNavigationBarHidden(true, animated: true)
-        
-        // Create the map view
-        if mapView == nil {
-            mapView = MKMapView(frame: view.bounds)
-            mapView?.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-            mapView?.delegate = self // MKMapViewDelegate atandı
-            view.addSubview(mapView!)
-            
-            // Add annotations for all coordinates
-            for coordinate in coordinates {
-                let annotation = MKPointAnnotation()
-                annotation.coordinate = CLLocationCoordinate2D(latitude: coordinate.latitude, longitude: coordinate.longitude)
-                annotation.title = coordinate.city
-                mapView?.addAnnotation(annotation)
-            }
-            
-            // Add a dismiss button on the map
-            let dismissButton = UIButton(type: .system)
-            dismissButton.setTitle("Close Map", for: .normal)
-            dismissButton.tintColor = .white
-            dismissButton.backgroundColor = .systemRed
-            dismissButton.layer.cornerRadius = 10
-            dismissButton.addTarget(self, action: #selector(closeMapView), for: .touchUpInside)
-            
-            // Add dismiss button to the map view
-            mapView?.addSubview(dismissButton)
-            
-            // Set dismiss button constraints
-            dismissButton.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                dismissButton.bottomAnchor.constraint(equalTo: mapView!.safeAreaLayoutGuide.bottomAnchor, constant: -20),
-                dismissButton.centerXAnchor.constraint(equalTo: mapView!.centerXAnchor),
-                dismissButton.widthAnchor.constraint(equalToConstant: 120),
-                dismissButton.heightAnchor.constraint(equalToConstant: 40)
-            ])
-        }
-    }
-
-    @objc func closeMapView() {
-        // Show the navigation bar again
-        navigationController?.setNavigationBarHidden(false, animated: true)
-        // Remove the map view from the screen
-        mapView?.removeFromSuperview()
-        mapView = nil
-    }
-    
-    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        let identifier = "pin"
-        
-        if annotation is MKUserLocation {
-            // Kullanıcının konumu için varsayılan simgeyi kullanma
-            return nil
-        }
-
-        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? MKPinAnnotationView
-        
-        if annotationView == nil {
-            annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
-            annotationView?.canShowCallout = true
-            
-            // Pin animasyonunu etkinleştir
-            annotationView?.animatesDrop = true
-            
-            // Annotation'un başlığını şehre göre al
-            if let cityTitle = annotation.title as? String {
-                // coordinates dizisinde bu şehre karşılık gelen isGone değerini bul
-                if let coordinate = coordinates.first(where: { $0.city == cityTitle }) {
-                    // isGone true ise yeşil, false ise kırmızı pin
-                    annotationView?.pinTintColor = coordinate.isGone ? .green : .red
-                } else {
-                    // Eğer bir eşleşme bulunmazsa varsayılan olarak kırmızı pin kullan
-                    annotationView?.pinTintColor = .red
-                }
-            }
-        } else {
-            annotationView?.annotation = annotation
-        }
-        
-        return annotationView
+        performSegue(withIdentifier: "toMapVC", sender: self)
     }
 
     // Number of sections
@@ -344,7 +267,6 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
         print(country)
         if let cities = itemDictionary[country] {
             let selectedCity = cities[indexPath.row]
-            print("deneme: \(selectedCity.uuid)")
             // UUID bilgisini ShowViewController'a aktar
             selectedUUID = selectedCity.uuid
         }
@@ -386,7 +308,7 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
     func fetchSectionsFromFirestore() {
         db.collection((currentUser?.email)!+"-CoordinateInformations").getDocuments { (snapshot, error) in
             if let error = error {
-                print("Error getting documents: \(error)")
+                AlertManager.showAlert(title: "Error!", message: "Error getting documents: \(error)", viewController: self)
             } else {
                 for document in snapshot!.documents {
                     let data = document.data()
@@ -437,6 +359,12 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
                 destinationVC.uuid = selectedUUID
             }
         }
+        
+        if segue.identifier == "toMapVC" {
+            if let destinationVC = segue.destination as? HistoryMapViewController {
+                destinationVC.coordinates = self.coordinates // Koordinatları yeni VC'ye gönder
+            }
+        }
     }
 
 
@@ -451,13 +379,16 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
             db.collection((currentUser?.email)!+"-CoordinateInformations").whereField("Country", isEqualTo: country).whereField("CityTitle", isEqualTo: cityToDelete.city).getDocuments { (snapshot, error) in
                 if let error = error {
                     print("Error deleting document: \(error)")
+                    AlertManager.showAlert(title: "Error", message: "Error deleting document: \(error)", viewController: self)
                 } else {
                     for document in snapshot!.documents {
                         document.reference.delete { error in
                             if let error = error {
-                                print("Error deleting document: \(error)")
+                                AlertManager.showAlert(title: "Delete Error", message: "Error deleting document: \(error)", viewController: self)
+
                             } else {
-                                print("Document successfully deleted!")
+                                AlertManager.showAlert(title: "Deleted", message: "Document successfully deleted!", viewController: self)
+
                             }
                         }
                     }
@@ -468,6 +399,11 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
             cities.remove(at: indexPath.row)
             itemDictionary[country] = cities
             
+            // coordinates dizisinden şehri kaldır
+            if let index = coordinates.firstIndex(where: { $0.city == cityToDelete.city }) {
+                coordinates.remove(at: index)
+            }
+            
             if cities.isEmpty {
                 // Eğer tüm şehirler silindiyse, ülkeyi de silin
                 itemDictionary.removeValue(forKey: country)
@@ -475,15 +411,13 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
 
                 // Tabloda ilgili bölümü sil ve tabloyu tamamen yeniden yükle
                 tableView.deleteSections(IndexSet(integer: indexPath.section), with: .automatic)
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
             } else {
                 // Tabloda ilgili satırı güncelleyin
                 tableView.deleteRows(at: [indexPath], with: .automatic)
             }
         }
     }
+
 }
 
 // Section model

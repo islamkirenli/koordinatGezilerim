@@ -90,14 +90,14 @@ class SaveCoordinateViewController: UIViewController {
 
             
         } else {
-            print("alanları kontrol edin.")
+            AlertManager.showAlert(title: "Alert", message: "Alanları kontrol edin.", viewController: self)
         }
         
         db.collection((currentUser?.email)!+"-CoordinateInformations").document(coordinateInfoID).setData(coordinateInfo) { error in
             if let error = error {
-                print("Error writing coordinate document: \(error)")
+                AlertManager.showAlert(title: "Save Error", message: "Error writing coordinate document: \(error)", viewController: self)
             } else {
-                print("Coordinate document successfully written!")
+                AlertManager.showAlert(title: "Saved", message: "Coordinate document successfully written!", viewController: self)
             }
         }
     }

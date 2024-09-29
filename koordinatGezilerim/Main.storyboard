@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="zbe-8P-but">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="zbe-8P-but">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23084"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -28,6 +28,25 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1052.6717557251909" y="-2.1126760563380285"/>
+        </scene>
+        <!--History Map View Controller-->
+        <scene sceneID="XRT-Vq-ExJ">
+            <objects>
+                <viewController id="bb8-HW-c5E" customClass="HistoryMapViewController" customModule="RandomJourney" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="fSt-Pu-wX9">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="ttu-22-zpg"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="0UO-YS-n1z"/>
+                    <connections>
+                        <segue destination="mvI-Ya-Aly" kind="show" identifier="toShowVC" id="rTW-8H-z6w"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="agd-CW-b4K" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="920" y="1582"/>
         </scene>
         <!--Coordinate History-->
         <scene sceneID="FUn-ie-wDc">
@@ -69,6 +88,7 @@
                     <connections>
                         <outlet property="tableView" destination="EDz-YR-Rf0" id="8MX-c1-8Wq"/>
                         <segue destination="mvI-Ya-Aly" kind="show" identifier="toShowVC" id="94G-G5-MN9"/>
+                        <segue destination="bb8-HW-c5E" kind="show" identifier="toMapVC" id="jZ0-5p-QoR"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1I4-bg-I9R" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -520,7 +540,7 @@
                     <navigationItem key="navigationItem" title="Save Coordinate" id="Eg3-OX-IXY">
                         <barButtonItem key="rightBarButtonItem" style="plain" systemItem="save" id="TXK-bS-ZJH">
                             <connections>
-                                <action selector="saveButton:" destination="gbx-ev-O5T" id="t9b-3d-z6c"/>
+                                <action selector="saveButton:" destination="gbx-ev-O5T" id="JQM-0F-9y2"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -963,10 +983,14 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Show Coordinate" id="WeJ-fk-xwx">
-                        <barButtonItem key="rightBarButtonItem" style="plain" systemItem="save" id="JyQ-DQ-TFf"/>
+                        <barButtonItem key="rightBarButtonItem" style="plain" systemItem="save" id="JyQ-DQ-TFf">
+                            <connections>
+                                <action selector="saveButtonTapped:" destination="mvI-Ya-Aly" id="cSv-A6-hLR"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="commentTextField" destination="h5g-FO-cpj" id="LU1-ys-XCF"/>
+                        <outlet property="commentTextView" destination="h5g-FO-cpj" id="LU1-ys-XCF"/>
                         <outlet property="coordinateVisibiltySwitch" destination="4MR-Wz-LZ8" id="ZOv-Ew-MNE"/>
                         <outlet property="isGoneSwitch" destination="viS-mz-nbt" id="GiT-kJ-BlW"/>
                         <outlet property="latitudeLabel" destination="46v-Rb-8fd" id="eC9-TO-YwH"/>
@@ -980,11 +1004,12 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
+        <segue reference="rTW-8H-z6w"/>
         <segue reference="vKr-XP-mDv"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="avatar-1" width="256" height="256"/>
-        <image name="chevron.right" catalog="system" width="97" height="128"/>
+        <image name="chevron.right" catalog="system" width="32" height="32"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

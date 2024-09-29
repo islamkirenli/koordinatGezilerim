@@ -150,7 +150,7 @@ class MainViewController: UIViewController {
 
     private func generateCoordinatesAndTransition() {
         guard let north = north, let south = south, let east = east, let west = west else {
-            print("Koordinatlar eksik")
+            AlertManager.showAlert(title: "Error", message: "Lütfen ayarlardan bölge seçimi yapınız.", viewController: self)
             return
         }
         
@@ -245,7 +245,7 @@ class MainViewController: UIViewController {
                     self?.east = data?["east"] as? Double
                     self?.west = data?["west"] as? Double
                 } else {
-                    print("Document does not exist or error occurred: \(error?.localizedDescription ?? "Unknown error")")
+                    AlertManager.showAlert(title: "Error", message: "Document does not exist or error occurred: \(error?.localizedDescription ?? "Unknown error")", viewController: self!)
                 }
             }
         }

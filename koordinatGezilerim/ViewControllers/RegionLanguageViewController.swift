@@ -132,9 +132,9 @@ class RegionLanguageViewController: UIViewController, UIPickerViewDelegate, UIPi
         // Koordinat verilerini Firebase'e kaydet
         db.collection((currentUser?.email)!).document(coordinateDocumentID).setData(coordinateSettings) { error in
             if let error = error {
-                print("Error writing coordinate document: \(error)")
+                AlertManager.showAlert(title: "Error", message: "Error writing coordinate document: \(error)", viewController: self)
             } else {
-                print("Coordinate document successfully written!")
+                AlertManager.showAlert(title: "Saved", message: "Coordinate document successfully written!", viewController: self)
             }
         }
         
@@ -159,7 +159,7 @@ class RegionLanguageViewController: UIViewController, UIPickerViewDelegate, UIPi
                     self?.selectedCountry = country  // selectedCountry'e atama yap
                 }
             } else {
-                print("Coordinate document does not exist or error occurred: \(error?.localizedDescription ?? "Unknown error")")
+                AlertManager.showAlert(title: "Error", message: "Coordinate document does not exist or error occurred: \(error?.localizedDescription ?? "Unknown error")", viewController: self!)
             }
         }
         

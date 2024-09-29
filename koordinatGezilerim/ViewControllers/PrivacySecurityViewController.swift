@@ -183,17 +183,16 @@ class PrivacySecurityViewController: UIViewController, UITextViewDelegate {
               !currentPassword.isEmpty,
               !newPassword.isEmpty,
               !reNewPassword.isEmpty else {
-            // Kullanıcıya hata mesajı göster (örneğin, UIAlertController kullanarak)
-            //Alerts.showAlert(title: "ERROR", message: "Please fill in all fields.", viewController: self)
+            AlertManager.showAlert(title: "ERROR", message: "Please fill in all fields.", viewController: self)
             return
         }
         
         if newPasswordTextField.text != confirmNewPasswordTextField.text{
-            //Alerts.showAlert(title: "ERROR", message: "The new passwords must match.", viewController: self)
+            AlertManager.showAlert(title: "ERROR", message: "The new passwords must match.", viewController: self)
         }
         
         guard let userEmail = currentUser?.email else {
-            //Alerts.showAlert(title: "ERROR", message: "User not logged in.", viewController: self)
+            AlertManager.showAlert(title: "ERROR", message: "User not logged in.", viewController: self)
             return
         }
         
@@ -203,16 +202,16 @@ class PrivacySecurityViewController: UIViewController, UITextViewDelegate {
         currentUser?.reauthenticate(with: credential) { authResult, error in
             if let error = error {
                 // Hata durumunu işle
-                //Alerts.showAlert(title: "ERROR", message: "Reauthentication failed: \(error.localizedDescription)", viewController: self)
+                AlertManager.showAlert(title: "ERROR", message: "Reauthentication failed: \(error.localizedDescription)", viewController: self)
             } else {
                 // Şifre güncellenebilir
                 self.currentUser?.updatePassword(to: newPassword) { error in
                     if let error = error {
                         // Hata durumunu işle
-                        //Alerts.showAlert(title: "ERROR", message: "Password update failed: \(error.localizedDescription)", viewController: self)
+                        AlertManager.showAlert(title: "ERROR", message: "Password update failed: \(error.localizedDescription)", viewController: self)
                     } else {
                         // Başarılı güncelleme
-                        //Alerts.showAlert(title: "SUCCESS", message: "Password updated successfully.", viewController: self)
+                        AlertManager.showAlert(title: "SUCCESS", message: "Password updated successfully.", viewController: self)
                     }
                 }
             }
@@ -244,15 +243,15 @@ class PrivacySecurityViewController: UIViewController, UITextViewDelegate {
                 self.currentUser?.delete { error in
                     if let error = error {
                         // Kullanıcı silme hatası
-                        print("Kullanıcı silme hatası: \(error.localizedDescription)")
+                        AlertManager.showAlert(title: "Error", message: "Kullanıcı silme hatası: \(error.localizedDescription)", viewController: self)
                     } else {
                         // Kullanıcı başarıyla silindi
                         self.performSegue(withIdentifier: "toLogInVC", sender: nil)
-                        print("Kullanıcı başarıyla silindi")
+                        AlertManager.showAlert(title: "Deleted", message: "Kullanıcı başarıyla silindi", viewController: self)
                     }
                 }
             } else {
-                print("Kullanıcı verileri silinirken bir hata oluştu.")
+                AlertManager.showAlert(title: "Error", message: "Kullanıcı verileri silinirken bir hata oluştu.", viewController: self)
             }
         }
     }
@@ -268,7 +267,7 @@ class PrivacySecurityViewController: UIViewController, UITextViewDelegate {
         
         userCollectionRef.getDocuments { snapshot, error in
             if let error = error {
-                print("Error getting documents: \(error)")
+                AlertManager.showAlert(title: "Error", message: "Error getting documents: \(error)", viewController: self)
                 completion(false)
                 return
             }
@@ -285,7 +284,7 @@ class PrivacySecurityViewController: UIViewController, UITextViewDelegate {
             
             coordinateCollectionRef.getDocuments { snapshot, error in
                 if let error = error {
-                    print("Error getting CoordinateInformations documents: \(error)")
+                    AlertManager.showAlert(title: "Error", message: "Error getting CoordinateInformations documents: \(error)", viewController: self)
                     completion(false)
                     return
                 }
@@ -320,7 +319,6 @@ class PrivacySecurityViewController: UIViewController, UITextViewDelegate {
                 print("Error writing document: \(error)")
             } else {
                 // Başarılı yazma
-                //Alerts.showAlert(title: "Saved!", message: "Your information has been successfully saved.", viewController: self)
                 print("Document successfully written!")
             }
         }
