@@ -215,11 +215,11 @@ class AyarlarViewController: UIViewController, UITableViewDelegate, UITableViewD
         let alertController = UIAlertController(title: "Support Us", message: "Please choose an option to support us", preferredStyle: .actionSheet)
         
         let twitterAction = UIAlertAction(title: "Follow us on X", style: .default) { _ in
-            self.openURL("https://twitter.com/your_twitter_profile")
+            self.openURL("https://x.com/RandomJourney0")
         }
         
         let instagramAction = UIAlertAction(title: "Follow us on Instagram", style: .default) { _ in
-            self.openURL("https://instagram.com/your_instagram_profile")
+            self.openURL("https://www.instagram.com/randomjourneyapp/")
         }
         
         let appStoreAction = UIAlertAction(title: "Rate us on the App Store", style: .default) { _ in

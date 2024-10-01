@@ -39,6 +39,10 @@ class PrivacySecurityViewController: UIViewController, UITextViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Adding the "Read" button to the navigation bar
+        let readButton = UIBarButtonItem(title: "Read", style: .plain, target: self, action: #selector(readButtonTapped))
+        self.navigationItem.rightBarButtonItem = readButton
+        
         // Şifre gösterme/gizleme butonları ekleniyor
         setupPasswordToggleButtons()
         
@@ -77,6 +81,16 @@ class PrivacySecurityViewController: UIViewController, UITextViewDelegate {
         
         deleteAccountTextView.addSubview(placeholderLabel)
     }
+    
+    @objc func readButtonTapped() {
+        // Create an instance of ReadMessageViewController
+        let readMessageVC = PrivacySecurityMessageViewController()
+        
+        // Navigate to the new view controller
+        self.navigationController?.pushViewController(readMessageVC, animated: true)
+    }
+
+
     
     func setupPasswordToggleButtons() {
         // Mevcut şifre için toggle button

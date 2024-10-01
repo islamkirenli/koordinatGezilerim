@@ -1,7 +1,6 @@
 import UIKit
 import FirebaseAuth
 import FirebaseCore
-import GoogleSignIn
 import AuthenticationServices
 
 class LoginViewController: UIViewController, ASAuthorizationControllerPresentationContextProviding {
@@ -10,9 +9,9 @@ class LoginViewController: UIViewController, ASAuthorizationControllerPresentati
     @IBOutlet weak var passwordTextField: UITextField!
     
     @IBOutlet weak var loginButtonOutlet: UIButton!
-    @IBOutlet weak var googleSignInButtonOutlet: UIButton!
     @IBOutlet weak var appleSignInButtonOutlet: UIButton!
-    
+    @IBOutlet weak var forgetPasswordButtonOutlet: UIButton!
+
     var spinWorldManager: SpinWorldManager!
     
     var destinationVC = UIViewController()
@@ -115,8 +114,9 @@ class LoginViewController: UIViewController, ASAuthorizationControllerPresentati
         performSegue(withIdentifier: "toSignUpVC", sender: nil)
     }
     
-    @IBAction func googleSigninButton(_ sender: Any) {
-        signInWithGoogle()
+    
+    @IBAction func forgetPasswordButton(_ sender: Any) {
+        performSegue(withIdentifier: "toForgetPasswordVC", sender: nil)
     }
     
     @IBAction func appleSignInButton(_ sender: Any) {
@@ -132,67 +132,6 @@ class LoginViewController: UIViewController, ASAuthorizationControllerPresentati
     
     func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
         return self.view.window!
-    }
-    
-    func signInWithGoogle(){
-        Task { @MainActor in
-            let success = await performSignInWithGoogle()
-            if success {
-                // Giriş başarılı, küreyi büyüt ve butonları gizle
-                UIView.animate(withDuration: 1.5, animations: {
-                    self.emailTextField.alpha = 0
-                    self.passwordTextField.alpha = 0
-                    self.loginButtonOutlet.alpha = 0
-                    self.googleSignInButtonOutlet.alpha = 0
-                    self.appleSignInButtonOutlet.alpha = 0
-                    self.label.alpha = 0
-                    self.signUpButton.alpha = 0
-                })
-                
-                // Giriş başarılı, küreyi büyüt
-                self.spinWorldManager.animateSphereGrowth(to: 2.0, duration: 3.0) {
-                    // Küre büyüme işlemi tamamlandığında segue ile MainViewController'a geç
-                    UIView.animate(withDuration: 2, animations: {
-                        self.destinationVC.view.alpha = 1.0  // Görünürlüğü yavaş yavaş artır
-                    }, completion: { _ in
-                        self.destinationVC.didMove(toParent: self)
-                    })
-                }
-            } else {
-                print("burda hata var.....")
-            }
-        }
-    }
-    
-    func performSignInWithGoogle() async -> Bool {
-      guard let clientID = FirebaseApp.app()?.options.clientID else {
-        fatalError("No client ID found in Firebase configuration")
-      }
-      let config = GIDConfiguration(clientID: clientID)
-      GIDSignIn.sharedInstance.configuration = config
-
-        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-              let window = windowScene.windows.first,
-              let rootViewController = window.rootViewController else {
-        print("There is no root view controller!")
-        return false
-        }
-        do {
-          let userAuthentication = try await GIDSignIn.sharedInstance.signIn(withPresenting: rootViewController)
-          let user = userAuthentication.user
-          guard let idToken = user.idToken else { throw AuthenticationError.showAlert(message: "ID token missing") }
-          let accessToken = user.accessToken
-          let credential = GoogleAuthProvider.credential(withIDToken: idToken.tokenString,
-                                                         accessToken: accessToken.tokenString)
-          let result = try await Auth.auth().signIn(with: credential)
-          let firebaseUser = result.user
-          print("User \(firebaseUser.uid) signed in with email \(firebaseUser.email ?? "unknown")")
-          return true
-        }
-        catch {
-          print(error.localizedDescription)
-          return false
-        }
     }
     
     enum AuthenticationError: Error {
@@ -218,8 +157,8 @@ class LoginViewController: UIViewController, ASAuthorizationControllerPresentati
                 UIView.animate(withDuration: 1.5, animations: {
                     self.emailTextField.alpha = 0
                     self.passwordTextField.alpha = 0
+                    self.forgetPasswordButtonOutlet.alpha = 0
                     self.loginButtonOutlet.alpha = 0
-                    self.googleSignInButtonOutlet.alpha = 0
                     self.appleSignInButtonOutlet.alpha = 0
                     self.label.alpha = 0
                     self.signUpButton.alpha = 0
@@ -243,8 +182,8 @@ class LoginViewController: UIViewController, ASAuthorizationControllerPresentati
         UIView.animate(withDuration: 1.5, animations: {
             self.emailTextField.alpha = 0
             self.passwordTextField.alpha = 0
+            self.forgetPasswordButtonOutlet.alpha = 0
             self.loginButtonOutlet.alpha = 0
-            self.googleSignInButtonOutlet.alpha = 0
             self.appleSignInButtonOutlet.alpha = 0
             self.label.alpha = 0
             self.signUpButton.alpha = 0
@@ -283,8 +222,8 @@ extension LoginViewController: ASAuthorizationControllerDelegate {
                     UIView.animate(withDuration: 1.5, animations: {
                         self.emailTextField.alpha = 0
                         self.passwordTextField.alpha = 0
+                        self.forgetPasswordButtonOutlet.alpha = 0
                         self.loginButtonOutlet.alpha = 0
-                        self.googleSignInButtonOutlet.alpha = 0
                         self.appleSignInButtonOutlet.alpha = 0
                         self.label.alpha = 0
                         self.signUpButton.alpha = 0
@@ -310,7 +249,5 @@ extension LoginViewController: ASAuthorizationControllerDelegate {
         AlertManager.showAlert(title: "Error", message: "Sign in with Apple failed: \(error.localizedDescription)", viewController: self)
     }
 }
-
-
 
 

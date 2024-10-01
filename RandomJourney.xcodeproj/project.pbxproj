@@ -24,8 +24,10 @@
 		B544EEC02C53FA1200C1B898 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B544EEBF2C53FA1200C1B898 /* Assets.xcassets */; };
 		B54E80C52C937D82001A5523 /* AyarlarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54E80C42C937D81001A5523 /* AyarlarViewController.swift */; };
 		B54E80CA2C937FAD001A5523 /* SettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54E80C82C937FAD001A5523 /* SettingsTableViewCell.swift */; };
+		B5671AF32CAB3444001A15A8 /* PrivacySecurityMessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5671AF22CAB3444001A15A8 /* PrivacySecurityMessageViewController.swift */; };
 		B56D7A9F2CA72C270002163D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B56D7A9E2CA72C270002163D /* Main.storyboard */; };
 		B56D7AA12CA757BF0002163D /* ShowCoordinateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56D7AA02CA757BF0002163D /* ShowCoordinateViewController.swift */; };
+		B5820F372CAC8F6A0090CD27 /* ForgetPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5820F362CAC8F6A0090CD27 /* ForgetPasswordViewController.swift */; };
 		B58FC2462C9CC7B600F43D8D /* LanguageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B58FC2452C9CC7B600F43D8D /* LanguageManager.swift */; };
 		B59061052CA9730100741EDE /* HistoryMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59061042CA9730100741EDE /* HistoryMapViewController.swift */; };
 		B599D6232C972AE50027F2C7 /* SloganManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B599D6222C972AE50027F2C7 /* SloganManager.swift */; };
@@ -63,8 +65,10 @@
 		B544EEC22C53FA1200C1B898 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B54E80C42C937D81001A5523 /* AyarlarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AyarlarViewController.swift; sourceTree = "<group>"; };
 		B54E80C82C937FAD001A5523 /* SettingsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewCell.swift; sourceTree = "<group>"; };
+		B5671AF22CAB3444001A15A8 /* PrivacySecurityMessageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacySecurityMessageViewController.swift; sourceTree = "<group>"; };
 		B56D7A9E2CA72C270002163D /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		B56D7AA02CA757BF0002163D /* ShowCoordinateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowCoordinateViewController.swift; sourceTree = "<group>"; };
+		B5820F362CAC8F6A0090CD27 /* ForgetPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgetPasswordViewController.swift; sourceTree = "<group>"; };
 		B58FC2452C9CC7B600F43D8D /* LanguageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageManager.swift; sourceTree = "<group>"; };
 		B59061042CA9730100741EDE /* HistoryMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryMapViewController.swift; sourceTree = "<group>"; };
 		B599D6222C972AE50027F2C7 /* SloganManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SloganManager.swift; sourceTree = "<group>"; };
@@ -173,6 +177,8 @@
 				B50FCE9B2CA0BBC300097E83 /* SignUpViewController.swift */,
 				B56D7AA02CA757BF0002163D /* ShowCoordinateViewController.swift */,
 				B59061042CA9730100741EDE /* HistoryMapViewController.swift */,
+				B5671AF22CAB3444001A15A8 /* PrivacySecurityMessageViewController.swift */,
+				B5820F362CAC8F6A0090CD27 /* ForgetPasswordViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -321,6 +327,7 @@
 				B51A1DA62C5545D70095DACE /* NewCoordinateViewController.swift in Sources */,
 				B51A1DAA2C556A920095DACE /* RandomCoordinateManager.swift in Sources */,
 				B5B56A6D2C9DAEAE001083B4 /* ProfilAccountViewController.swift in Sources */,
+				B5671AF32CAB3444001A15A8 /* PrivacySecurityMessageViewController.swift in Sources */,
 				B5247D642C6BFA3D00062D8D /* HistoryViewController.swift in Sources */,
 				B54E80CA2C937FAD001A5523 /* SettingsTableViewCell.swift in Sources */,
 				B51A1DA82C5565450095DACE /* MapManager.swift in Sources */,
@@ -329,6 +336,7 @@
 				B544EEB92C53FA1100C1B898 /* SceneDelegate.swift in Sources */,
 				B53324252C57F68F005AA2E2 /* CountriesManager.swift in Sources */,
 				B5B56A6F2C9F73D9001083B4 /* AvatarSelectionViewController.swift in Sources */,
+				B5820F372CAC8F6A0090CD27 /* ForgetPasswordViewController.swift in Sources */,
 				B599D6232C972AE50027F2C7 /* SloganManager.swift in Sources */,
 				B58FC2462C9CC7B600F43D8D /* LanguageManager.swift in Sources */,
 				B5E671482C791DAF00FFCE7F /* LoginViewController.swift in Sources */,

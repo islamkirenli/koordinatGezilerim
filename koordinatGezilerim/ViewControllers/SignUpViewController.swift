@@ -1,7 +1,6 @@
 import UIKit
 import FirebaseAuth
 import FirebaseCore
-import GoogleSignIn
 import AuthenticationServices
 
 class SignUpViewController: UIViewController, ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
@@ -123,57 +122,6 @@ class SignUpViewController: UIViewController, ASAuthorizationControllerDelegate,
                 loginVC.startWorldGrowthAnimation()
             })
         }
-    }
-    
-    @IBAction func signUpWithGoogleButton(_ sender: Any) {
-        signInWithGoogle()
-    }
-    
-    func signInWithGoogle(){
-        Task { @MainActor in
-            let success = await performSignInWithGoogle()
-            if success {
-                //başarılı kayıt.
-                self.handleSuccessfulSignUp()
-            } else {
-                print("burda hata var.....")
-            }
-        }
-    }
-    
-    func performSignInWithGoogle() async -> Bool {
-      guard let clientID = FirebaseApp.app()?.options.clientID else {
-        fatalError("No client ID found in Firebase configuration")
-      }
-      let config = GIDConfiguration(clientID: clientID)
-      GIDSignIn.sharedInstance.configuration = config
-
-        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-              let window = windowScene.windows.first,
-              let rootViewController = window.rootViewController else {
-        print("There is no root view controller!")
-        return false
-        }
-        do {
-          let userAuthentication = try await GIDSignIn.sharedInstance.signIn(withPresenting: rootViewController)
-          let user = userAuthentication.user
-          guard let idToken = user.idToken else { throw AuthenticationError.showAlert(message: "ID token missing") }
-          let accessToken = user.accessToken
-          let credential = GoogleAuthProvider.credential(withIDToken: idToken.tokenString,
-                                                         accessToken: accessToken.tokenString)
-          let result = try await Auth.auth().signIn(with: credential)
-          let firebaseUser = result.user
-          print("User \(firebaseUser.uid) signed in with email \(firebaseUser.email ?? "unknown")")
-          return true
-        }
-        catch {
-          print(error.localizedDescription)
-          return false
-        }
-    }
-    
-    enum AuthenticationError: Error {
-      case showAlert(message: String)
     }
     
     @IBAction func signUpWithAppleButton(_ sender: Any) {
