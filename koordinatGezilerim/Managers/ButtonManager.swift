@@ -40,25 +40,6 @@ class ButtonManager {
         return button
     }()
     
-    /*
-    lazy var historyButton: UIButton = {
-        let button = UIButton(frame: historyButtonFrame)
-        
-        // UIButtonConfiguration ile ikon ve metin ekleme
-        var config = UIButton.Configuration.filled()
-        config.title = "Coordinate History" // Metin
-        config.image = UIImage(systemName: "mappin.and.ellipse") // İkon
-        config.baseForegroundColor = .black // Metin ve ikon rengi
-        config.baseBackgroundColor = UIColor(hex: "#CACACA") // Butonun arka plan rengi
-        config.imagePadding = 10 // İkon ile metin arasındaki boşluk
-        config.imagePlacement = .leading // İkonu metnin soluna yerleştir
-        button.configuration = config
-        
-        button.layer.cornerRadius = 10 // Yuvarlak köşeler
-        button.addTarget(self, action: #selector(historyButtonTapped), for: .touchUpInside)
-        return button
-    }()*/
-    
     private let startButtonFrame: CGRect
     private let settingsButtonFrame: CGRect
     private let historyButtonFrame: CGRect

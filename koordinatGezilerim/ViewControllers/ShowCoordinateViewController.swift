@@ -2,7 +2,7 @@ import UIKit
 import FirebaseFirestore
 import FirebaseAuth
 
-class ShowCoordinateViewController: UIViewController {
+class ShowCoordinateViewController: UIViewController, UITextViewDelegate {
     
     @IBOutlet weak var titleTextField: UITextField!
     @IBOutlet weak var commentTextView: UITextView!
@@ -10,6 +10,8 @@ class ShowCoordinateViewController: UIViewController {
     @IBOutlet weak var coordinateVisibiltySwitch: UISwitch!
     @IBOutlet weak var latitudeLabel: UILabel!
     @IBOutlet weak var longitudeLabel: UILabel!
+    
+    let placeholderLabel = UILabel()
     
     var latitude: Double?
     var longitude: Double?
@@ -25,13 +27,36 @@ class ShowCoordinateViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // deleteAccountTextView için delegasyon atanıyor
+        commentTextView.delegate = self
+        
         // UUID kontrolü yapalım
         if let coordinateInfoID = uuid {
             fetchCoordinateInfo(coordinateInfoID: coordinateInfoID)
         }
         
+        titleTextField.textColor = .black
+        
         latitudeLabel.alpha = 0
         longitudeLabel.alpha = 0
+        
+        commentTextView.layer.cornerRadius = 10
+        
+        // Placeholder Label ayarları
+        placeholderLabel.text = "You can write your notes here for these coordinates."
+        placeholderLabel.font = UIFont.systemFont(ofSize: 16)
+        placeholderLabel.numberOfLines = 2 // Çok satırlı olmasını sağlar
+        placeholderLabel.lineBreakMode = .byWordWrapping // Kelime kesme modunu ayarla
+        placeholderLabel.textColor = UIColor.lightGray
+        placeholderLabel.isHidden = !commentTextView.text.isEmpty
+        
+        // Placeholder Label boyutlandırma ve yerleşim ayarları
+        placeholderLabel.frame = CGRect(x: 5, y: 5, width: commentTextView.frame.width, height: 0)
+        placeholderLabel.sizeToFit() // İçeriğe göre boyutlandırma
+        
+        if !commentTextView.text.isEmpty{
+            commentTextView.addSubview(placeholderLabel)
+        }
         
         coordinateVisibiltySwitch.isOn = false
         
@@ -121,5 +146,10 @@ class ShowCoordinateViewController: UIViewController {
                 }
             }
         }
+    }
+    
+    func textViewDidChange(_ textView: UITextView) {
+        // Placeholder'ın görünürlüğünü kontrol et
+        placeholderLabel.isHidden = !textView.text.isEmpty
     }
 }

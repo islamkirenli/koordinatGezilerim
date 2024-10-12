@@ -26,45 +26,6 @@ class HistoryMapViewController: UIViewController, MKMapViewDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        // Firestore'dan verileri yeniden çek
-        fetchUpdatedCoordinatesFromFirestore()
-    }
-
-    
-    func fetchUpdatedCoordinatesFromFirestore() {
-        db.collection((currentUser?.email)!+"-CoordinateInformations").getDocuments { (snapshot, error) in
-            if let error = error {
-                AlertManager.showAlert(title: "Error", message: "Error getting documents: \(error)", viewController: self)
-            } else {
-                self.coordinates.removeAll() // Eski koordinatları temizle
-                for document in snapshot!.documents {
-                    let data = document.data()
-                    let city = data["CityTitle"] as? String ?? "Unknown City"
-                    let latitude = data["Latitude"] as? CLLocationDegrees ?? 0.0
-                    let longitude = data["Longitude"] as? CLLocationDegrees ?? 0.0
-                    let isGone = data["IsGone"] as? Bool ?? false
-                    let uuid = data["UUID"] as? String ?? "Unknown UUID"
-                    
-                    if latitude != 0.0 && longitude != 0.0 && uuid != "Unknown UUID" {
-                        self.coordinates.append((city: city, latitude: latitude, longitude: longitude, isGone: isGone, uuid: uuid))
-                    }
-                }
-                
-                // Haritayı yeniden yükleyin UI ana thread'de
-                DispatchQueue.main.async {
-                    self.reloadMapAnnotations()
-                }
-            }
-        }
-    }
-
-    
-    // Mevcut annotation'ları kaldırın ve yeniden ekleyin
-    func reloadMapAnnotations() {
-        mapView.removeAnnotations(mapView.annotations) // Mevcut annotation'ları kaldır
-
-        // Yeni verilerle annotation'ları yeniden ekleyin
-        addAnnotationsToMap()
     }
     
     // Koordinatlara annotation ekleyin
@@ -81,14 +42,16 @@ class HistoryMapViewController: UIViewController, MKMapViewDelegate {
         let identifier = "pin"
         
         if annotation is MKUserLocation {
+            // Kullanıcının konumu için varsayılan simgeyi kullanma
             return nil
         }
-
         var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? MKPinAnnotationView
         
         if annotationView == nil {
             annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
             annotationView?.canShowCallout = true
+            
+            // Pin animasyonunu etkinleştir
             annotationView?.animatesDrop = true
             
             if let cityTitle = annotation.title as? String {

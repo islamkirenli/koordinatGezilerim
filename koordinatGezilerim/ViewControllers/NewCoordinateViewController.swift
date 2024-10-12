@@ -1,8 +1,9 @@
 import UIKit
 import MapKit
 import Lottie
+import CoreLocation
 
-class NewCoordinateViewController: UIViewController, MKMapViewDelegate {
+class NewCoordinateViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     
     var mapManager: MapManager!
     var latitude: Double!
@@ -16,6 +17,8 @@ class NewCoordinateViewController: UIViewController, MKMapViewDelegate {
     var south: Double?
     var east: Double?
     var west: Double?
+    
+    var locationManager = CLLocationManager()
     
     var annotation = MKPointAnnotation()
     
@@ -72,11 +75,46 @@ class NewCoordinateViewController: UIViewController, MKMapViewDelegate {
             newCoordinateButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             newCoordinateButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
         ])
+        
+        // Kullanıcının konumunu takip etmeye başla
+        setupLocationManager()
     }
     
     @objc override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         animationView.isHidden = true
+    }
+    
+    func setupLocationManager() {
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        
+        // Konum izni iste
+        locationManager.requestWhenInUseAuthorization()
+    }
+    
+    // Konum izin durumu değiştiğinde bu fonksiyon çağrılır
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        switch manager.authorizationStatus {
+        case .notDetermined:
+            // İzin henüz verilmedi
+            manager.requestWhenInUseAuthorization()
+        case .restricted, .denied:
+            // Kullanıcı izin vermedi
+            AlertManager.showAlert(title: "Konum Servisleri Kapalı", message: "Konum servislerini ayarlardan açınız.", viewController: self)
+        case .authorizedWhenInUse, .authorizedAlways:
+            // İzin verildi, konumu güncellemeye başla
+            if CLLocationManager.locationServicesEnabled() {
+                locationManager.startUpdatingLocation()
+                mapManager.mapView.showsUserLocation = true // Haritada kullanıcı konumunu göster
+            }
+        @unknown default:
+            break
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        AlertManager.showAlert(title: "Error", message: "Failed to find user's location: \(error.localizedDescription)", viewController: self)
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
@@ -239,5 +277,6 @@ class NewCoordinateViewController: UIViewController, MKMapViewDelegate {
         }
     }
 }
+
 
 

@@ -38,6 +38,7 @@
 		B5D307792C976B690042DFD9 /* search_animation.json in Resources */ = {isa = PBXBuildFile; fileRef = B5D307782C976B690042DFD9 /* search_animation.json */; };
 		B5E671482C791DAF00FFCE7F /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E671472C791DAF00FFCE7F /* LoginViewController.swift */; };
 		B5E6D5DC2CA9EE0800752DC1 /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E6D5DB2CA9EE0800752DC1 /* AlertManager.swift */; };
+		B5FD24F32CB9E575002C1670 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FD24F22CB9E575002C1670 /* NotificationManager.swift */; };
 		DD3D1ACB3DF9B0A802C2859F /* Pods_RandomJourney.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61A64F8C8463E2C07A117969 /* Pods_RandomJourney.framework */; };
 /* End PBXBuildFile section */
 
@@ -81,6 +82,7 @@
 		B5D32ADF2CA3384400D27A04 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B5E671472C791DAF00FFCE7F /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		B5E6D5DB2CA9EE0800752DC1 /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
+		B5FD24F22CB9E575002C1670 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		BDEE1210B7BFA79D181FFBFD /* Pods-koordinatGezilerim.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-koordinatGezilerim.debug.xcconfig"; path = "Target Support Files/Pods-koordinatGezilerim/Pods-koordinatGezilerim.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -194,6 +196,7 @@
 				B599D6222C972AE50027F2C7 /* SloganManager.swift */,
 				B58FC2452C9CC7B600F43D8D /* LanguageManager.swift */,
 				B5E6D5DB2CA9EE0800752DC1 /* AlertManager.swift */,
+				B5FD24F22CB9E575002C1670 /* NotificationManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -332,6 +335,7 @@
 				B54E80CA2C937FAD001A5523 /* SettingsTableViewCell.swift in Sources */,
 				B51A1DA82C5565450095DACE /* MapManager.swift in Sources */,
 				B5CB67042C5538550073D8E0 /* SpinWorldManager.swift in Sources */,
+				B5FD24F32CB9E575002C1670 /* NotificationManager.swift in Sources */,
 				B5E6D5DC2CA9EE0800752DC1 /* AlertManager.swift in Sources */,
 				B544EEB92C53FA1100C1B898 /* SceneDelegate.swift in Sources */,
 				B53324252C57F68F005AA2E2 /* CountriesManager.swift in Sources */,

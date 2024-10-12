@@ -33,13 +33,22 @@ class SignUpViewController: UIViewController, ASAuthorizationControllerDelegate,
         // Email TextField'ı kapsül şeklinde yap
         emailTextField.layer.cornerRadius = emailTextField.frame.height / 2
         emailTextField.clipsToBounds = true
+        let emailPlaceholderText = "e-Mail"
+        let emailPlaceholderColor = UIColor.lightGray
+        emailTextField.attributedPlaceholder = NSAttributedString(string: emailPlaceholderText, attributes: [NSAttributedString.Key.foregroundColor: emailPlaceholderColor])
         
         // Password TextField'ı kapsül şeklinde yap
         passwordTextField.layer.cornerRadius = passwordTextField.frame.height / 2
         passwordTextField.clipsToBounds = true
+        let passwordPlaceholderText = "Password"
+        let passwordPlaceholderColor = UIColor.lightGray
+        passwordTextField.attributedPlaceholder = NSAttributedString(string: passwordPlaceholderText, attributes: [NSAttributedString.Key.foregroundColor: passwordPlaceholderColor])
         
         confirmPasswordTextField.layer.cornerRadius = confirmPasswordTextField.frame.height / 2
         confirmPasswordTextField.clipsToBounds = true
+        let confirmPasswordPlaceholderText = "Confirm Password"
+        let confirmPasswordPlaceholderColor = UIColor.lightGray
+        confirmPasswordTextField.attributedPlaceholder = NSAttributedString(string: confirmPasswordPlaceholderText, attributes: [NSAttributedString.Key.foregroundColor: confirmPasswordPlaceholderColor])
         
         togglePasswordButton.addTarget(self, action: #selector(togglePasswordVisibility), for: .touchUpInside)
         let passwordRightView = UIView(frame: CGRect(x: 0, y: 0, width: 40, height: 40)) // 40 genişliğinde bir alan
