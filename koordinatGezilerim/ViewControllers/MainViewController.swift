@@ -11,10 +11,10 @@ class MainViewController: UIViewController {
     var latitude: Double?
     var longitude: Double?
     
-    var north: Double? = 90.0
-    var south: Double? = -90.0
-    var east: Double? = 180.0
-    var west: Double? = -180.0
+    var north: Double? //= 90.0
+    var south: Double? //= -90.0
+    var east: Double? //= 180.0
+    var west: Double? //= -180.0
     var selectedCountry: String?
     var backgroundImage: String?
     
@@ -24,11 +24,12 @@ class MainViewController: UIViewController {
     private var blurEffectView: UIVisualEffectView?
     
     let db = Firestore.firestore()
-    let currentUser = Auth.auth().currentUser
+    var currentUser = Auth.auth().currentUser
     
     override func viewDidLoad() {
         super.viewDidLoad()
                 
+        print("main viewdidload çalıştı.")
         self.view.backgroundColor = UIColor(patternImage: UIImage(named: "world_texture_cloud.jpg")!)
         
         // SpinWorldManager oluştur ve SceneKit sahnesini ekle
@@ -141,6 +142,11 @@ class MainViewController: UIViewController {
     }
     
     func checkCoordinatesAndTransition() {
+        guard let north = north, let south = south, let east = east, let west = west else {
+            AlertManager.showAlert(title: "Error", message: "Lütfen ayarlardan bölge seçimi yapınız.", viewController: self)
+            return
+        }
+        
         animationView.isHidden = false
         animationView.play()
         

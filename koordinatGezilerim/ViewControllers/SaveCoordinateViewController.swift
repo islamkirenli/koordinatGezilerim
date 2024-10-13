@@ -108,17 +108,15 @@ class SaveCoordinateViewController: UIViewController, UITextViewDelegate {
             coordinateInfo["IsGone"] = isGoneSwitch.isOn // isGoneSwitch değerini ekledik
             coordinateInfo["UUID"] = coordinateInfoID 
 
-            
+            db.collection((currentUser?.email)!+"-CoordinateInformations").document(coordinateInfoID).setData(coordinateInfo) { error in
+                if let error = error {
+                    AlertManager.showAlert(title: "Save Error", message: "Error writing coordinate document: \(error)", viewController: self)
+                } else {
+                    AlertManager.showAlert(title: "Saved", message: "Coordinate document successfully written!", viewController: self)
+                }
+            }
         } else {
             AlertManager.showAlert(title: "Alert", message: "Alanları kontrol edin.", viewController: self)
-        }
-        
-        db.collection((currentUser?.email)!+"-CoordinateInformations").document(coordinateInfoID).setData(coordinateInfo) { error in
-            if let error = error {
-                AlertManager.showAlert(title: "Save Error", message: "Error writing coordinate document: \(error)", viewController: self)
-            } else {
-                AlertManager.showAlert(title: "Saved", message: "Coordinate document successfully written!", viewController: self)
-            }
         }
     }
 

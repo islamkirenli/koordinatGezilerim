@@ -2,7 +2,7 @@ import UIKit
 import FirebaseFirestore
 import FirebaseAuth
 
-class RegionLanguageViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
+class RegionLanguageViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UITextFieldDelegate {
     
     @IBOutlet weak var regionTextField: UITextField!
     @IBOutlet weak var languageTextField: UITextField!
@@ -24,6 +24,9 @@ class RegionLanguageViewController: UIViewController, UIPickerViewDelegate, UIPi
 
         pickerView.delegate = self
         pickerView.dataSource = self
+        
+        // TextField'lar için delegate ayarlaması
+        regionTextField.delegate = self
 
         // Toolbar
         let toolbar = UIToolbar()
@@ -39,11 +42,6 @@ class RegionLanguageViewController: UIViewController, UIPickerViewDelegate, UIPi
         regionTextField.inputView = pickerView
         regionTextField.inputAccessoryView = toolbar
         
-        // Default olarak ilk seçeneği seçili yap
-        pickerView.selectRow(0, inComponent: 0, animated: false)
-        selectedCountry = CountriesManager.countries[0]
-        regionTextField.text = selectedCountry
-        
         /*
         languageTextField.inputView = pickerView
         languageTextField.inputAccessoryView = toolbar
@@ -56,6 +54,17 @@ class RegionLanguageViewController: UIViewController, UIPickerViewDelegate, UIPi
         navigationItem.rightBarButtonItem = saveButton
         
         fetchSettingsDataFromFirebase()
+    }
+    
+    // UITextFieldDelegate
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        if textField == regionTextField {
+            // TextField'daki yazı pickerView'da seçili gelsin
+            if let selectedCountry = selectedCountry,
+               let row = CountriesManager.countries.firstIndex(of: selectedCountry) {
+                pickerView.selectRow(row, inComponent: 0, animated: true)
+            }
+        }
     }
     
     // UIPickerViewDataSource
@@ -114,9 +123,7 @@ class RegionLanguageViewController: UIViewController, UIPickerViewDelegate, UIPi
                 coordinateSettings["south"] = coordinatesRange.south
                 coordinateSettings["east"] = coordinatesRange.east
                 coordinateSettings["west"] = coordinatesRange.west
-                if selectedCountry != "Global" {
-                    coordinateSettings["country"] = selectedCountry
-                }
+                coordinateSettings["country"] = selectedCountry
             }
         }
 
@@ -135,6 +142,7 @@ class RegionLanguageViewController: UIViewController, UIPickerViewDelegate, UIPi
                 AlertManager.showAlert(title: "Error", message: "Error writing coordinate document: \(error)", viewController: self)
             } else {
                 AlertManager.showAlert(title: "Saved", message: "Coordinate document successfully written!", viewController: self)
+                NotificationCenter.default.post(name: NSNotification.Name("SettingsUpdated"), object: nil)
             }
         }
         

@@ -1,6 +1,7 @@
 import UIKit
 import FirebaseAuth
 import FirebaseCore
+import FirebaseFirestore
 import AuthenticationServices
 
 class LoginViewController: UIViewController, ASAuthorizationControllerPresentationContextProviding {
@@ -15,6 +16,14 @@ class LoginViewController: UIViewController, ASAuthorizationControllerPresentati
     var spinWorldManager: SpinWorldManager!
     
     var destinationVC = UIViewController()
+    
+    let db = Firestore.firestore()
+    var currentUser: User? = nil
+    
+    var north: Double? //= 90.0
+    var south: Double? //= -90.0
+    var east: Double? //= 180.0
+    var west: Double? //= -180.0
     
     let label = UILabel()
     let signUpButton = UIButton(type: .system)
@@ -160,6 +169,9 @@ class LoginViewController: UIViewController, ASAuthorizationControllerPresentati
                 // Başarılı giriş, kullanıcıyı başka bir ekrana yönlendirin
                 print("Giriş başarılı!")
                 
+                self.currentUser = Auth.auth().currentUser
+                self.fetchSettingsDataFromFirebase()
+                
                 // Giriş başarılı, küreyi büyüt ve butonları gizle
                 UIView.animate(withDuration: 1.5, animations: {
                     self.emailTextField.alpha = 0
@@ -206,6 +218,35 @@ class LoginViewController: UIViewController, ASAuthorizationControllerPresentati
             })
         }
     }
+    
+    func fetchSettingsDataFromFirebase() {
+        let documentID = "coordinateSettings" // Bu doküman ID'yi ihtiyacınıza göre belirleyin
+        if let currentUserEmail = currentUser?.email {
+            let docRef = db.collection(currentUserEmail).document(documentID)
+            
+            docRef.getDocument { [weak self] (document, error) in
+                if let document = document, document.exists {
+                    let data = document.data()
+                    self?.north = data?["north"] as? Double
+                    self?.south = data?["south"] as? Double
+                    self?.east = data?["east"] as? Double
+                    self?.west = data?["west"] as? Double
+                    
+                    // Verileri NavigationController içindeki MainViewController'a aktar
+                    if let navController = self?.destinationVC as? UINavigationController,
+                       let mainVC = navController.viewControllers.first as? MainViewController {
+                        mainVC.north = self?.north
+                        mainVC.south = self?.south
+                        mainVC.east = self?.east
+                        mainVC.west = self?.west
+                        mainVC.currentUser = self?.currentUser
+                    }
+                } else {
+                    AlertManager.showAlert(title: "Error", message: "Document does not exist or error occurred: \(error?.localizedDescription ?? "Unknown error")", viewController: self!)
+                }
+            }
+        }
+    }
 }
 
 extension LoginViewController: ASAuthorizationControllerDelegate {
@@ -225,6 +266,8 @@ extension LoginViewController: ASAuthorizationControllerDelegate {
                     let firebaseUser = result.user
                     print("User \(firebaseUser.uid) signed in with email \(firebaseUser.email ?? "unknown")")
                     // Başarılı giriş işlemleri burada yapılabilir
+                    self.currentUser = Auth.auth().currentUser
+                    self.fetchSettingsDataFromFirebase()
                     // Giriş başarılı, küreyi büyüt ve butonları gizle
                     UIView.animate(withDuration: 1.5, animations: {
                         self.emailTextField.alpha = 0

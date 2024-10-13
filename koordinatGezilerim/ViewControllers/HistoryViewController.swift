@@ -25,6 +25,23 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
         // TableView delegate ve datasource ataması
         tableView.delegate = self
         tableView.dataSource = self
+        
+        tableView.separatorStyle = .none
+        
+        // Scroll çubuklarını gizle
+        tableView.showsVerticalScrollIndicator = false
+        tableView.showsHorizontalScrollIndicator = false
+        
+        // tableView'in translatesAutoresizingMaskIntoConstraints ayarını kapat
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+
+        // tableView'e sağdan ve soldan boşluk bırakacak Auto Layout ayarları
+        NSLayoutConstraint.activate([
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20), // Soldan 20 px boşluk
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20), // Sağdan 20 px boşluk
+            tableView.topAnchor.constraint(equalTo: view.topAnchor), // Yukarıdan sıfırlanmış
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor) // Aşağıdan sıfırlanmış
+        ])
 
         // Firestore'dan verileri çek ve dizileri doldur
         fetchSectionsFromFirestore()
@@ -207,14 +224,65 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         cell.backgroundColor = UIColor(hex: "#0f1418")
         
-        // İlgili section için CityTitle bilgisini itemDictionary'den al ve alfabetik sırada göster
+        // Önceki separator varsa temizle
+        for subview in cell.contentView.subviews where subview.tag == 1001 {
+            subview.removeFromSuperview()
+        }
+        
+        // Şehir ismini göster
         let country = sections[indexPath.section].title
         if let cities = itemDictionary[country] {
             cell.textLabel?.text = cities[indexPath.row].city
         }
+        
+        // Sağda bir sağ ok (chevron) ikonu göster
+        cell.accessoryType = .disclosureIndicator
 
+        // Her section'daki toplam satır sayısını bulun
+        let totalRows = tableView.numberOfRows(inSection: indexPath.section)
+        
+        // Hücrelerin köşe ovalleştirilmesi için layer ayarları
+        cell.layer.cornerRadius = 0
+        cell.layer.maskedCorners = []
+
+        if totalRows == 1 {
+            // Eğer section'da sadece bir satır varsa, tüm köşeleri oval yap
+            cell.layer.cornerRadius = 10
+            cell.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner, .layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+        } else {
+            if indexPath.row == 0 {
+                // İlk satırın sadece üst köşeleri ovalleştirilsin
+                cell.layer.cornerRadius = 10
+                cell.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+            }
+            
+            if indexPath.row == totalRows - 1 {
+                // Son satırın sadece alt köşeleri ovalleştirilsin
+                cell.layer.cornerRadius = 10
+                cell.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+            }
+        }
+        
+        // Eğer son satır değilse, özel separator ekleyin
+        if indexPath.row < totalRows - 1 {
+            let separatorHeight: CGFloat = 0.5 // Separator kalınlığı
+            let separator = UIView()
+            separator.backgroundColor = UIColor.lightGray // Separator rengi
+            separator.translatesAutoresizingMaskIntoConstraints = false
+            separator.tag = 1001
+            cell.contentView.addSubview(separator)
+
+            // Auto Layout ayarları: separator'ın konumunu ve boyutunu ayarlıyoruz
+            NSLayoutConstraint.activate([
+                separator.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 16),
+                separator.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor, constant: -16),
+                separator.heightAnchor.constraint(equalToConstant: separatorHeight),
+                separator.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor)
+            ])
+        }
+        
+        // Seçim moduna göre sağ tarafta ikon gösterimi
         if isSelectionMode {
-            // Sağ tarafta çember ikonu ekleyin
             let isSelected = selectedItems.contains(indexPath)
             cell.accessoryView = UIImageView(image: UIImage(systemName: isSelected ? "checkmark.circle.fill" : "circle"))
         } else {
@@ -223,6 +291,7 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         return cell
     }
+
 
     // Height for header in section
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {

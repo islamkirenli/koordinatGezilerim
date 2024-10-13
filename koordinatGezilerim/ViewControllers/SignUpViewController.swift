@@ -1,6 +1,7 @@
 import UIKit
 import FirebaseAuth
 import FirebaseCore
+import FirebaseFirestore
 import AuthenticationServices
 
 class SignUpViewController: UIViewController, ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
@@ -10,6 +11,13 @@ class SignUpViewController: UIViewController, ASAuthorizationControllerDelegate,
     @IBOutlet weak var confirmPasswordTextField: UITextField!
     
     var spinWorldManager: SpinWorldManager!
+    
+    let db = Firestore.firestore()
+    
+    var currentUser: User? = nil
+    let coordinateDocumentID = "coordinateSettings"
+    
+    var coordinateSettings: [String: Any] = [:]
     
     let togglePasswordButton: UIButton = {
         let button = UIButton(type: .custom)
@@ -112,6 +120,9 @@ class SignUpViewController: UIViewController, ASAuthorizationControllerDelegate,
                 } else {
                     // Başarılı kayıt, kullanıcıyı giriş yapmaya yönlendirin
                     print("Kayıt başarılı!")
+                    self.currentUser = Auth.auth().currentUser
+                    self.saveCoordinateSettings()
+                    self.saveProfilSettings()
                     self.handleSuccessfulSignUp()
                 }
             }
@@ -164,6 +175,9 @@ class SignUpViewController: UIViewController, ASAuthorizationControllerDelegate,
                     let firebaseUser = result.user
                     print("User \(firebaseUser.uid) signed in with email \(firebaseUser.email ?? "unknown")")
                     // Başarılı giriş işlemleri burada yapılabilir
+                    self.currentUser = Auth.auth().currentUser
+                    self.saveCoordinateSettings()
+                    self.saveProfilSettings()
                     self.handleSuccessfulSignUp()
                 } catch {
                     AlertManager.showAlert(title: "Error", message: "Apple sign up error: \(error.localizedDescription)", viewController: self)
@@ -174,5 +188,41 @@ class SignUpViewController: UIViewController, ASAuthorizationControllerDelegate,
     
     func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
         AlertManager.showAlert(title: "Error", message: "Sign up with Apple failed: \(error.localizedDescription)", viewController: self)
+    }
+    
+    func saveCoordinateSettings(){
+        coordinateSettings["north"] = 90.0
+        coordinateSettings["south"] = -90.0
+        coordinateSettings["east"] = 180.0
+        coordinateSettings["west"] = -180.0
+        coordinateSettings["country"] = "Global"
+        
+        // Koordinat verilerini Firebase'e kaydet
+        db.collection((currentUser?.email)!).document(coordinateDocumentID).setData(coordinateSettings) { error in
+            if let error = error {
+                AlertManager.showAlert(title: "Error", message: "Error writing coordinate document: \(error)", viewController: self)
+            } else {
+                //AlertManager.showAlert(title: "Saved", message: "Coordinate document successfully written!", viewController: self)
+                print("Coordinate document successfully written!")
+            }
+        }
+    }
+    
+    func saveProfilSettings(){
+        db.collection((currentUser?.email)!).document("profilSettings").setData([
+            "name": "",
+            "surname": "",
+            "email": currentUser?.email,
+            "avatar": "avatar-1",
+        ]) { error in
+            if let error = error {
+                // Hata durumunu işle
+                AlertManager.showAlert(title: "Error", message: "Error writing document: \(error)", viewController: self)
+            } else {
+                // Başarılı yazma
+                //AlertManager.showAlert(title: "Saved", message: "Your information has been successfully saved.", viewController: self)
+                print("profil ayarları kaydedildi.")
+            }
+        }
     }
 }

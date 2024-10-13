@@ -28,6 +28,8 @@ class AyarlarViewController: UIViewController, UITableViewDelegate, UITableViewD
         tableView.delegate = self
         tableView.dataSource = self
         
+        tableView.separatorStyle = .none
+        
         // Scroll çubuğunu gizlemek
         tableView.showsVerticalScrollIndicator = false
     }
@@ -51,20 +53,13 @@ class AyarlarViewController: UIViewController, UITableViewDelegate, UITableViewD
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "SettingsCell", for: indexPath) as! SettingsTableViewCell
         
-        // Hücre içeriğini ayarlama
+        // Mevcut hücre içeriği ayarları (İkonlar, Başlıklar vs.)
         if indexPath.section == 0 {
             cell.titleLabel.text = accountItems[indexPath.row]
             cell.iconImageView.image = UIImage(systemName: accountIcons[indexPath.row])
         } else if indexPath.section == 1 {
-            if indexPath.row == 0 {
-                // Dark Mode satırı
-                cell.titleLabel.text = personalizationItems[indexPath.row]
-                cell.iconImageView.image = UIImage(systemName: personalizationIcons[indexPath.row])
-            } else {
-                // Diğer personalization satırları
-                cell.titleLabel.text = personalizationItems[indexPath.row]
-                cell.iconImageView.image = UIImage(systemName: personalizationIcons[indexPath.row])
-            }
+            cell.titleLabel.text = personalizationItems[indexPath.row]
+            cell.iconImageView.image = UIImage(systemName: personalizationIcons[indexPath.row])
         } else if indexPath.section == 2 {
             cell.titleLabel.text = accessibilityItems[indexPath.row]
             cell.iconImageView.image = UIImage(systemName: accessibilityIcons[indexPath.row])
@@ -73,31 +68,48 @@ class AyarlarViewController: UIViewController, UITableViewDelegate, UITableViewD
             cell.iconImageView.image = UIImage(systemName: signOutIcons[indexPath.row])
         }
         
-        // Separator'ın alt satırlarda olmamasını sağlama
-        if indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {
-            cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: .greatestFiniteMagnitude)
-        } else {
-            cell.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        // Var olan separator'ı gizlemek için
+        cell.separatorInset = UIEdgeInsets(top: 0, left: .greatestFiniteMagnitude, bottom: 0, right: 0)
+        
+        // Eğer son satır değilse özel separator ekle
+        let totalRows = tableView.numberOfRows(inSection: indexPath.section)
+        
+        if indexPath.row < totalRows - 1 {
+            // Önceki separator varsa temizle
+            for subview in cell.contentView.subviews where subview.tag == 1001 {
+                subview.removeFromSuperview()
+            }
+            
+            // Kendi özel separator'ınızı ekleyin
+            let separatorHeight: CGFloat = 1.0 // separator'ın kalınlığı
+            let separator = UIView()
+            separator.backgroundColor = UIColor.lightGray // separator'ın rengi
+            separator.translatesAutoresizingMaskIntoConstraints = false
+            separator.tag = 1001
+            cell.contentView.addSubview(separator)
+
+            // Auto Layout ayarları: separator'ın konumunu ve boyutunu ayarlıyoruz
+            NSLayoutConstraint.activate([
+                separator.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 16),
+                separator.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor, constant: -16),
+                separator.heightAnchor.constraint(equalToConstant: separatorHeight),
+                separator.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor)
+            ])
         }
 
-        // Köşe yuvarlama işlemi
-        let totalRows = tableView.numberOfRows(inSection: indexPath.section)
+        // Yuvarlak köşeler için köşe ayarlamaları
         let cornerRadius: CGFloat = 10
 
         if indexPath.row == 0 && indexPath.row == totalRows - 1 {
-            // Tek hücrelik bir grup (ilk ve son aynı hücre)
             cell.layer.cornerRadius = cornerRadius
             cell.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner, .layerMinXMaxYCorner, .layerMaxXMaxYCorner]
         } else if indexPath.row == 0 {
-            // İlk hücre (üst köşeler yuvarlak)
             cell.layer.cornerRadius = cornerRadius
             cell.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         } else if indexPath.row == totalRows - 1 {
-            // Son hücre (alt köşeler yuvarlak)
             cell.layer.cornerRadius = cornerRadius
             cell.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
         } else {
-            // Ara hücreler (köşe yuvarlaması yok)
             cell.layer.cornerRadius = 0
         }
 
