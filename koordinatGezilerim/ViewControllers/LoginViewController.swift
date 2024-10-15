@@ -164,7 +164,7 @@ class LoginViewController: UIViewController, ASAuthorizationControllerPresentati
         Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
             if let error = error {
                 // Hata durumunu ele alın
-                AlertManager.showAlert(title: "Error", message: "Giriş hatası: \(error.localizedDescription)", viewController: self)
+                AlertManager.showAlert(title: "Error", message: "Login error: \(error.localizedDescription)", viewController: self)
             } else {
                 // Başarılı giriş, kullanıcıyı başka bir ekrana yönlendirin
                 print("Giriş başarılı!")

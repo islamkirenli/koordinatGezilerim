@@ -22,10 +22,12 @@ extension UIColor {
 class SettingsTableViewCell: UITableViewCell {
     
     @IBOutlet weak var iconImageView: UIImageView!
-    @IBOutlet weak var titleLabel: UILabel!    
+    @IBOutlet weak var titleLabel: UILabel!
     
     @IBOutlet weak var chevronRightOutlet: UIImageView!
     
+    var cellTapAction: (() -> Void)?
+
     override func awakeFromNib() {
         super.awakeFromNib()
         // Köşe yuvarlatma ve maskeleme
@@ -35,9 +37,14 @@ class SettingsTableViewCell: UITableViewCell {
         contentView.layer.borderColor = UIColor.darkGray.cgColor // Kenarlık rengini ayarlayabilirsiniz
         contentView.backgroundColor = UIColor(hex: "#0f1418")
         
-        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(cellTapped))
+        self.addGestureRecognizer(tapGesture)
     }
 
+    @objc func cellTapped() {
+        cellTapAction?()
+    }
+    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
     }

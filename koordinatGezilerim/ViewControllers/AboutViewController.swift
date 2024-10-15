@@ -11,49 +11,49 @@ class AboutViewController: UIViewController {
         let attributedText = NSMutableAttributedString()
 
         // Başlık ve açıklamaları ekliyoruz
-        attributedText.append(NSAttributedString(string: "Keşfe Çıkmaya Hazır mısınız?\n\n", attributes: [
+        attributedText.append(NSAttributedString(string: "Are you ready to explore?\n\n", attributes: [
             .font: UIFont.boldSystemFont(ofSize: 18),
             .foregroundColor: UIColor.white
         ]))
         attributedText.append(NSAttributedString(string: """
-Dünyanın her köşesinde keşfedilmeyi bekleyen gizli güzellikler var ve bu uygulama size yeni maceralar sunmak için burada! Uygulamamız, seçtiğiniz ülkeden rastgele bir koordinat oluşturarak sizi o noktayı keşfetmeye teşvik eder. Her macera, yeni deneyimlerle dolu olabilir ve biz de sizi bu serüvene çıkarmaktan mutluluk duyuyoruz.
+There are hidden beauties waiting to be discovered in every corner of the world, and this app is here to offer you new adventures! Our app generates a random coordinate from the country you choose, encouraging you to explore that spot. Every adventure can be filled with new experiences, and we are thrilled to guide you on this journey.
 
 """, attributes: [
             .font: UIFont.systemFont(ofSize: 16),
             .foregroundColor: UIColor.white
         ]))
         
-        attributedText.append(NSAttributedString(string: "\nNasıl Çalışır?\n\n", attributes: [
+        attributedText.append(NSAttributedString(string: "\nHow Does It Work?\n\n", attributes: [
             .font: UIFont.boldSystemFont(ofSize: 18),
             .foregroundColor: UIColor.white
         ]))
         attributedText.append(NSAttributedString(string: """
-Uygulamamız oldukça basit ve kullanımı keyifli! İlk olarak, keşfetmek istediğiniz ülkeyi seçin. Daha sonra uygulama sizin için o ülkeden rastgele bir koordinat oluşturacak. Bu koordinat sizi doğrudan maceraya davet ederken, çevredeki ilgi çekici yerler hakkında da öneriler sunacağız. Yeni yerler keşfetmek, bilmediğiniz güzelliklere yolculuk etmek için mükemmel bir fırsat!
+Our app is simple and enjoyable to use! First, select the country you wish to explore. Then, the app will generate a random coordinate from that country just for you. While inviting you directly to an adventure, we’ll also provide suggestions about interesting spots nearby. It’s a perfect opportunity to discover new places and embark on a journey to hidden beauties you’ve never seen before!
 
 """, attributes: [
             .font: UIFont.systemFont(ofSize: 16),
             .foregroundColor: UIColor.white
         ]))
         
-        attributedText.append(NSAttributedString(string: "\nGizliliğiniz Bizim İçin Önemli\n\n", attributes: [
+        attributedText.append(NSAttributedString(string: "\nYour Privacy is Important to Us\n\n", attributes: [
             .font: UIFont.boldSystemFont(ofSize: 18),
             .foregroundColor: UIColor.white
         ]))
         attributedText.append(NSAttributedString(string: """
-Kişisel verilerinizin gizliliği ve güvenliği bizim önceliğimizdir. Uygulamada paylaştığınız hiçbir bilgi üçüncü taraflarla paylaşılmayacak ve tamamen güvenli bir şekilde saklanacaktır. Gizlilik politikamız hakkında daha fazla bilgi almak isterseniz, ayarlar menüsünden "Gizlilik ve Güvenlik" sekmesine göz atabilirsiniz.
+The privacy and security of your personal data is our top priority. Any information you share within the app will not be shared with third parties and will be stored securely. If you would like to learn more about our privacy policy, you can check the 'Privacy and Security' section in the settings menu.
 
 """, attributes: [
             .font: UIFont.systemFont(ofSize: 16),
             .foregroundColor: UIColor.white
         ]))
         
-        attributedText.append(NSAttributedString(string: "\nİletişim\n\n", attributes: [
+        attributedText.append(NSAttributedString(string: "\nContact\n\n", attributes: [
             .font: UIFont.boldSystemFont(ofSize: 18),
             .foregroundColor: UIColor.white
         ]))
         
         attributedText.append(NSAttributedString(string: """
- Uygulama ile ilgili geri bildirimlerinizi, önerilerinizi veya yaşadığınız sorunları paylaşmak isterseniz, her zaman sizinle iletişimde olmaktan memnuniyet duyarız. Bizimle 
+ If you would like to share your feedback, suggestions, or any issues you’ve encountered with the app, we are always happy to stay in touch with you. You can reach us at 
  """, attributes: [
             .font: UIFont.systemFont(ofSize: 16),
             .foregroundColor: UIColor.white
@@ -67,20 +67,20 @@ Kişisel verilerinizin gizliliği ve güvenliği bizim önceliğimizdir. Uygulam
         ]))
         
         attributedText.append(NSAttributedString(string: """
-  adresinden iletişime geçebilirsiniz. Size en kısa sürede dönüş yapmaya çalışacağız!
+  We will do our best to respond to you as soon as possible!
 
 """, attributes: [
             .font: UIFont.systemFont(ofSize: 16),
             .foregroundColor: UIColor.white
         ]))
         
-        attributedText.append(NSAttributedString(string: "\nSürüm Bilgisi\n\n", attributes: [
+        attributedText.append(NSAttributedString(string: "\nVersion Information\n\n", attributes: [
             .font: UIFont.boldSystemFont(ofSize: 18),
             .foregroundColor: UIColor.white
         ]))
         attributedText.append(NSAttributedString(string: """
-Mevcut Sürüm: 1.0
-Uygulamamızı geliştirmeye devam ediyoruz. Yeni özellikler ve iyileştirmeler hakkında güncellemeler almak için bildirimleri açık tutmayı unutmayın!
+Current Version: 1.0
+We are continuously working to improve our app. Don't forget to keep notifications enabled to receive updates about new features and enhancements!
 """, attributes: [
             .font: UIFont.systemFont(ofSize: 16),
             .foregroundColor: UIColor.white

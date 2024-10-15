@@ -41,7 +41,7 @@ class ForgetPasswordViewController: UIViewController {
     
     @IBAction func resetPasswordTapped(_ sender: UIButton) {
         guard let email = emailTextField.text, !email.isEmpty else {
-            AlertManager.showAlert(title: "Alert",message: "Lütfen geçerli bir e-posta adresi girin.", viewController: self)
+            AlertManager.showAlert(title: "Alert",message: "Please enter a valid email address.", viewController: self)
             return
         }
         
@@ -50,7 +50,7 @@ class ForgetPasswordViewController: UIViewController {
             if let error = error {
                 AlertManager.showAlert(title: "Error",message: error.localizedDescription, viewController: self)
             } else {
-                AlertManager.showAlert(title: "Success",message: "Şifre sıfırlama e-postası gönderildi. Lütfen e-postanızı kontrol edin.", viewController: self)
+                AlertManager.showAlert(title: "Success",message: "A password reset email has been sent. Please check your email.", viewController: self)
             }
         }
     }

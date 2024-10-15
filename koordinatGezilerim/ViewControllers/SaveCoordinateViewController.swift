@@ -116,7 +116,7 @@ class SaveCoordinateViewController: UIViewController, UITextViewDelegate {
                 }
             }
         } else {
-            AlertManager.showAlert(title: "Alert", message: "Alanları kontrol edin.", viewController: self)
+            AlertManager.showAlert(title: "Alert", message: "Check the fields.", viewController: self)
         }
     }
 

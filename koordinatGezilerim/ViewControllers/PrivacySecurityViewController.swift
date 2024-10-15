@@ -257,15 +257,15 @@ class PrivacySecurityViewController: UIViewController, UITextViewDelegate {
                 self.currentUser?.delete { error in
                     if let error = error {
                         // Kullanıcı silme hatası
-                        AlertManager.showAlert(title: "Error", message: "Kullanıcı silme hatası: \(error.localizedDescription)", viewController: self)
+                        AlertManager.showAlert(title: "Error", message: "User deletion error: \(error.localizedDescription)", viewController: self)
                     } else {
                         // Kullanıcı başarıyla silindi
                         self.performSegue(withIdentifier: "toLogInVC", sender: nil)
-                        AlertManager.showAlert(title: "Deleted", message: "Kullanıcı başarıyla silindi", viewController: self)
+                        AlertManager.showAlert(title: "Deleted", message: "User successfully deleted", viewController: self)
                     }
                 }
             } else {
-                AlertManager.showAlert(title: "Error", message: "Kullanıcı verileri silinirken bir hata oluştu.", viewController: self)
+                AlertManager.showAlert(title: "Error", message: "An error occurred while deleting user data.", viewController: self)
             }
         }
     }

@@ -68,6 +68,12 @@ class AyarlarViewController: UIViewController, UITableViewDelegate, UITableViewD
             cell.iconImageView.image = UIImage(systemName: signOutIcons[indexPath.row])
         }
         
+        // Satır tıklamasını algılamak için action atıyoruz
+        cell.cellTapAction = {
+            print("Cell tapped in section \(indexPath.section), row \(indexPath.row)")
+            self.handleCellTap(section: indexPath.section, row: indexPath.row)
+        }
+        
         // Var olan separator'ı gizlemek için
         cell.separatorInset = UIEdgeInsets(top: 0, left: .greatestFiniteMagnitude, bottom: 0, right: 0)
         
@@ -114,6 +120,54 @@ class AyarlarViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
 
         return cell
+    }
+    
+    func handleCellTap(section: Int, row: Int) {
+        if section == 0 {
+            switch row {
+            case 0:
+                print("Profile & Accounts tapped")
+                performSegue(withIdentifier: "toProfilAccountVC", sender: nil)
+            case 1:
+                print("Privacy & Security tapped")
+                performSegue(withIdentifier: "toPrivacySecurityVC", sender: nil)
+            default:
+                break
+            }
+        } else if section == 1 {
+            switch row {
+            case 0:
+                print("Region tapped")
+                performSegue(withIdentifier: "toRegionLanguageVC", sender: nil)
+            default:
+                break
+            }
+        } else if section == 2 {
+            switch row {
+            case 0:
+                print("Help & Feedback tapped")
+                sendFeedbackEmail()
+            case 1:
+                print("Permissions tapped")
+                openAppPermissions()
+            case 2:
+                print("About tapped")
+                performSegue(withIdentifier: "toAboutVC", sender: nil)
+            case 3:
+                print("Support Us tapped")
+                showSupportOptions()
+            default:
+                break
+            }
+        } else {
+            switch row {
+            case 0:
+                print("Sign Out tapped")
+                logOutUser()
+            default:
+                break
+            }
+        }
     }
 
 
@@ -218,7 +272,7 @@ class AyarlarViewController: UIViewController, UITableViewDelegate, UITableViewD
             
             present(mailComposeVC, animated: true, completion: nil)
         } else {
-            AlertManager.showAlert(title: "Mail Gönderilemiyor", message: "Mail uygulaması bulunamadı. Lütfen cihazınıza mail hesabı ekleyin.", viewController: self)
+            AlertManager.showAlert(title: "Unable to send email", message: "Mail app not found. Please add an email account to your device.", viewController: self)
         }
     }
 

@@ -101,7 +101,7 @@ class NewCoordinateViewController: UIViewController, MKMapViewDelegate, CLLocati
             manager.requestWhenInUseAuthorization()
         case .restricted, .denied:
             // Kullanıcı izin vermedi
-            AlertManager.showAlert(title: "Konum Servisleri Kapalı", message: "Konum servislerini ayarlardan açınız.", viewController: self)
+            AlertManager.showAlert(title: "Location Services are turned off", message: "Please enable Location Services from the settings.", viewController: self)
         case .authorizedWhenInUse, .authorizedAlways:
             // İzin verildi, konumu güncellemeye başla
             if CLLocationManager.locationServicesEnabled() {
@@ -154,7 +154,7 @@ class NewCoordinateViewController: UIViewController, MKMapViewDelegate, CLLocati
     
     private func generateCoordinatesAndTransition() {
         guard let north = north, let south = south, let east = east, let west = west else {
-            AlertManager.showAlert(title: "Error!", message: "Lütfen ayarlardan bölge seçimi yapınız.", viewController: self)
+            AlertManager.showAlert(title: "Error!", message: "Please select a region from the settings.", viewController: self)
             return
         }
         

@@ -55,18 +55,18 @@ class PrivacySecurityMessageViewController: UIViewController {
         
         // Add content with mixed attributes (bold for titles, normal for body text)
         let sections = [
-            ("Kişisel Verilerinizin Korunması\n", boldAttributes),
-            ("Uygulamamızı kullanırken paylaştığınız tüm kişisel veriler, gizliliğinizin korunmasına büyük özen gösterilerek saklanır. Verileriniz, yalnızca uygulamanın işlevselliği için gerekli olduğunda işlenir ve üçüncü taraflarla paylaşılmaz. Verilerinizi ne şekilde topladığımız ve nasıl koruduğumuz konusunda şeffaf bir politika izliyoruz.\n\n", normalAttributes),
-            ("Topladığımız Veriler\n", boldAttributes),
-            ("Uygulama deneyiminizi geliştirmek amacıyla bazı verilerinizi topluyor olabiliriz:\n- Konum verileri (uygulamamızın rastgele koordinat özelliği için)\n- Hesap bilgileri (uygulamaya giriş yaparken sağladığınız bilgiler)\n\n", normalAttributes),
-            ("Veri Güvenliği\n", boldAttributes),
-            ("Verilerinizin güvenliğini sağlamak için en güncel güvenlik protokollerini kullanıyoruz. Tüm kullanıcı verileri güvenli sunucularımızda saklanır ve yalnızca yetkilendirilmiş kişiler tarafından erişilebilir. Güvenliğinizi sağlamak için:\n- Veriler şifrelenmiş bir şekilde saklanır.\n- Hassas bilgilere erişim sadece güvenli bağlantılar üzerinden yapılır.\n\n", normalAttributes),
-            ("İzinler\n", boldAttributes),
-            ("Uygulamamız, yalnızca işlevselliği için gerekli olan izinleri talep eder. Talep edilen izinler şunlardır:\n- Konum İzni: Rastgele koordinatlar oluşturmak için gereklidir.\n- Bildirim İzni: Yeni özellikler ve önemli güncellemeler hakkında sizi bilgilendirmek için kullanılır.\n\n", normalAttributes),
-            ("Verilerinizi Nasıl Yönetebilirsiniz?\n", boldAttributes),
-            ("Kullanıcı olarak, kişisel verilerinize dair tam kontrol sizdedir. Hesabınızı silmek istediğinizde, uygulamadaki tüm verileriniz kalıcı olarak silinecektir. Ayrıca, verilerinizin güncellenmesi veya düzeltilmesi için bizimle iletişime geçebilirsiniz.\n\n", normalAttributes),
-            ("İletişim\n", boldAttributes),
-            ("Gizlilik ve güvenlikle ilgili sorularınız veya endişeleriniz varsa, lütfen bizimle randomjourneyapp@gmail.com adresinden iletişime geçin. Size en kısa sürede yardımcı olacağız.", normalAttributes)
+            ("Protection of Your Personal Data\n", boldAttributes),
+            ("All personal data you share while using our app is stored with great care to protect your privacy. Your data is processed only when necessary for the functionality of the app and is not shared with third parties. We follow a transparent policy regarding how we collect and protect your data.\n\n", normalAttributes),
+            ("Data We Collect\n", boldAttributes),
+            ("We may collect some of your data to enhance your app experience:\n- Location data (for the app's random coordinate feature)\n- Account information (the details you provide when logging into the app)\n\n", normalAttributes),
+            ("Data Security\n", boldAttributes),
+            ("We use the latest security protocols to ensure the safety of your data. All user data is stored on secure servers and can only be accessed by authorized personnel. To protect your security:\n- Data is stored in an encrypted format.\n- Access to sensitive information is only allowed through secure connections.\n\n", normalAttributes),
+            ("Permissions\n", boldAttributes),
+            ("Our app only requests permissions necessary for its functionality. The requested permissions are:\n- Location Permission: Required to generate random coordinates.\n- Notification Permission: Used to inform you about new features and important updates.\n\n", normalAttributes),
+            ("How Can You Manage Your Data?\n", boldAttributes),
+            ("As a user, you have full control over your personal data. If you choose to delete your account, all your data within the app will be permanently deleted. You can also contact us to update or correct your data.\n\n", normalAttributes),
+            ("Contact\n", boldAttributes),
+            ("If you have any questions or concerns regarding privacy and security, please contact us at randomjourneyapp@gmail.com. We will assist you as soon as possible.", normalAttributes)
         ]
         
         // Build the attributed string by appending each section

@@ -116,7 +116,7 @@ class SignUpViewController: UIViewController, ASAuthorizationControllerDelegate,
             Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
                 if let error = error {
                     // Hata durumunu ele alın
-                    AlertManager.showAlert(title: "Error", message: "Kayıt hatası: \(error.localizedDescription)", viewController: self)
+                    AlertManager.showAlert(title: "Error", message: "Sign up error: \(error.localizedDescription)", viewController: self)
                 } else {
                     // Başarılı kayıt, kullanıcıyı giriş yapmaya yönlendirin
                     print("Kayıt başarılı!")
@@ -127,7 +127,7 @@ class SignUpViewController: UIViewController, ASAuthorizationControllerDelegate,
                 }
             }
         } else{
-            AlertManager.showAlert(title: "Error", message: "şifre ve doğrulama şifresi aynı değil.", viewController: self)
+            AlertManager.showAlert(title: "Error", message: "The password and confirm password do not match.", viewController: self)
         }
         
     }

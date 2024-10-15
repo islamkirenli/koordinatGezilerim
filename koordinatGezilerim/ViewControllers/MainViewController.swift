@@ -143,7 +143,7 @@ class MainViewController: UIViewController {
     
     func checkCoordinatesAndTransition() {
         guard let north = north, let south = south, let east = east, let west = west else {
-            AlertManager.showAlert(title: "Error", message: "Lütfen ayarlardan bölge seçimi yapınız.", viewController: self)
+            AlertManager.showAlert(title: "Error", message: "Please select a region from the settings.", viewController: self)
             return
         }
         
@@ -156,7 +156,7 @@ class MainViewController: UIViewController {
 
     private func generateCoordinatesAndTransition() {
         guard let north = north, let south = south, let east = east, let west = west else {
-            AlertManager.showAlert(title: "Error", message: "Lütfen ayarlardan bölge seçimi yapınız.", viewController: self)
+            AlertManager.showAlert(title: "Error", message: "Please select a region from the settings.", viewController: self)
             return
         }
         

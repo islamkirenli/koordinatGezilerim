@@ -135,7 +135,7 @@ class ShowCoordinateViewController: UIViewController, UITextViewDelegate {
 
                 
             } else {
-                AlertManager.showAlert(title: "Alert", message: "alanları kontrol edin.", viewController: self)
+                AlertManager.showAlert(title: "Alert", message: "Please check the fields.", viewController: self)
             }
             
             db.collection((currentUser?.email)!+"-CoordinateInformations").document(coordinateInfoID).setData(coordinateInfo) { error in
