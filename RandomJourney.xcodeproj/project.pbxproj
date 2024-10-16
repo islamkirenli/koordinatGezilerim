@@ -34,6 +34,7 @@
 		B5B56A692C9DAD56001083B4 /* PrivacySecurityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B56A682C9DAD56001083B4 /* PrivacySecurityViewController.swift */; };
 		B5B56A6D2C9DAEAE001083B4 /* ProfilAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B56A6C2C9DAEAE001083B4 /* ProfilAccountViewController.swift */; };
 		B5B56A6F2C9F73D9001083B4 /* AvatarSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5B56A6E2C9F73D9001083B4 /* AvatarSelectionViewController.swift */; };
+		B5C280062CC06366006170D1 /* OnboardingPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5C280052CC06366006170D1 /* OnboardingPageViewController.swift */; };
 		B5CB67042C5538550073D8E0 /* SpinWorldManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CB67032C5538550073D8E0 /* SpinWorldManager.swift */; };
 		B5D307792C976B690042DFD9 /* search_animation.json in Resources */ = {isa = PBXBuildFile; fileRef = B5D307782C976B690042DFD9 /* search_animation.json */; };
 		B5E671482C791DAF00FFCE7F /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E671472C791DAF00FFCE7F /* LoginViewController.swift */; };
@@ -77,6 +78,7 @@
 		B5B56A682C9DAD56001083B4 /* PrivacySecurityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacySecurityViewController.swift; sourceTree = "<group>"; };
 		B5B56A6C2C9DAEAE001083B4 /* ProfilAccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilAccountViewController.swift; sourceTree = "<group>"; };
 		B5B56A6E2C9F73D9001083B4 /* AvatarSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarSelectionViewController.swift; sourceTree = "<group>"; };
+		B5C280052CC06366006170D1 /* OnboardingPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPageViewController.swift; sourceTree = "<group>"; };
 		B5CB67032C5538550073D8E0 /* SpinWorldManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinWorldManager.swift; sourceTree = "<group>"; };
 		B5D307782C976B690042DFD9 /* search_animation.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = search_animation.json; sourceTree = "<group>"; };
 		B5D32ADF2CA3384400D27A04 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -164,6 +166,7 @@
 		B5E671452C791D3800FFCE7F /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				B5C280052CC06366006170D1 /* OnboardingPageViewController.swift */,
 				B51A1DA52C5545D70095DACE /* NewCoordinateViewController.swift */,
 				B5247D652C6BFE0F00062D8D /* SaveCoordinateViewController.swift */,
 				B5247D632C6BFA3D00062D8D /* HistoryViewController.swift */,
@@ -326,6 +329,7 @@
 				B544EEB72C53FA1100C1B898 /* AppDelegate.swift in Sources */,
 				B50FCE9C2CA0BBC300097E83 /* SignUpViewController.swift in Sources */,
 				B56D7AA12CA757BF0002163D /* ShowCoordinateViewController.swift in Sources */,
+				B5C280062CC06366006170D1 /* OnboardingPageViewController.swift in Sources */,
 				B5247D662C6BFE0F00062D8D /* SaveCoordinateViewController.swift in Sources */,
 				B51A1DA62C5545D70095DACE /* NewCoordinateViewController.swift in Sources */,
 				B51A1DAA2C556A920095DACE /* RandomCoordinateManager.swift in Sources */,

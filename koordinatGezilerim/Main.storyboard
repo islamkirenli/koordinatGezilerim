@@ -698,6 +698,18 @@
             </objects>
             <point key="canvasLocation" x="-1269.4656488549617" y="-814.08450704225356"/>
         </scene>
+        <!--Onboarding Page View Controller-->
+        <scene sceneID="u08-mG-LBO">
+            <objects>
+                <pageViewController storyboardIdentifier="OnboardingViewController" autoresizesArchivedViewToFullSize="NO" transitionStyle="scroll" navigationOrientation="horizontal" spineLocation="none" id="SKD-N3-yue" customClass="OnboardingPageViewController" customModule="RandomJourney" customModuleProvider="target" sceneMemberID="viewController">
+                    <connections>
+                        <segue destination="zbe-8P-but" kind="presentation" identifier="toLoginVC" modalPresentationStyle="fullScreen" id="ICp-Me-g2b"/>
+                    </connections>
+                </pageViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Dwu-aX-lvZ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2605" y="-2"/>
+        </scene>
         <!--Login View Controller-->
         <scene sceneID="MvQ-jC-APM">
             <objects>
@@ -1036,7 +1048,7 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="rTW-8H-z6w"/>
-        <segue reference="kyb-d0-zvn"/>
+        <segue reference="ICp-Me-g2b"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="avatar-1" width="256" height="256"/>

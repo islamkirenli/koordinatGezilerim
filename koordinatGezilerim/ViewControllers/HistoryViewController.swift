@@ -233,6 +233,7 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
         let country = sections[indexPath.section].title
         if let cities = itemDictionary[country] {
             cell.textLabel?.text = cities[indexPath.row].city
+            cell.textLabel?.textColor = .white
         }
         
         // Sağda bir sağ ok (chevron) ikonu göster
