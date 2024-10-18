@@ -216,6 +216,7 @@
 				B544EEB02C53FA1100C1B898 /* Frameworks */,
 				B544EEB12C53FA1100C1B898 /* Resources */,
 				2E34820D9FE54D644EE0F57F /* [CP] Embed Pods Frameworks */,
+				2FADE8C25A15A84A5D4E2602 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -311,6 +312,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RandomJourney/Pods-RandomJourney-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		2FADE8C25A15A84A5D4E2602 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RandomJourney/Pods-RandomJourney-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RandomJourney/Pods-RandomJourney-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RandomJourney/Pods-RandomJourney-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */

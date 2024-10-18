@@ -3,6 +3,9 @@ import UIKit
 class OnboardingPageViewController: UIPageViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate {
     
     let onboardingImages = ["Welcome", "New Coordinate", "Save Coordinate", "Coordinate History", "Region Settings"]
+    
+    // Bu değişken ayarlardan mı açıldığını kontrol eder
+    var isFromSettings = false
 
     lazy var orderedViewControllers: [UIViewController] = {
         var viewControllers = [UIViewController]()
@@ -23,8 +26,8 @@ class OnboardingPageViewController: UIPageViewController, UIPageViewControllerDa
                 imageView.bottomAnchor.constraint(equalTo: vc.view.bottomAnchor)
             ])
             
-            // Eğer son görselse bir buton ekle
-            if index == onboardingImages.count - 1 {
+            // Eğer son görselse ve ayarlardan açılmamışsa bir buton ekle
+            if index == onboardingImages.count - 1 && !isFromSettings {
                 let button = UIButton(type: .system)
                 button.setTitle("Let's Start", for: .normal)
                 

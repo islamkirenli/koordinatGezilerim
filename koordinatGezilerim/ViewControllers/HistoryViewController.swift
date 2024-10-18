@@ -53,12 +53,6 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
         addFloatingMapButton()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-    }
-
-    
     @objc func selectButtonTapped() {
         isSelectionMode.toggle()
 
@@ -229,6 +223,12 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
             subview.removeFromSuperview()
         }
         
+        // GestureRecognizer ekleyin
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleCellTap(_:)))
+        cell.addGestureRecognizer(tapGesture)
+        cell.isUserInteractionEnabled = true
+        cell.tag = indexPath.row
+        
         // Şehir ismini göster
         let country = sections[indexPath.section].title
         if let cities = itemDictionary[country] {
@@ -292,7 +292,29 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         return cell
     }
+    
+    // GestureRecognizer için hücre tıklama işlevi
+    @objc func handleCellTap(_ sender: UITapGestureRecognizer) {
+        guard let cell = sender.view as? UITableViewCell else { return }
+        let indexPath = tableView.indexPath(for: cell)!
+        let country = sections[indexPath.section].title
 
+        if let cities = itemDictionary[country] {
+            let selectedCity = cities[indexPath.row]
+            selectedUUID = selectedCity.uuid
+        }
+
+        if isSelectionMode {
+            if let index = selectedItems.firstIndex(of: indexPath) {
+                selectedItems.remove(at: index)
+            } else {
+                selectedItems.append(indexPath)
+            }
+            tableView.reloadRows(at: [indexPath], with: .none)
+        } else {
+            performSegue(withIdentifier: "toShowVC", sender: self)
+        }
+    }
 
     // Height for header in section
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {

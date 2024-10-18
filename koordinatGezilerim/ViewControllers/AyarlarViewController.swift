@@ -13,13 +13,13 @@ class AyarlarViewController: UIViewController, UITableViewDelegate, UITableViewD
     let sections = ["Account", "Personalization", "Accessibility & Advanced", ""]
     let accountItems = ["Profile & Accounts", "Privacy & Security"]
     let personalizationItems = ["Region"]
-    let accessibilityItems = ["Help & Feedback", "Permissions", "About", "Support Us"]
+    let accessibilityItems = ["Help & Feedback", "Permissions", "About", "Introduction", "Support Us"]
     let signOutItems = ["Sign Out"]
     
     // İkonlar
     let accountIcons = ["person.crop.circle", "lock"]
     let personalizationIcons = ["globe"]
-    let accessibilityIcons = ["smiley.fill", "lock.shield", "questionmark.circle", "heart"]
+    let accessibilityIcons = ["smiley.fill", "lock.shield", "questionmark.circle", "lightbulb.max", "heart"]
     let signOutIcons = ["rectangle.portrait.and.arrow.right"]
     
     override func viewDidLoad() {
@@ -154,6 +154,9 @@ class AyarlarViewController: UIViewController, UITableViewDelegate, UITableViewD
                 print("About tapped")
                 performSegue(withIdentifier: "toAboutVC", sender: nil)
             case 3:
+                print("introduction tapped.")
+                performSegue(withIdentifier: "toIntroductionVC", sender: nil)
+            case 4:
                 print("Support Us tapped")
                 showSupportOptions()
             default:
@@ -273,6 +276,14 @@ class AyarlarViewController: UIViewController, UITableViewDelegate, UITableViewD
             present(mailComposeVC, animated: true, completion: nil)
         } else {
             AlertManager.showAlert(title: "Unable to send email", message: "Mail app not found. Please add an email account to your device.", viewController: self)
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "toIntroductionVC" {
+            if let onboardingVC = segue.destination as? OnboardingPageViewController {
+                onboardingVC.isFromSettings = true // Ayarlardan açıldığını belirtiyoruz
+            }
         }
     }
 

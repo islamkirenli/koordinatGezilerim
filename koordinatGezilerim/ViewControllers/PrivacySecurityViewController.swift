@@ -43,6 +43,18 @@ class PrivacySecurityViewController: UIViewController, UITextViewDelegate {
         let readButton = UIBarButtonItem(title: "Read", style: .plain, target: self, action: #selector(readButtonTapped))
         self.navigationItem.rightBarButtonItem = readButton
         
+        let currentPasswordPlaceholderText = "Current Password"
+        let currentPasswordPlaceholderColor = UIColor.lightGray
+        currentPasswordTextField.attributedPlaceholder = NSAttributedString(string: currentPasswordPlaceholderText, attributes: [NSAttributedString.Key.foregroundColor: currentPasswordPlaceholderColor])
+        
+        let newPasswordPlaceholderText = "New Password"
+        let newPasswordPlaceholderColor = UIColor.lightGray
+        newPasswordTextField.attributedPlaceholder = NSAttributedString(string: newPasswordPlaceholderText, attributes: [NSAttributedString.Key.foregroundColor: newPasswordPlaceholderColor])
+        
+        let confirmPasswordPlaceholderText = "Confirm Password"
+        let confirmPasswordPlaceholderColor = UIColor.lightGray
+        confirmNewPasswordTextField.attributedPlaceholder = NSAttributedString(string: confirmPasswordPlaceholderText, attributes: [NSAttributedString.Key.foregroundColor: confirmPasswordPlaceholderColor])
+        
         // Şifre gösterme/gizleme butonları ekleniyor
         setupPasswordToggleButtons()
         

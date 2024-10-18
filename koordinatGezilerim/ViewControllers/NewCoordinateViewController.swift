@@ -2,9 +2,11 @@ import UIKit
 import MapKit
 import Lottie
 import CoreLocation
+import GoogleMobileAds
 
 class NewCoordinateViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
-    
+    var interstitial: GADInterstitialAd?
+
     var mapManager: MapManager!
     var latitude: Double!
     var longitude: Double!
@@ -27,6 +29,9 @@ class NewCoordinateViewController: UIViewController, MKMapViewDelegate, CLLocati
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Reklam yükleme fonksiyonunu çağır
+        loadInterstitialAd()
         
         view.backgroundColor = .white
         
@@ -147,6 +152,10 @@ class NewCoordinateViewController: UIViewController, MKMapViewDelegate, CLLocati
     @objc func newCoordinateButtonTapped() {
         animationView.isHidden = false
         animationView.play()
+        
+        // Geçiş reklamını göster
+        showInterstitialAd()
+        
         print("new coordinate tıklandı")
         generateCoordinatesAndTransition()
     }
@@ -222,7 +231,7 @@ class NewCoordinateViewController: UIViewController, MKMapViewDelegate, CLLocati
 
     private func addBlurEffect() {
         // Bulanıklık efekti oluştur
-        let blurEffect = UIBlurEffect(style: .regular) // İsteğe göre `.light` veya `.extraLight` seçilebilir
+        let blurEffect = UIBlurEffect(style: .regular) // İsteğe göre .light veya .extraLight seçilebilir
         blurEffectView = UIVisualEffectView(effect: blurEffect)
         blurEffectView?.frame = self.view.bounds
         blurEffectView?.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -276,7 +285,47 @@ class NewCoordinateViewController: UIViewController, MKMapViewDelegate, CLLocati
             destinationVC.annotationCountry = self.annotationCountry
         }
     }
+    
+    // Reklam yükleme fonksiyonu
+    func loadInterstitialAd() {
+        let adUnitID = "ca-app-pub-3940256099942544/4411468910" // Test geçiş reklamı ID
+        let request = GADRequest()
+        GADInterstitialAd.load(withAdUnitID: adUnitID, request: request) { [self] ad, error in
+            if let error = error {
+                print("Failed to load interstitial ad with error: \(error.localizedDescription)")
+                return
+            }
+            interstitial = ad
+            interstitial?.fullScreenContentDelegate = self as? (any GADFullScreenContentDelegate)
+        }
+    }
+    
+    // Reklamı gösterme fonksiyonu
+    func showInterstitialAd() {
+        if let interstitial = interstitial {
+            interstitial.present(fromRootViewController: self)
+        } else {
+            print("Ad wasn't ready")
+            // Eğer reklam hazır değilse geçişe devam et
+            generateCoordinatesAndTransition()
+        }
+    }
+    
+    // Reklam kapandıktan sonra çağrılacak fonksiyon
+    func adDidDismissFullScreenContent(_ ad: GADFullScreenPresentingAd) {
+        print("Ad dismissed.")
+        generateCoordinatesAndTransition()
+    }
+    
+    // Reklam gösterilirken hata olursa
+    func ad(_ ad: GADFullScreenPresentingAd, didFailToPresentFullScreenContentWithError error: Error) {
+        print("Ad failed to present full screen content.")
+        generateCoordinatesAndTransition()
+    }
+    
+    // Reklam gösteriminde hata olursa
+    func adDidFailToPresentFullScreenContent(_ ad: GADFullScreenPresentingAd) {
+        print("Ad failed to present full screen content.")
+        generateCoordinatesAndTransition()
+    }
 }
-
-
-
