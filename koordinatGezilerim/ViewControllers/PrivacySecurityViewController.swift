@@ -245,18 +245,22 @@ class PrivacySecurityViewController: UIViewController, UITextViewDelegate {
     }
     
     @IBAction func deleteAccountButtonTapped(_ sender: Any) {
-        let alertController = UIAlertController(title: "Are you sure you want to delete your account?", message: "This action cannot be undone.", preferredStyle: .alert)
-        
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-        alertController.addAction(cancelAction)
-        
-        let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { _ in
-            self.saveDeleteReason()
-            self.deleteUserAccount()
+        if deleteAccountTextView.text.isEmpty{
+            AlertManager.showAlert(title: "Alert", message: "Please explain to us in a few sentences why you deleted your account.", viewController: self)
+        }else{
+            let alertController = UIAlertController(title: "Are you sure you want to delete your account?", message: "This action cannot be undone.", preferredStyle: .alert)
+            
+            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+            alertController.addAction(cancelAction)
+            
+            let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { _ in
+                self.saveDeleteReason()
+                self.deleteUserAccount()
+            }
+            alertController.addAction(deleteAction)
+            
+            present(alertController, animated: true, completion: nil)
         }
-        alertController.addAction(deleteAction)
-        
-        present(alertController, animated: true, completion: nil)
     }
     
     func deleteUserAccount() {

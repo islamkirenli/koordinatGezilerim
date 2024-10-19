@@ -27,11 +27,19 @@ class NewCoordinateViewController: UIViewController, MKMapViewDelegate, CLLocati
     var animationView: LottieAnimationView!
     private var blurEffectView: UIVisualEffectView?
     
+    let newCoordinateButton = UIButton(type: .custom)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Reklam yükleme fonksiyonunu çağır
-        loadInterstitialAd()
+        // AppDelegate'e erişip adUnitID değişkenini alalım
+        if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+            let adUnitID = appDelegate.adUnitID
+            print("Ad Unit ID: \(adUnitID)")
+            
+            // Reklam yükleme işlemleri burada yapılabilir
+            loadInterstitialAd(adUnitID: adUnitID)
+        }
         
         view.backgroundColor = .white
         
@@ -59,7 +67,6 @@ class NewCoordinateViewController: UIViewController, MKMapViewDelegate, CLLocati
         animationView.isHidden = true
         self.view.addSubview(animationView)
  
-        let newCoordinateButton = UIButton(type: .custom)
         var config = UIButton.Configuration.filled()
         config.title = "New Coordinate" // Metin
         config.image = UIImage(systemName: "mappin.and.ellipse") // İkon
@@ -153,8 +160,10 @@ class NewCoordinateViewController: UIViewController, MKMapViewDelegate, CLLocati
         animationView.isHidden = false
         animationView.play()
         
-        // Geçiş reklamını göster
-        showInterstitialAd()
+        if let interstitial = interstitial{
+            // Geçiş reklamını göster
+            showInterstitialAd()
+        }
         
         print("new coordinate tıklandı")
         generateCoordinatesAndTransition()
@@ -243,6 +252,7 @@ class NewCoordinateViewController: UIViewController, MKMapViewDelegate, CLLocati
 
             // Butonları blur effect'in arkasına yerleştir
             self.view.bringSubviewToFront(animationView)  // Animasyon net gözükmeli
+            newCoordinateButton.isHidden = true
             
             UIView.animate(withDuration: 0.5) {
                 blurView.alpha = 1.0
@@ -255,6 +265,7 @@ class NewCoordinateViewController: UIViewController, MKMapViewDelegate, CLLocati
         if let blurView = blurEffectView {
             UIView.animate(withDuration: 0.5, animations: {
                 blurView.alpha = 0.0
+                self.newCoordinateButton.isHidden = false
             }) { _ in
                 blurView.removeFromSuperview()
             }
@@ -287,8 +298,7 @@ class NewCoordinateViewController: UIViewController, MKMapViewDelegate, CLLocati
     }
     
     // Reklam yükleme fonksiyonu
-    func loadInterstitialAd() {
-        let adUnitID = "ca-app-pub-3940256099942544/4411468910" // Test geçiş reklamı ID
+    func loadInterstitialAd(adUnitID: String) {
         let request = GADRequest()
         GADInterstitialAd.load(withAdUnitID: adUnitID, request: request) { [self] ad, error in
             if let error = error {

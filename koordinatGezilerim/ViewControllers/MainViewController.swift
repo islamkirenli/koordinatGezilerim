@@ -37,21 +37,18 @@ class MainViewController: UIViewController {
         spinWorldManager.viewController = self // SpinWorldManager'a ViewController referansını ver
         self.view.addSubview(spinWorldManager.sceneView)
         
-        // ButtonManager'ı oluştur ve butonları ayarla
-        let startButtonFrame = CGRect(x: 105, y: 670, width: 200, height: 60)
-        let settingsButtonFrame = CGRect(x: 330, y: 80, width: 70, height: 70)
-        let historyButtonFrame = CGRect(x: 15, y: 80, width: 70, height: 70)
-        buttonManager = ButtonManager(startButtonFrame: startButtonFrame, settingsButtonFrame: settingsButtonFrame, historyButtonFrame: historyButtonFrame)
-        buttonManager.delegate = self
-        
-        // Slogan Label'ı oluştur ve startButton'un altında konumlandır
-        sloganLabel = UILabel(frame: CGRect(x: 0, y: buttonManager.historyButton.frame.maxY + 35, width: self.view.bounds.width, height: 50))
+        // Slogan Label'ı oluştur ve Auto Layout kısıtlamalarını aktif hale getirin
+        sloganLabel = UILabel()
         sloganLabel.textAlignment = .center
-        //sloganLabel.font = UIFont.systemFont(ofSize: 18)
         sloganLabel.font = UIFont.italicSystemFont(ofSize: 18)
         sloganLabel.textColor = .white
-        sloganLabel.numberOfLines = 2 // Sınırsız satır sayısı, yazı satırlara bölünebilir
-        sloganLabel.lineBreakMode = .byWordWrapping // Kelimelere göre satır kırma
+        sloganLabel.numberOfLines = 2
+        sloganLabel.lineBreakMode = .byWordWrapping
+        sloganLabel.translatesAutoresizingMaskIntoConstraints = false // Auto Layout kısıtlamaları için gerekli
+        
+        // ButtonManager'ı oluştur ve delegate'i ayarla
+        buttonManager = ButtonManager()
+        buttonManager.delegate = self
         
         // Butonları view'e ekle
         view.addSubview(buttonManager.startButton)
@@ -59,11 +56,16 @@ class MainViewController: UIViewController {
         view.addSubview(buttonManager.historyButton)
         view.addSubview(sloganLabel)
         
-        // Ensure the buttons are visible initially
-        self.view.bringSubviewToFront(buttonManager.startButton)
-        self.view.bringSubviewToFront(buttonManager.settingsButton)
-        self.view.bringSubviewToFront(buttonManager.historyButton)
-        self.view.bringSubviewToFront(sloganLabel)
+        // Kısıtlamaları uygulayın
+        buttonManager.setupConstraints(view: self.view)
+        
+        // SloganLabel kısıtlamaları
+        NSLayoutConstraint.activate([
+            sloganLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor), // Yatayda ortala
+            sloganLabel.bottomAnchor.constraint(equalTo: buttonManager.historyButton.bottomAnchor, constant: 60), // Start butonunun üstüne yerleştir
+            sloganLabel.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8), // Genişliğini ekranın %80'i kadar yap
+            sloganLabel.heightAnchor.constraint(equalToConstant: 50) // Sabit yükseklik
+        ])
         
         // Butonları başlangıçta görünmez yap
         buttonManager.startButton.alpha = 0

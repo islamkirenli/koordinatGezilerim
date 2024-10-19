@@ -114,6 +114,52 @@ class LoginViewController: UIViewController, ASAuthorizationControllerPresentati
             signUpButton.leadingAnchor.constraint(equalTo: label.trailingAnchor, constant: 8),
             signUpButton.centerYAnchor.constraint(equalTo: label.centerYAnchor)
         ])
+        
+        // Auto Layout kısıtlamalarını manuel olarak uygulayacağız, bu yüzden translatesAutoresizingMaskIntoConstraints'i false yapıyoruz.
+        emailTextField.translatesAutoresizingMaskIntoConstraints = false
+        passwordTextField.translatesAutoresizingMaskIntoConstraints = false
+        loginButtonOutlet.translatesAutoresizingMaskIntoConstraints = false
+        appleSignInButtonOutlet.translatesAutoresizingMaskIntoConstraints = false
+        forgetPasswordButtonOutlet.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Email TextField'ı ekranın üst kısmında, ortalamak
+        NSLayoutConstraint.activate([
+            emailTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            emailTextField.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -150), // Ekranın merkezinin üstüne, -150px
+            emailTextField.widthAnchor.constraint(equalToConstant: 300),
+            emailTextField.heightAnchor.constraint(equalToConstant: 34)
+        ])
+        
+        // Password TextField'ı, emailTextField'ın altına yerleştirmek
+        NSLayoutConstraint.activate([
+            passwordTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            passwordTextField.topAnchor.constraint(equalTo: emailTextField.bottomAnchor, constant: 20), // emailTextField'ın 20px altında
+            passwordTextField.widthAnchor.constraint(equalToConstant: 300),
+            passwordTextField.heightAnchor.constraint(equalToConstant: 34)
+        ])
+        
+        // Forget Password Button'ı, passwordTextField'ın sağ alt köşesine yerleştirmek
+        NSLayoutConstraint.activate([
+            forgetPasswordButtonOutlet.trailingAnchor.constraint(equalTo: passwordTextField.trailingAnchor, constant: -10), // Sağda 10px boşluk
+            forgetPasswordButtonOutlet.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 5), // Password TextField'ın 5px altında
+            forgetPasswordButtonOutlet.heightAnchor.constraint(equalToConstant: 30)
+        ])
+        
+        // Login Button'ı, ekranın alt yarısına yerleştirmek (email ve password textField'larından biraz boşluk bırakıyoruz)
+        NSLayoutConstraint.activate([
+            loginButtonOutlet.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            loginButtonOutlet.topAnchor.constraint(equalTo: view.centerYAnchor, constant: 60), // Password TextField'dan 100px aşağıda
+            loginButtonOutlet.widthAnchor.constraint(equalToConstant: 200),
+            loginButtonOutlet.heightAnchor.constraint(equalToConstant: 35)
+        ])
+        
+        // Apple SignIn Button'ı, Login Button'ın altına yerleştirmek
+        NSLayoutConstraint.activate([
+            appleSignInButtonOutlet.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            appleSignInButtonOutlet.topAnchor.constraint(equalTo: loginButtonOutlet.bottomAnchor, constant: 20), // Login Button'ın 20px altında
+            appleSignInButtonOutlet.widthAnchor.constraint(equalToConstant: 200),
+            appleSignInButtonOutlet.heightAnchor.constraint(equalToConstant: 35)
+        ])
     }
     
     @objc func togglePasswordVisibility() {

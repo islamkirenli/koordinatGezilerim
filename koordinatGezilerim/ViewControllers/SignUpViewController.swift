@@ -10,6 +10,9 @@ class SignUpViewController: UIViewController, ASAuthorizationControllerDelegate,
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var confirmPasswordTextField: UITextField!
     
+    @IBOutlet weak var signUpButtonOutlet: UIButton!
+    @IBOutlet weak var signUpWithAppleButtonOutlet: UIButton!
+    
     var spinWorldManager: SpinWorldManager!
     
     let db = Firestore.firestore()
@@ -86,7 +89,52 @@ class SignUpViewController: UIViewController, ASAuthorizationControllerDelegate,
         let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(klavyeKapat))
         view.addGestureRecognizer(gestureRecognizer)
 
+        // Auto Layout kısıtlamalarını manuel olarak uygulayacağız, bu yüzden translatesAutoresizingMaskIntoConstraints'i false yapıyoruz.
+        emailTextField.translatesAutoresizingMaskIntoConstraints = false
+        passwordTextField.translatesAutoresizingMaskIntoConstraints = false
+        confirmPasswordTextField.translatesAutoresizingMaskIntoConstraints = false
+        signUpButtonOutlet.translatesAutoresizingMaskIntoConstraints = false
+        signUpWithAppleButtonOutlet.translatesAutoresizingMaskIntoConstraints = false
         
+        // confirmPasswordTextField ekranın üst kısmında, ortalamak
+        NSLayoutConstraint.activate([
+            confirmPasswordTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            confirmPasswordTextField.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -50), // Ekranın merkezinin üstüne, -60px
+            confirmPasswordTextField.widthAnchor.constraint(equalToConstant: 300),
+            confirmPasswordTextField.heightAnchor.constraint(equalToConstant: 34)
+        ])
+        
+        // passwordTextField ekranın üst kısmında, ortalamak
+        NSLayoutConstraint.activate([
+            passwordTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            passwordTextField.centerYAnchor.constraint(equalTo: confirmPasswordTextField.topAnchor, constant: -30),
+            passwordTextField.widthAnchor.constraint(equalToConstant: 300),
+            passwordTextField.heightAnchor.constraint(equalToConstant: 34)
+        ])
+        
+        // emailTextField ekranın üst kısmında, ortalamak
+        NSLayoutConstraint.activate([
+            emailTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            emailTextField.centerYAnchor.constraint(equalTo: passwordTextField.topAnchor, constant: -30),
+            emailTextField.widthAnchor.constraint(equalToConstant: 300),
+            emailTextField.heightAnchor.constraint(equalToConstant: 34)
+        ])
+        
+        // signUpButtonOutlet ekranın üst kısmında, ortalamak
+        NSLayoutConstraint.activate([
+            signUpButtonOutlet.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            signUpButtonOutlet.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 100), // Ekranın merkezinin altına, 60px
+            signUpButtonOutlet.widthAnchor.constraint(equalToConstant: 200),
+            signUpButtonOutlet.heightAnchor.constraint(equalToConstant: 35)
+        ])
+        
+        // signUpWithAppleButtonOutlet ekranın üst kısmında, ortalamak
+        NSLayoutConstraint.activate([
+            signUpWithAppleButtonOutlet.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            signUpWithAppleButtonOutlet.centerYAnchor.constraint(equalTo: signUpButtonOutlet.bottomAnchor, constant: 30),
+            signUpWithAppleButtonOutlet.widthAnchor.constraint(equalToConstant: 200),
+            signUpWithAppleButtonOutlet.heightAnchor.constraint(equalToConstant: 35)
+        ])
     }
     
     @objc func togglePasswordVisibility() {

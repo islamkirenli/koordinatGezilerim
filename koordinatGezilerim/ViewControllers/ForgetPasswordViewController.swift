@@ -4,6 +4,7 @@ import FirebaseAuth
 class ForgetPasswordViewController: UIViewController {
 
     @IBOutlet weak var emailTextField: UITextField!
+    @IBOutlet weak var sendRecoveryMailButtonOutlet: UIButton!
     
     var spinWorldManager: SpinWorldManager!
 
@@ -33,6 +34,26 @@ class ForgetPasswordViewController: UIViewController {
         
         let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(klavyeKapat))
         view.addGestureRecognizer(gestureRecognizer)
+        
+        // Auto Layout kısıtlamalarını manuel olarak uygulayacağız, bu yüzden translatesAutoresizingMaskIntoConstraints'i false yapıyoruz.
+        emailTextField.translatesAutoresizingMaskIntoConstraints = false
+        sendRecoveryMailButtonOutlet.translatesAutoresizingMaskIntoConstraints = false
+        
+        // emailTextField ekranın üst kısmında, ortalamak
+        NSLayoutConstraint.activate([
+            emailTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            emailTextField.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -50), // Ekranın merkezinin üstüne, -50px
+            emailTextField.widthAnchor.constraint(equalToConstant: 300),
+            emailTextField.heightAnchor.constraint(equalToConstant: 34)
+        ])
+        
+        // sendRecoveryMailButtonOutlet ekranın üst kısmında, ortalamak
+        NSLayoutConstraint.activate([
+            sendRecoveryMailButtonOutlet.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            sendRecoveryMailButtonOutlet.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 100), // Ekranın merkezinin üstüne, -50px
+            sendRecoveryMailButtonOutlet.widthAnchor.constraint(equalToConstant: 200),
+            sendRecoveryMailButtonOutlet.heightAnchor.constraint(equalToConstant: 35)
+        ])
     }
     
     @objc func klavyeKapat(){
