@@ -300,7 +300,7 @@ class AyarlarViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
         
         let appStoreAction = UIAlertAction(title: "Rate us on the App Store", style: .default) { _ in
-            self.openURL("https://apps.apple.com/app/id123456789") // App Store URL'si
+            self.openURL("https://apps.apple.com/app/randomjourney/id6737148094") // App Store URL'si
         }
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)

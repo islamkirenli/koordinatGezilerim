@@ -24,8 +24,8 @@
 		B544EEC02C53FA1200C1B898 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B544EEBF2C53FA1200C1B898 /* Assets.xcassets */; };
 		B54E80C52C937D82001A5523 /* AyarlarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54E80C42C937D81001A5523 /* AyarlarViewController.swift */; };
 		B54E80CA2C937FAD001A5523 /* SettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54E80C82C937FAD001A5523 /* SettingsTableViewCell.swift */; };
+		B55F4F722CC8416500AE9FB7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B55F4F712CC8416500AE9FB7 /* Main.storyboard */; };
 		B5671AF32CAB3444001A15A8 /* PrivacySecurityMessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5671AF22CAB3444001A15A8 /* PrivacySecurityMessageViewController.swift */; };
-		B56D7A9F2CA72C270002163D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B56D7A9E2CA72C270002163D /* Main.storyboard */; };
 		B56D7AA12CA757BF0002163D /* ShowCoordinateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56D7AA02CA757BF0002163D /* ShowCoordinateViewController.swift */; };
 		B5820F372CAC8F6A0090CD27 /* ForgetPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5820F362CAC8F6A0090CD27 /* ForgetPasswordViewController.swift */; };
 		B58FC2462C9CC7B600F43D8D /* LanguageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B58FC2452C9CC7B600F43D8D /* LanguageManager.swift */; };
@@ -64,11 +64,10 @@
 		B544EEB82C53FA1100C1B898 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		B544EEBA2C53FA1100C1B898 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		B544EEBF2C53FA1200C1B898 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		B544EEC22C53FA1200C1B898 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B54E80C42C937D81001A5523 /* AyarlarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AyarlarViewController.swift; sourceTree = "<group>"; };
 		B54E80C82C937FAD001A5523 /* SettingsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewCell.swift; sourceTree = "<group>"; };
+		B55F4F752CC8426000AE9FB7 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/Main.storyboard; sourceTree = "<group>"; };
 		B5671AF22CAB3444001A15A8 /* PrivacySecurityMessageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacySecurityMessageViewController.swift; sourceTree = "<group>"; };
-		B56D7A9E2CA72C270002163D /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		B56D7AA02CA757BF0002163D /* ShowCoordinateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowCoordinateViewController.swift; sourceTree = "<group>"; };
 		B5820F362CAC8F6A0090CD27 /* ForgetPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgetPasswordViewController.swift; sourceTree = "<group>"; };
 		B58FC2452C9CC7B600F43D8D /* LanguageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageManager.swift; sourceTree = "<group>"; };
@@ -154,9 +153,8 @@
 				B52DA5E82C9B933C00711607 /* Animations */,
 				B544EEB62C53FA1100C1B898 /* AppDelegate.swift */,
 				B544EEB82C53FA1100C1B898 /* SceneDelegate.swift */,
-				B56D7A9E2CA72C270002163D /* Main.storyboard */,
+				B55F4F712CC8416500AE9FB7 /* Main.storyboard */,
 				B544EEBF2C53FA1200C1B898 /* Assets.xcassets */,
-				B544EEC12C53FA1200C1B898 /* LaunchScreen.storyboard */,
 				B5D32ADF2CA3384400D27A04 /* Info.plist */,
 				B52953BE2C66A6620096782C /* GoogleService-Info.plist */,
 			);
@@ -244,11 +242,10 @@
 			};
 			buildConfigurationList = B544EEAE2C53FA1100C1B898 /* Build configuration list for PBXProject "RandomJourney" */;
 			compatibilityVersion = "Xcode 14.0";
-			developmentRegion = tr;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				Base,
-				tr,
+				en,
 			);
 			mainGroup = B544EEAA2C53FA1100C1B898;
 			productRefGroup = B544EEB42C53FA1100C1B898 /* Products */;
@@ -265,7 +262,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B56D7A9F2CA72C270002163D /* Main.storyboard in Resources */,
+				B55F4F722CC8416500AE9FB7 /* Main.storyboard in Resources */,
 				B544EEC02C53FA1200C1B898 /* Assets.xcassets in Resources */,
 				B52953BF2C66A6620096782C /* GoogleService-Info.plist in Resources */,
 				B5D307792C976B690042DFD9 /* search_animation.json in Resources */,
@@ -373,12 +370,12 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		B544EEC12C53FA1200C1B898 /* LaunchScreen.storyboard */ = {
+		B55F4F712CC8416500AE9FB7 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				B544EEC22C53FA1200C1B898 /* Base */,
+				B55F4F752CC8426000AE9FB7 /* en */,
 			);
-			name = LaunchScreen.storyboard;
+			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -513,6 +510,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
 				CODE_SIGN_ENTITLEMENTS = RandomJourney.entitlements;
 				CODE_SIGN_STYLE = Automatic;
@@ -521,16 +519,20 @@
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = koordinatGezilerim/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Your app needs access to your location to show it on the map even when the app is running in the background.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Your app needs access to your location to show it on the map.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.islamkirenli.koordinatGezilerim;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -545,6 +547,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
 				CODE_SIGN_ENTITLEMENTS = RandomJourney.entitlements;
 				CODE_SIGN_STYLE = Automatic;
@@ -553,16 +556,20 @@
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = koordinatGezilerim/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Your app needs access to your location to show it on the map even when the app is running in the background.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Your app needs access to your location to show it on the map.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.islamkirenli.koordinatGezilerim;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

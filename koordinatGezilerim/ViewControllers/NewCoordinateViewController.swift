@@ -339,3 +339,4 @@ class NewCoordinateViewController: UIViewController, MKMapViewDelegate, CLLocati
         generateCoordinatesAndTransition()
     }
 }
+

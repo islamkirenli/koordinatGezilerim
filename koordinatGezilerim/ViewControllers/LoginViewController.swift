@@ -20,6 +20,9 @@ class LoginViewController: UIViewController, ASAuthorizationControllerPresentati
     let db = Firestore.firestore()
     var currentUser: User? = nil
     
+    var coordinateSettings: [String: Any] = [:]
+    let coordinateDocumentID = "coordinateSettings"
+    
     var north: Double? //= 90.0
     var south: Double? //= -90.0
     var east: Double? //= 180.0
@@ -313,7 +316,21 @@ extension LoginViewController: ASAuthorizationControllerDelegate {
                     print("User \(firebaseUser.uid) signed in with email \(firebaseUser.email ?? "unknown")")
                     // Başarılı giriş işlemleri burada yapılabilir
                     self.currentUser = Auth.auth().currentUser
-                    self.fetchSettingsDataFromFirebase()
+                    
+                    // Kullanıcının verileri var mı kontrol et
+                    let userDocumentRef = db.collection(firebaseUser.email!).document("profilSettings")
+                    userDocumentRef.getDocument { (document, error) in
+                        if let document = document, document.exists {
+                            // Kullanıcı daha önce giriş yapmış, veriler var
+                            self.fetchSettingsDataFromFirebase()
+                        } else {
+                            // Kullanıcı daha önce giriş yapmamış, yeni veriler kaydedilmeli
+                            self.saveProfilSettings()
+                            self.saveCoordinateSettings()
+                        }
+                    }
+                    
+                    
                     // Giriş başarılı, küreyi büyüt ve butonları gizle
                     UIView.animate(withDuration: 1.5, animations: {
                         self.emailTextField.alpha = 0
@@ -343,6 +360,56 @@ extension LoginViewController: ASAuthorizationControllerDelegate {
     
     func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
         AlertManager.showAlert(title: "Error", message: "Sign in with Apple failed: \(error.localizedDescription)", viewController: self)
+    }
+    
+    func saveCoordinateSettings(){
+        coordinateSettings["north"] = 90.0
+        coordinateSettings["south"] = -90.0
+        coordinateSettings["east"] = 180.0
+        coordinateSettings["west"] = -180.0
+        coordinateSettings["country"] = "Global"
+        
+        // Koordinat verilerini Firebase'e kaydet
+        db.collection((currentUser?.email)!).document(coordinateDocumentID).setData(coordinateSettings) { error in
+            if let error = error {
+                AlertManager.showAlert(title: "Error", message: "Error writing coordinate document: \(error)", viewController: self)
+            } else {
+                self.north = self.coordinateSettings["north"] as? Double
+                self.south = self.coordinateSettings["south"] as? Double
+                self.east = self.coordinateSettings["east"] as? Double
+                self.west = self.coordinateSettings["west"] as? Double
+                
+                // Verileri NavigationController içindeki MainViewController'a aktar
+                if let navController = self.destinationVC as? UINavigationController,
+                   let mainVC = navController.viewControllers.first as? MainViewController {
+                    mainVC.north = self.north
+                    mainVC.south = self.south
+                    mainVC.east = self.east
+                    mainVC.west = self.west
+                    mainVC.currentUser = self.currentUser
+                }
+                
+                print("Coordinate document successfully written!")
+            }
+        }
+    }
+    
+    func saveProfilSettings(){
+        db.collection((currentUser?.email)!).document("profilSettings").setData([
+            "name": "",
+            "surname": "",
+            "email": currentUser?.email,
+            "avatar": "avatar-1",
+        ]) { error in
+            if let error = error {
+                // Hata durumunu işle
+                AlertManager.showAlert(title: "Error", message: "Error writing document: \(error)", viewController: self)
+            } else {
+                // Başarılı yazma
+                //AlertManager.showAlert(title: "Saved", message: "Your information has been successfully saved.", viewController: self)
+                print("profil ayarları kaydedildi.")
+            }
+        }
     }
 }
 

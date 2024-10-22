@@ -2,6 +2,7 @@ import UIKit
 import FirebaseFirestore
 import FirebaseAuth
 import Lottie
+import StoreKit
 
 class MainViewController: UIViewController {
     
@@ -11,6 +12,9 @@ class MainViewController: UIViewController {
     var latitude: Double?
     var longitude: Double?
     
+    var timer: Timer? // Zamanlayıcı için değişken
+    let defaults = UserDefaults.standard
+
     var north: Double? //= 90.0
     var south: Double? //= -90.0
     var east: Double? //= 180.0
@@ -86,6 +90,8 @@ class MainViewController: UIViewController {
         animationView.center = self.view.center
         animationView.isHidden = true
         self.view.addSubview(animationView)
+        
+        checkAndRequestRatingPrompt()
         
         // Geri dönüldüğünde çağrılacak olan observer
         NotificationCenter.default.addObserver(self, selector: #selector(viewWillAppear(_:)), name: NSNotification.Name(rawValue: "resetScene"), object: nil)
@@ -266,6 +272,37 @@ class MainViewController: UIViewController {
     @objc func handleBackgroundChange() {
         print("Background has changed, updating scene.")
         spinWorldManager.fetchBackgroundFromFirestore()
+    }
+    
+    func checkAndRequestRatingPrompt() {
+        let appOpenCount = defaults.integer(forKey: "appOpenCount")
+        let lastPromptDate = defaults.object(forKey: "lastPromptDate") as? Date
+        
+        // Uygulamanın kaç kere açıldığını artır
+        defaults.set(appOpenCount + 1, forKey: "appOpenCount")
+        
+        // Eğer uygulama 5 kez açılmışsa ve en son gösterimden 30 gün geçmişse pop-up'ı göster
+        if appOpenCount >= 5 {
+            if let lastDate = lastPromptDate {
+                let daysSinceLastPrompt = Calendar.current.dateComponents([.day], from: lastDate, to: Date()).day ?? 0
+                if daysSinceLastPrompt >= 30 {
+                    showAppStoreRatingPrompt()
+                }
+            } else {
+                // Daha önce hiç gösterilmemişse, göster
+                showAppStoreRatingPrompt()
+            }
+        }
+    }
+    
+    @objc func showAppStoreRatingPrompt() {
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            SKStoreReviewController.requestReview(in: windowScene)
+            // En son ne zaman gösterildiğini kaydet
+            defaults.set(Date(), forKey: "lastPromptDate")
+            // Oturum sayısını sıfırla
+            defaults.set(0, forKey: "appOpenCount")
+        }
     }
 }
 
