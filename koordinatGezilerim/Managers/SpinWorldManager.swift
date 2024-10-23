@@ -11,6 +11,8 @@ class SpinWorldManager {
     var timer: Timer?
     var viewController: UIViewController?
     let db = Firestore.firestore()  // Firestore bağlantısı
+    var isUserInteracting = false // Kullanıcı etkileşimi kontrolü
+    var isRotating = true // Kürenin dönüp dönmediğini izlemek için bayrak
         
     init(frame: CGRect, radius: CGFloat) {
         // SceneKit Görüntüleyici
@@ -47,6 +49,9 @@ class SpinWorldManager {
         let repeatAction = SCNAction.repeatForever(rotateAction)
         sphereNode.runAction(repeatAction)
         
+        // Küre animasyonu başlat
+        startWorldRotation()
+        
         // Firestore'dan arka plan bilgisini çek
         fetchBackgroundFromFirestore()
     }
@@ -72,6 +77,35 @@ class SpinWorldManager {
         } else {
             print("Background image not found: \(backgroundName)")
         }
+    }
+    
+    // Küreyi döndürme fonksiyonları
+    func startWorldRotation() {
+        if !isRotating {
+            let rotateAction = SCNAction.rotateBy(x: 0, y: CGFloat(Double.pi * 2), z: 0, duration: 10)
+            let repeatAction = SCNAction.repeatForever(rotateAction)
+            sphereNode.runAction(repeatAction)
+            isRotating = true
+        }
+    }
+    
+    func stopWorldRotation() {
+        if isRotating {
+            sphereNode.removeAllActions()
+            isRotating = false
+        }
+    }
+
+    // Kullanıcı etkileşimi başlarsa küre dönmeyi durdur
+    func userDidInteract() {
+        isUserInteracting = true
+        stopWorldRotation()
+    }
+
+    // Kullanıcı etkileşimi biterse küre tekrar dönmeye başlasın
+    func userDidEndInteraction() {
+        isUserInteracting = false
+        startWorldRotation()
     }
     
     func startIncreasingRadius() {

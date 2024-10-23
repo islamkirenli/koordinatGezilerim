@@ -3,6 +3,7 @@ import FirebaseFirestore
 import FirebaseAuth
 import Lottie
 import StoreKit
+import SceneKit
 
 class MainViewController: UIViewController {
     
@@ -40,6 +41,9 @@ class MainViewController: UIViewController {
         spinWorldManager = SpinWorldManager(frame: self.view.bounds, radius: 2)
         spinWorldManager.viewController = self // SpinWorldManager'a ViewController referansını ver
         self.view.addSubview(spinWorldManager.sceneView)
+        
+        // Kullanıcı etkileşimini algılamak için SCNViewDelegate ekle
+        spinWorldManager.sceneView.delegate = self
         
         // Slogan Label'ı oluştur ve Auto Layout kısıtlamalarını aktif hale getirin
         sloganLabel = UILabel()
@@ -304,6 +308,32 @@ class MainViewController: UIViewController {
             defaults.set(0, forKey: "appOpenCount")
         }
     }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        spinWorldManager.userDidInteract() // Kullanıcı dokunduğunda etkileşim başlasın, küre durdurulsun
+    }
+
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
+        spinWorldManager.userDidEndInteraction() // Kullanıcı dokunmayı bıraktığında küre tekrar dönmeye başlasın
+    }
+
+    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesCancelled(touches, with: event)
+        spinWorldManager.userDidEndInteraction() // Dokunma iptal edilirse küre tekrar dönmeye başlasın
+    }
+
+}
+
+// SCNSceneRendererDelegate kullanarak etkileşimi yönet
+extension MainViewController: SCNSceneRendererDelegate {
+    func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
+        // Eğer kullanıcı etkileşimde değilse dünyayı döndür
+        if !spinWorldManager.isUserInteracting {
+            spinWorldManager.startWorldRotation()
+        }
+    }
 }
 
 // ButtonManagerDelegate protokolünü ekleyin
@@ -322,5 +352,6 @@ extension MainViewController: ButtonManagerDelegate {
         performSegue(withIdentifier: "toSettingsVC", sender: nil)
     }
 }
+
 
 
